@@ -12,6 +12,8 @@ var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
+var braintreeWeb = require('braintree-web');
+var braintree = require('braintree');
 
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
@@ -22,7 +24,18 @@ require('./config/passport');
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
-app.engine('.hbs', expressHbs({defaultLayout: 'layout',extname: '.hbs'}))
+
+var hbs = expressHbs.create({
+    helpers: {
+        inc: function (value, options) {
+          return parseInt(value) + 1;
+        }
+    },
+    defaultLayout: 'layout',
+    extname: '.hbs'
+});
+
+app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 
 app.use(bodyParser.json());
@@ -32,7 +45,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
-
 
 app.use(session({
   secret:'mysecret',

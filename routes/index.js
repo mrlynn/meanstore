@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 var Cart = require('../models/cart');
 var Product = require('../models/product');
+var braintree = require('braintree');
+
+var gateway = braintree.connect({
+  accessToken: 'access_token$production$w6hd3wnxhv5cr8hv$4846ae9a612ecd4646ccf31bdfb1b816'
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -55,7 +60,9 @@ router.get('/add-to-cart/:id/', function(req,res,next) {
 
 router.get('/shopping-cart', function(req, res, next) {
 	if (!req.session.cart) {
-		return res.render('shop/shopping-cart', { products: null});
+		return res.render('shop/shopping-cart', { products: null,helpers: {
+			inc: function(val) { return ++val;}
+		}});
 	}
 	var cart = new Cart(req.session.cart);
 	res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
@@ -67,7 +74,8 @@ router.get('/checkout', function(req,res, next) {
 	}
 	var cart = new Cart(req.session.cart);
 	res.render('shop/checkout', {total: cart.totalPrice});
-	
-})
+
+});
+
 
 module.exports = router;
