@@ -11,6 +11,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
+var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
@@ -24,11 +25,14 @@ require('./config/passport');
 app.engine('.hbs', expressHbs({defaultLayout: 'layout',extname: '.hbs'}))
 app.set('view engine', '.hbs');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
+
 
 app.use(session({
   secret:'mysecret',

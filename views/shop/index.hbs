@@ -7,10 +7,22 @@
 			        <div class="caption">
 				        <h3>{{ this.title }}</h3>
 				        <p class="description">{{ this.description }}</p>
-
 				        <div class="clearfix">
-					        <div class="price pull-left">{{ this.price }}</div>
-					        <a href="#" class="btn btn-success pull-right" role="button">Add to Cart</a>
+				        	{{#if this.isVariable }}
+				        		<div class="price pull-left">
+				        			<form action='add-to-cart' method='POST'>
+				        				<input type='hidden' id='id' name='id' value='{{ this._id }}'>
+				        				<label for="price">Amount of Donation:</label>
+				        				<input type='text' name=price class="form-control input-sm" id="price" ng-model="this.price" placeholder="0.00">
+							        	<input type='submit' value='Add to Cart' class="btn btn-success pull-right" role="button">
+
+				        			</form>
+				        		</div>
+				        	{{else}}
+					        <div class="price pull-left">${{ this.price }}</div>
+					        <a href="/add-to-cart/{{this._id}}" class="btn btn-success pull-right" role="button">Add to Cart</a>
+				        	{{/if}}
+
 					    </div>
 	      			</div>
 	    		</div>

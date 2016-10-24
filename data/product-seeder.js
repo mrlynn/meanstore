@@ -20,6 +20,15 @@ var products = [
 		description: 'Attendance Ticket for 2017 Round-up',
 		price: 25,
 		productType: 'SIMPLE'
+	}),	
+	new Product({
+		order: 99,
+		imagePath: 'images/ticket.jpg',
+		name: 'donation',
+		title: 'Help someone attend the round-up by donating a ticket.',
+		description: 'Scholarship or Donation',
+		price: 0,
+		productType: 'VARPRICE'
 	}),
 	new Product({
 		order: 2,
