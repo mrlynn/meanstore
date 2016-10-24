@@ -1,7 +1,14 @@
 <div class="row">
 	<div class="col-md-4 col-md-offset-4">
-		<h1>Sign Up</h1>
-		<form action="" method="POST">
+		<h1>Sign In</h1>
+ 		{{#if hasErrors }}
+ 			<div class="alert alert-danger">
+ 				{{# each message }}
+ 					<p>{{this}}</p>
+ 				{{/each}}
+ 			</div>
+ 		{{/if}}
+ 		<form action="/user/signin" method="POST">
 			<div class="form-group">
 				<label for="email">Email</label>
 				<input type="text" id="email" name="email" class="form-control">
@@ -10,7 +17,8 @@
 				<label for="password">Password</label>
 				<input type="password" id="password" name="password" class="form-control">
 			</div>
-			<button type="submit">Sign In</button>
+			<input type="hidden" name="_csrf" value="{{ csrfToken }}">
+			<button class="btn btn-default" type="submit">Sign In</button>
 		</form>
 	</div>
 </div>
