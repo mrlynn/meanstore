@@ -43,5 +43,16 @@ var schema = new Schema({
 	}]
 });
 
+schema.virtual('isVariable')
+	.get(function() {
+		if (this.productType=='VARPRICE') {
+			return true;
+		}
+	return false;
+});
+
+schema.methods.setPrice = function(price) {
+	this.price = price;
+};
 module.exports = mongoose.model('Product',schema);
 

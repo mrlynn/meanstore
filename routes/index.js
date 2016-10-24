@@ -19,9 +19,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/add-to-cart', function(req,res,next) {
 	var price = req.body.price;
-	console.log('Price' + price);
 	var productId = req.body.id;
-	console.log(req.body);
 	// if we have a cart, pass it - otherwise, pass an empty object
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -54,5 +52,22 @@ router.get('/add-to-cart/:id/', function(req,res,next) {
 		res.redirect('/');
 	});
 });
+
+router.get('/shopping-cart', function(req, res, next) {
+	if (!req.session.cart) {
+		return res.render('shop/shopping-cart', { products: null});
+	}
+	var cart = new Cart(req.session.cart);
+	res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
+})
+
+router.get('/checkout', function(req,res, next) {
+	if (!req.session.cart) {
+		return res.redirect('/shopping-cart');
+	}
+	var cart = new Cart(req.session.cart);
+	res.render('shop/checkout', {total: cart.totalPrice});
+	
+})
 
 module.exports = router;

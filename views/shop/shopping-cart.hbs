@@ -1,0 +1,58 @@
+{{#if products}}
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+			<div class="panel-heading"><h3>Items in Cart</h3></div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<td><strong>ITEM</strong></td>
+								<td><strong>QTY</STRONG></td>
+								<td><strong>PRICE</strong></td>
+								<td>&nbsp;</td>
+							</tr>
+						</thead>
+						<tbody>
+							{{# each products }}
+								<tr>
+									<td>{{this.item.title}}</td>
+									<td>{{this.qty}}</td>
+									<td text-align="right">${{this.price}}</td>
+									<td>
+										<div class="btn-group pull-right">
+										<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
+										<ul class="dropdown-menu">
+											<li><a href="#">Reduce by 1</a></li>
+											<li><a href="#">Remove All</a></li>
+										</ul>
+										</div>
+									</td>
+								</tr>
+							{{/each}}
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>Total: </td>
+								<td text-align="right">${{totalPrice}}</td>
+								<td>&nbsp;</td>
+
+							</tr>
+						</tbody>
+					</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+			<a href="/checkout" type="button" class="btn btn-success">Checkout</a>
+		</div>
+	</div>
+{{else}}
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+			<h2>No items in Cart</h2>
+		</div>
+	</div>
+{{/if}}
+
