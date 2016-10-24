@@ -10,13 +10,11 @@ var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 
-
 var routes = require('./routes/index');
 
 var app = express();
 mongoose.connect('localhost:27017/roundup');
 require('./config/passport');
-
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
