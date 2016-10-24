@@ -1,0 +1,20 @@
+body {
+  padding: 0px;
+  font: 14px "Proxima Nova", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.thumbnail img { 
+	max-height:150px; 
+	max-width:150px; 
+} 
+.thumbnail description {
+	color: 7f7f7f;
+}
+.price {
+	font-weight: bold;
+	font-size: 16px;
+}
