@@ -2,6 +2,9 @@
 	<div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
 		<h1>Checkout</h1>
 		<h3>Your Total: ${{total}}</h3>
+		<div id="charge-error" class="alert alert-danger {{#if noErrors}}hidden{{/if}}">
+			{{errMsg}}
+		</div>
 		<form action="/checkout" method="post" id="checkout-form">
 			<div class="row">
 				<div class="col-xs-12">

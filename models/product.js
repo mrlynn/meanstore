@@ -51,6 +51,14 @@ schema.virtual('isVariable')
 	return false;
 });
 
+schema.virtual('isApparel')
+	.get(function() {
+		if (this.productType=='APPAREL') {
+			return true;
+		}
+	return false;
+});	
+
 schema.methods.setPrice = function(price) {
 	this.price = price;
 };

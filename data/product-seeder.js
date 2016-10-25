@@ -24,9 +24,18 @@ var products = [
 	new Product({
 		order: 99,
 		imagePath: 'images/ticket.jpg',
-		name: 'donation',
+		name: 'scholarship',
 		title: 'Help someone attend the round-up by donating a ticket.',
-		description: 'Scholarship or Donation',
+		description: 'Scholarship',
+		price: 25,
+		productType: 'SIMPLE'
+	}),
+	new Product({
+		order: 99,
+		imagePath: 'images/heart.png',
+		name: 'donation',
+		title: 'Donate to help defray round-up costs.',
+		description: 'Donation',
 		price: 0,
 		productType: 'VARPRICE'
 	}),
@@ -35,7 +44,7 @@ var products = [
 		imagePath: 'images/tee-shirt.jpg',
 		name: 'teeshirt-small',
 		title: 'Tee-Shirt (XS,S,M,L,XL)',
-		description: 'Small through XL tee-shirt with Round-up Logo.',
+		description: 'Small through XL tee-shirt with Round-up Logo.   Choose specific size when you arrive.',
 		price: 14,
 		productType: 'APPAREL',
 		options: [
@@ -66,7 +75,7 @@ var products = [
 		imagePath: 'images/tee-shirt.jpg',
 		name: 'teeshirt-large',
 		title: 'Tee-Shirt (2XL,3XL,4XL)',
-		description: '2XL through 3XL tee-shirt with Round-up Logo..',
+		description: '2XL through 3XL tee-shirt with Round-up Logo.  Choose specific size when you arrive.',
 		price: 18,
 		productType: 'APPAREL',
 		options: [
@@ -89,7 +98,7 @@ var products = [
 		imagePath: 'images/hoodie.jpg',
 		name: 'hoodie-small',
 		title: 'Hooded Sweatshirt',
-		description: 'Hooded Sweatshirt with Round-up Logo. Sizes XS through XL',
+		description: 'Hooded Sweatshirt with Round-up Logo. Sizes XS through XL.  Choose specific size when you arrive.',
 		price: 25,
 		productType: 'APPAREL',
 		options: [
@@ -120,7 +129,7 @@ var products = [
 		imagePath: 'images/hoodie.jpg',
 		name: 'hoodie-large',
 		title: 'Hooded Sweatshirt XL Sizes',
-		description: 'Hooded Sweatshirt with Round-up Logo. Sizes 2XL through 4XL',
+		description: 'Hooded Sweatshirt with Round-up Logo. Sizes 2XL through 4XL. Choose specific size when you arrive.',
 		price: 25,
 		productType: 'APPAREL',
 		options: [

@@ -18,14 +18,14 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a href="shopping-cart">
-            <i class="fa fa-shopping-cart" aria-hidden="true"></i>Shopping Cart
-              <span class="badge">{{ session.cart.totalQty }}</span>
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
+              {{#if session.cart.totalQty }}
+                <span class="badge btn-success">{{ session.cart.totalQty }}</span>
+              {{/if}}
         </a></li>
-        <li><a href="http://aasepia.org"><i class="fa fa-chevron-left" aria-hidden="true"></i>
-Back to SEPIA</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-              <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>User Menu
+              <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;User Menu
           </a>
           <ul class="dropdown-menu">
             {{#if login }}
@@ -38,6 +38,8 @@ Back to SEPIA</a></li>
             {{/if}}
           </ul>
         </li>
+        <li><a href="http://aasepia.org"><i class="fa fa-chevron-left" aria-hidden="true"></i>
+Back to SEPIA</a></li>
 
       </ul>
     </div><!-- /.navbar-collapse -->

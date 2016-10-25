@@ -59,6 +59,7 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Create global logged in variable login to indicate whether the user is logged in or not.

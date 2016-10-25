@@ -10,6 +10,38 @@ var userSchema = new Schema({
 	password: {
 		type: String,
 		required: true
+	},
+	first_name: {
+		type: String,
+		required: false
+	},
+	last_name: {
+		type: String,
+		required: false
+	},
+	addr1: {
+		type: String,
+		required: false
+	},
+	addr2: {
+		type: String,
+		required: false
+	},
+	city: {
+		type: String,
+		required: false
+	},
+	state: {
+		type: String,
+		required: false
+	},
+	zipcode: {
+		type: String,
+		required: false
+	},
+	telephone: {
+		type: String,
+		required: false
 	}
 });
 
