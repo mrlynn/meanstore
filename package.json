@@ -25,6 +25,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-wordpress": "0.0.4",
+    "paypal-rest-sdk": "^1.6.9",
     "serve-favicon": "~2.3.0"
   }
 }

@@ -1,7 +1,8 @@
 var passport = require('passport');
 var User = require('../models/user');
 var LocalStrategy = require('passport-local').Strategy;
-
+// Mindspace meanstack cart tutorial
+//https://www.youtube.com/watch?v=GHNLWHGCBEc
 passport.serializeUser(function(user, done){
 	done(null,user.id);
 });
@@ -37,18 +38,20 @@ passport.use('local.signup', new LocalStrategy({
 		var newUser = new User();
 			newUser.email = email;
 			newUser.password = newUser.encryptPassword(password);
-			newUser.first_name = req.params.first_name;
-			newUser.last_name = req.params.last_name;
-			newUser.addr1 = req.params.addr1;
-			newUser.addr2 = req.params.addr2;
-			newUser.city = req.params.city;
-			newUser.state = req.params.state;
-			newUser.zipcode = req.params.zipcode;
-			newUser.telephone = req.params.telephone;
+			newUser.first_name = req.body.first_name;
+			newUser.last_name = req.body.last_name;
+			newUser.addr1 = req.body.addr1;
+			newUser.addr2 = req.body.addr2;
+			newUser.city = req.body.city;
+			newUser.state = req.body.state;
+			newUser.zipcode = req.body.zipcode;
+			newUser.telephone = req.body.telephone;
+			newUser.role = 'visitor';
 			newUser.save(function(err,result) {
 				if (err) {
 					return done(err);
 				}
+				console.log('User successfully registered');
 				return done(null, newUser);
 			});
 		});

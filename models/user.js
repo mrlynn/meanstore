@@ -42,6 +42,11 @@ var userSchema = new Schema({
 	telephone: {
 		type: String,
 		required: false
+	},
+	role: {
+		type: String,
+		required: false,
+		enum: ['visitor','administrator']
 	}
 });
 

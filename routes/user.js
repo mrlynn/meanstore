@@ -3,22 +3,25 @@ var router = express.Router();
 var Product = require('../models/product');
 var csrf = require('csurf');
 var passport = require('passport');
+var User = require('../models/user');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
+
 
 router.get('/profile', isLoggedIn, function(req,res,next) {
 	res.render('user/profile');
 });
 router.get('/logout', isLoggedIn, function(req,res,next) {
+	req.session.destroy()
 	req.logout();
 	res.redirect('/');
 });
 
-
 router.use('/', notLoggedIn, function(req,res,next) {
 	next();
 });
+
 
 router.get('/signup', function(req,res,next) {
 	var messages = req.flash('error');
@@ -42,8 +45,10 @@ router.post('/signin', passport.authenticate('local.signin', {
 	failureFlash: true
 }));
 
-
 module.exports = router;
+
+// Mindspace
+// https://www.youtube.com/watch?v=XVYApTfR6XE
 
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
@@ -57,4 +62,4 @@ function notLoggedIn(req, res, next) {
 		return next();
 	}
 	res.redirect('/');	
-}
+} 

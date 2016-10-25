@@ -28,7 +28,7 @@ var schema = new Schema({
 	},
 	productType: {
 		type: String,
-		enum: ['APPAREL','SIMPLE','VARPRICE'],
+		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE'],
 		required: true
 	},
 	options: [{
@@ -46,6 +46,14 @@ var schema = new Schema({
 schema.virtual('isVariable')
 	.get(function() {
 		if (this.productType=='VARPRICE') {
+			return true;
+		}
+	return false;
+});
+
+schema.virtual('isTicket')
+	.get(function() {
+		if (this.productType=='TICKET') {
 			return true;
 		}
 	return false;

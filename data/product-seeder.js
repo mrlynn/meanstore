@@ -10,7 +10,7 @@ var products = [
 		title: 'Round-up Registration',
 		description: 'Attendance Ticket for 2017 Round-up',
 		price: 25,
-		productType: 'SIMPLE'
+		productType: 'TICKET'
 	}),
 	new Product({
 		order: 1,
@@ -19,7 +19,16 @@ var products = [
 		title: 'Banquet Registration',
 		description: 'Attendance Ticket for 2017 Round-up',
 		price: 25,
-		productType: 'SIMPLE'
+		productType: 'TICKET'
+	}),
+	new Product({
+		order: 1,
+		imagePath: 'images/test.png',
+		name: 'test',
+		title: 'Test Item',
+		description: 'Test Attendance Ticket for 2017 Round-up',
+		price: .10,
+		productType: 'TICKET'
 	}),	
 	new Product({
 		order: 99,

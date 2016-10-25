@@ -12,6 +12,7 @@
 				        		<div class="price pull-left">
 				        			<form action='add-to-cart' method='POST'>
 				        				<input type='hidden' id='id' name='id' value='{{ this._id }}'>
+						        		<input type='hidden' id='type' name='type' value='VARPRICE'>
 				        				<div class="form-group">
 					        				<label for="price" class="">Amount of Donation:</label>
 					        				<div class="input-group pull-left">
@@ -32,6 +33,7 @@
 
 					        				<input type='hidden' id='id' name='id' value='{{ this._id }}'>
 					        				<input type='hidden' id='price' name='price' value='{{ this.price }}'>
+						        			<input type='hidden' id='type' name='type' value='APPAREL'>
 											<select name="size">
 							        			{{#each this.options}}
 							        				<option name="{{value}}">{{name}}</option>
@@ -43,8 +45,30 @@
 					        			</form>
 				        			</div>
 					        	{{else}}
-							        <div class="price pull-left">${{ this.price }}</div>
-							        <a href="/add-to-cart/{{this._id}}" class="btn btn-success pull-right" role="button">Add to Cart</a>
+					        		{{#if this.isTicket }}
+					        			<div class="price pull-left">
+						        			<form action='add-to-cart' method='POST'>
+						        				<div class="form-group">
+
+						        				<input type='hidden' id='id' name='id' value='{{ this._id }}'>
+						        				<input type='hidden' id='price' name='price' value='{{ this.price }}'>
+						        				<input type='hidden' id='type' name='type' value='TICKET'>
+
+												<div class='form-group'>
+													<label for='Name'>Name for Ticket</label>
+													<input class='form-control' type='text' name='name' value="{{user.first_name}}">
+													<label for='Name'>Email</label>
+													<input class='form-control' type='text' name='email' value="{{user.first_name}}">
+								        		</div>			 
+								        		<div class="price pull-left">${{ this.price }}</div>
+									        	<input type='submit' value='Add to Cart' class="btn btn-success pull-right" role="button">
+												</div>
+						        			</form>
+					        			</div>
+						        	{{else}}
+								        <div class="price pull-left">${{ this.price }}</div>
+								        		<a href="/add-to-cart/{{this._id}}" class="btn btn-success pull-right" role="button">Add to Cart</a>
+								    {{/if}}
 				        		{{/if}}
 				        	{{/if}}
 					    </div>

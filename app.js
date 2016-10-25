@@ -12,18 +12,18 @@ var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
-var braintreeWeb = require('braintree-web');
-var braintree = require('braintree');
-
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
 
 var app = express();
+
 mongoose.connect('localhost:27017/roundup');
 require('./config/passport');
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
+
+
 
 var hbs = expressHbs.create({
     helpers: {
