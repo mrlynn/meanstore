@@ -1,0 +1,34 @@
+<div class="row">
+	{{#if error }}
+		<div class="alert alert-danger alert-dismissable">
+			<p>{{error}}</p>
+		</div>
+ 	{{/if}}
+	<div class="panel-default">
+		<div class="panel-header">
+			<h2>Enter Paypal Payment String</h2>
+		</div>
+		<div class="panel-body">
+			<form action="/paypal-test" method="POST">
+			<div class="form-group">
+					<textarea name='payment' class="form-control" rows=20 cols=100></textarea>
+			</div>
+			<input class="btn btn-success" role="submit" type="submit" value="Send Payment String">
+			</div>
+		</div>
+	</div>
+	{{#if result }}
+		<div class="panel-body">
+			<form action="#">
+				<textarea disabled rows=10 cols=100>{{result}}</textarea>
+			</form>
+		</div>
+		<div class="panel-body">
+			<label for="payment-result">Payment Result</label>
+			<form action="#">
+				<textarea disabled name="payment-result" rows=10 cols=100>{{payment}}</textarea>
+			</form>
+		</div>
+ 	{{/if}}
+
+</div>

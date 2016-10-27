@@ -47,6 +47,9 @@ var userSchema = new Schema({
 		type: String,
 		required: false,
 		enum: ['visitor','administrator']
+	},
+	created: {
+		type: Date, default: Date.now()
 	}
 });
 

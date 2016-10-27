@@ -40,7 +40,15 @@ var schema = new Schema({
 			type: String,
 			required: false
 		}
-	}]
+	}],
+	created: {
+		type: Date,
+		default: Date.now()
+	},
+	update: {
+		type: Date,
+		default: Date.now()
+	}
 });
 
 schema.virtual('isVariable')

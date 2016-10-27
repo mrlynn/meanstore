@@ -34,8 +34,8 @@ var products = [
 		order: 99,
 		imagePath: 'images/ticket.jpg',
 		name: 'scholarship',
-		title: 'Help someone attend the round-up by donating a ticket.',
-		description: 'Scholarship',
+		title: 'Scholarship',
+		description: 'Help someone attend the round-up by donating a ticket.',
 		price: 25,
 		productType: 'SIMPLE'
 	}),
@@ -43,8 +43,8 @@ var products = [
 		order: 99,
 		imagePath: 'images/heart.png',
 		name: 'donation',
-		title: 'Donate to help defray round-up costs.',
-		description: 'Donation',
+		title: 'Donation',
+		description: 'Donate to help defray round-up costs.',
 		price: 0,
 		productType: 'VARPRICE'
 	}),
@@ -155,6 +155,24 @@ var products = [
 				value: '4XL'
 			}
 		]		
+	}),
+	new Product({
+		order: 5,
+		imagePath: 'images/hoodie.jpg',
+		name: 'hoodie-large',
+		title: 'Overfed Orangutan',
+		description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur hic deleniti commodi vero totam sapiente magnam, amet blanditiis ullam fuga nesciunt, ab accusamus eveniet consectetur. Enim aut quis neque labore.',
+		price: 25,
+		productType: 'SIMPLE'	
+	}),
+	new Product({
+		order: 5,
+		imagePath: 'images/hoodie.jpg',
+		name: 'hoodie-large',
+		title: 'Bloated Buffalo',
+		description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur hic deleniti commodi vero totam sapiente magnam, amet blanditiis ullam fuga nesciunt, ab accusamus eveniet consectetur. Enim aut quis neque labore.',
+		price: 11,
+		productType: 'SIMPLE'	
 	}),
 ]
 var done = 0;

@@ -1,5 +1,4 @@
 {{#if products}}
-<h1>{{user.first_name}}</h1>
 <div id="charge-error" class="alert alert-danger {{#if noErrors}}hidden{{/if}}">
 			{{errMsg}}
 </div>
@@ -9,28 +8,23 @@
 		<div class="panel-body">
 			<div class="table-responsive">
 {{!-- 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
- --}}				<form action="/checkout" method="post">	
+ --}}				<form action="/create" method="post">	
  					<div class="panel-body">
 
 						<div class="form-group">
-							<label class="col-md-8 control-label">First Name</label>
+							<label class="col-md-4 control-label">First Name</label>
+							<label class="col-md-4 control-label">Last Name</label>
 							<div class="col-md-8 inputGroupContainer">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 									<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-8 control-label" >Last Name</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
+
 									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 									<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
 								</div>
 							</div>
 						</div>
-						<!-- Text input-->
+						
 						<div class="form-group">
 							<label class="col-md-8 control-label">E-Mail</label>
 							<div class="col-md-8 inputGroupContainer">
@@ -73,11 +67,16 @@
 								</div>
 							</div>
 						</div>
+						<div class="clearfix"></div>
 						<!-- Text input-->
 						<div class="form-group">
-							<label class="col-md-8 control-label">Zip Code</label>
+							<label class="col-md-4 control-label">State</label>
+							<label class="col-md-4 control-label">Zip</label>
 							<div class="col-md-8 inputGroupContainer">
 								<div class="input-group">
+									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+									<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
+
 									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 									<input name="zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
 								</div>
@@ -100,6 +99,7 @@
 								<td><strong>ITEM</strong></td>
 								<td><strong>QTY</STRONG></td>
 								<td><strong>PRICE</strong></td>
+								<td><strong>TOTAL</strong></td>
 								<td>&nbsp;</td>
 							</tr>
 						</thead>
@@ -109,12 +109,14 @@
 							<input type="hidden" name="item_name_{{inc @index }}" value="{{this.item.title}}">
 							<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
 							<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
+							<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
 
 							<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
 							<tr>
 								<td>{{this.item.title}}</td>
 								<td>{{this.qty}}</td>
 								<td text-align="right">${{this.price}}</td>
+								<td text-align="right">${{this.itemTotal}}</td>
 								<td>
 									<div class="btn-group pull-right">
 										<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
@@ -130,6 +132,7 @@
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
+							<td>&nbsp;</td>
 							<td>Total: </td>
 							<td text-align="right">${{totalPrice}}</td>
 							<td>&nbsp;</td>
@@ -138,6 +141,7 @@
 				</table>
 				<input type='submit' value='Checkout' class='btn btn-primary'>
 				<input type="hidden" name="amount" value="{{totalPrice}}">
+				<input type="hidden" name="method" value="paypal">
 				<input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
 			</form>
 		</div>

@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "assert": "^1.4.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "braintree": "^1.42.0",
@@ -26,6 +28,10 @@
     "passport-local": "^1.0.0",
     "passport-wordpress": "0.0.4",
     "paypal-rest-sdk": "^1.6.9",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "strong-agent": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

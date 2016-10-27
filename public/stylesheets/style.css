@@ -18,3 +18,292 @@ a {
 	font-weight: bold;
 	font-size: 16px;
 }
+
+html, body {
+    font-size: 16px;
+}
+
+html{
+    position: relative;
+    min-height: 100%;
+}
+
+.page-header{
+    padding-bottom: 5px;
+}
+
+.cart-contents-title{
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.cart-row{
+    padding-bottom: 10px;
+}
+
+.cart-item-row{
+    margin-top: 5px;
+}
+
+.cart-link{
+    padding-left: 7px;
+}
+
+.cart-delete-button{
+    color: #d9534f;
+    cursor: pointer;
+}
+
+.cart-update-button{
+    cursor: pointer;
+}
+
+.thumbnail-image{
+    cursor: pointer;
+}
+
+.product-admin-layout{
+    padding-top: 10px;
+}
+
+.product-layout{
+    padding-top: 30px;
+}
+
+.product-title-image{
+    margin: auto;
+    max-height: 400px;
+    width: auto;
+}
+
+.thumbnail-image-container  .img-responsive {
+    display: block;
+    width: auto;
+    max-height: 100%;
+    margin: auto;
+    vertical-align: middle;
+}
+
+.thumbnail{
+    min-height: 415px;
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+.title-image-container  .img-responsive {
+    display: block;
+    width: auto;
+    max-height: 100%;
+    margin: auto;
+}
+
+.title-image-container{
+    height: 350px;
+}
+
+.thumbnail-image-container {
+    height: 110px;
+}
+
+.product-admin-title{
+    font-size: 20px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+    max-height: 86px;
+    min-height: 86px;
+}
+
+.product-admin-title-home{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+
+.product-admin-title{
+    font-size: 18px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    max-height: 86px;
+    min-height: 86px;
+}
+
+.product-title-home{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.product-price{
+    padding-bottom: 10px;
+    font-size: 20px;
+    color: #AAAAAA;
+}
+
+.product-option{
+    font-size: 20px;
+}
+
+.product-option-text{
+    font-size: 16px;
+    color: #AAAAAA;
+}
+
+.seporator{
+    padding-top: 5px;
+    border-bottom: 1px solid #EEEEEE;
+    padding-bottom: 6px;
+}
+
+.list-group-input-pad select{
+    margin-top: -7px;
+}
+
+.top-pad-10{
+    padding-top: 10px;
+}
+
+.top-pad-20{
+    padding-top: 20px;
+}
+
+.bottom-pad-20{
+    padding-bottom: 20px;
+}
+
+.paypal_button{
+    padding-top: 110px;
+}
+
+.left-pad-30{
+    padding-left: 30px;
+}
+
+.shipping-form input{
+    margin-bottom: 15px;
+}
+
+#header {        
+    height: 50px;
+}
+
+#frm_product_featured{
+    margin-top: 15px;
+}
+
+.show_footer{
+    margin-bottom: 60px;
+}
+
+.search-bar{
+    margin-top: 10px;
+}
+
+.search-bar-input{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dropup-button{
+    height: 34px;
+    padding: 0px;
+    color: #eeeeee !important;
+}
+
+.dropdown-menu>li>a{
+    padding-top: 5px !important;
+    color:#18bc9c;
+}
+
+.pad-bottom{
+    padding-bottom: 25px;
+}
+
+.keywords{
+    padding-bottom: 30px;
+    padding-top: 20px;
+    font-size: 19px;
+}
+
+.file-form{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.editor_btn_action{
+    border-top-left-radius: 4px !important; 
+    border-bottom-left-radius: 4px !important;
+}
+
+.dropup-list{
+    padding-bottom: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#notify_message{
+    position: fixed;
+    display: none;
+    z-index: 9999;
+    padding-top: 10px;
+    height: 50px;
+    bottom: 0px; 
+    width: 100%; 
+    text-align: center;
+    font-size: 22px;
+    color: white;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    padding-top: 15px;
+    margin-top: 35px;
+    background-color: #f5f5f5;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+@media only screen and (max-width: 768px) {
+    
+    .paypal_button{
+        padding-top: 10px;
+    }
+}
+
+

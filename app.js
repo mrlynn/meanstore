@@ -13,22 +13,40 @@ var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
+var fs = require('fs');
 var userRoutes = require('./routes/user');
+var adminRoutes = require('./routes/admin');
+var strongAgent = require('strong-agent');
+
+var fs = require('fs');
+
+try {
+  var configJSON = fs.readFileSync(__dirname + "/config/pp-config.json");
+  var config = JSON.parse(configJSON.toString());
+} catch (e) {
+  console.error("File config.json not found or is invalid: " + e.message);
+  process.exit(1);
+}
+
+routes.init(config);
 
 var app = express();
 
 mongoose.connect('localhost:27017/roundup');
+mongoose.Promise = global.Promise;
 require('./config/passport');
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 
-
-
 var hbs = expressHbs.create({
     helpers: {
         inc: function (value, options) {
           return parseInt(value) + 1;
+        },
+        option: function(value) {
+          var selected = value.toLowerCase() === (this.toString()).toLowerCase() ? 'selected="selected"' : '';
+          return '<option value="' + this + '" ' + selected + '>' + this + '</option>';
         }
     },
     defaultLayout: 'layout',
@@ -69,6 +87,7 @@ app.use(function(req,res,next) {
   next();
 })
 
+app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/', routes);
 
