@@ -7,7 +7,8 @@ var User = require('../models/user');
 var Payment = require('../models/payment');
 var passport = require('passport');
 var mongoose = require('mongoose');
-
+var validator = require('express-validator');
+var util = require('util');
 "use strict";
 
 var paypal = require('paypal-rest-sdk');
@@ -29,13 +30,27 @@ router.get('/', function(req, res, next) {
     	// 	products: productChunks,
     	// 	user: user
      //   	});
-       	res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
+       	// res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
+       	 res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
 	});
 });
 
 router.post('/add-to-cart', function(req,res,next) {
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
 	var price = req.body.price;
-	var productId = req.body.id;
+	var type = req.body.type;
+	var productId = req.body.productId;
+	console.log(productId);
+	if (type=='TICKET') {
+	   req.checkBody("email", "Enter a valid email address.").isEmail();
+	}
+	// var errors = req.validationErrors();
+	// if (errors) {
+	// 	errorMsg=req.flash('error','There have been validation errors: ' + util.inspect(errors), 400);
+	// 	return res.redirect('/');
+	// }
+
 	var size = req.body.size || null;
 	// if we have a cart, pass it - otherwise, pass an empty object
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -43,6 +58,8 @@ router.post('/add-to-cart', function(req,res,next) {
 	Product.findById(productId, function(err, product) {
 		if (err) {
 			// replace with err handling
+			var errorMsg = req.flash('error','unable to find product');
+
 			return res.redirect('/');
 		}
 		cart.add(product, product.id, price, size);
@@ -336,6 +353,8 @@ router.get('/execute', function (req, res, next) {
 			    });
 			    req.flash('success', "Successfully processed payment!");
 				req.cart = null;
+				var cart = new Cart({});
+				req.session.cart = cart;
 				res.redirect('/');
 			})
 			// res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
