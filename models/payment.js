@@ -3,8 +3,7 @@ var Schema = mongoose.Schema;
 
 var paymentSchema = new Schema({
   "id": {
-    type: String,
-    required: true
+    type: String
   },
   "intent": {
     type: String
@@ -85,6 +84,8 @@ var paymentSchema = new Schema({
   ],
   "httpStatusCode": {
       type: Number
-  }
+  },
+  user: {type: Schema.Types.ObjectId, ref: 'User'},
+
 });
 module.exports = mongoose.model('Payment',paymentSchema);

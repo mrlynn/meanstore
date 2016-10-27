@@ -1,6 +1,9 @@
 {{#if products}}
-<div id="charge-error" class="alert alert-danger {{#if noErrors}}hidden{{/if}}">
-			{{errMsg}}
+<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
+			{{errorMsg}}
+</div>
+<div id="charge-success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
+			{{successMsg}}
 </div>
 <div class="row">
 	<div class="col-sm-8 col-md-8 <col-md-offset-2>	</col-md-offset-2> col-sm-offset-2">
@@ -10,79 +13,9 @@
 {{!-- 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
  --}}				<form action="/create" method="post">	
  					<div class="panel-body">
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">First Name</label>
-							<label class="col-md-4 control-label">Last Name</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-									<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
-
-									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-									<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
-								</div>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-md-8 control-label">E-Mail</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-									<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
-								</div>
-							</div>
-						</div>
-						<!-- Text input-->
-						
-						<div class="form-group">
-							<label class="col-md-8 control-label">Phone #</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
-								</div>
-							</div>
-						</div>
-						<!-- Text input-->
-						
-						<div class="form-group">
-							<label class="col-md-8 control-label">Address</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-									<input name="address1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
-								</div>
-							</div>
-						</div>
-						<!-- Text input-->
-						
-						<div class="form-group">
-							<label class="col-md-8 control-label">City</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-									<input name="city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
-								</div>
-							</div>
-						</div>
 						<div class="clearfix"></div>
 						<!-- Text input-->
-						<div class="form-group">
-							<label class="col-md-4 control-label">State</label>
-							<label class="col-md-4 control-label">Zip</label>
-							<div class="col-md-8 inputGroupContainer">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-									<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
-
-									<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-									<input name="zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
-								</div>
-							</div>
-						</div>
-						
+												
 						<input type="hidden" name="cmd" value="_cart">
 						<input type="hidden" name="business" value="assistant@sepennaa.org">
 						<input type="hidden" name="currency_code" value="USD">
@@ -142,7 +75,6 @@
 				<input type='submit' value='Checkout' class='btn btn-primary'>
 				<input type="hidden" name="amount" value="{{totalPrice}}">
 				<input type="hidden" name="method" value="paypal">
-				<input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
 			</form>
 		</div>
 	</div>

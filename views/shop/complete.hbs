@@ -1,5 +1,23 @@
 <div class="row">
-	<div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-		{{}}
+	{{#if error }}
+		<div class="alert alert-danger alert-dismissable">
+			<p>{{error}}</p>
+		</div>
+ 	{{/if}}
+	{{#if message }}
+		<div class="alert alert-success alert-dismissable">
+			<p>{{message}}</p>
+		</div>
+ 	{{/if}}
+ 	<div class="panel-default">
+		<div class="panel-header">
+			<h2>Thanks for your order.</h2>
+		</div>
+		<div class="panel-body">
+			<form action="/paypal-test" method="POST">
+			<div class="form-group">
+					<textarea name='payment' class="form-control" rows=20 cols=100>{{payment}}</textarea>
+			</div>
+		</div>
 	</div>
 </div>

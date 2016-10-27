@@ -3,6 +3,7 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Product = require('../models/product');
 var Order = require('../models/order');
+var User = require('../models/user');
 var Payment = require('../models/payment');
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -15,9 +16,8 @@ var config = {};
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
-	// var cart = new Cart(req.session.cart);
-
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
 	Product.find(function(err,docs) {
 		productChunks = [];
 		chunkSize = 4;
@@ -29,8 +29,7 @@ router.get('/', function(req, res, next) {
     	// 	products: productChunks,
     	// 	user: user
      //   	});
-       	res.render('shop/index', {products: productChunks,user: req.user, noErrors:1});
-
+       	res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
 	});
 });
 
@@ -60,7 +59,7 @@ router.get('/product/:id/', function(req,res,next) {
 			// replace with err handling
 			return res.redirect('/');
 		}
-		res.render('shop/product',{product: null, errMsg: "Product not found.",noErrors:0})
+		res.render('shop/product',{product: null, errorMsg: "Product not found.",noErrorMsg:0})
 
 	});
 });
@@ -102,7 +101,7 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 			return res.redirect('/');
 		}
 		if (!product) {
-			res.render('shop/shopping-cart',{products: null, errMsg: "Product not found.",noErrors:0})
+			res.render('shop/shopping-cart',{products: null, errorMsg: "Product not found.",noErrorMsg:0})
 		}
 		cart.reduce(product, product.id, product.price);
 		req.session.cart = cart; // store cart in session
@@ -111,12 +110,13 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 });
 
 router.get('/shopping-cart', function(req, res, next) {
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
 	if (!req.session.cart) {
 		return res.render('shop/shopping-cart', { products: null, user: req.user});
 	}
 	var cart = new Cart(req.session.cart);
-	console.log(req.user);
-	res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice, user: req.user, noErrors:1});
+	res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice, user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
 })
 
 router.get('/checkout', isLoggedIn, function(req,res, next) {
@@ -124,9 +124,8 @@ router.get('/checkout', isLoggedIn, function(req,res, next) {
 		return res.redirect('/shopping-cart');
 	}
 	var cart = new Cart(req.session.cart);
-	var errMsg = req.flash('error')[0];
-	res.render('shop/checkout', {total: cart.totalPrice, errMsg, noError:!errMsg});
-
+	var errorMsg = req.flash('error')[0];
+	res.render('shop/checkout', {total: cart.totalPrice, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
 });
 
 
@@ -173,14 +172,13 @@ router.post('/paypal-test', function(req, res, next) {
 router.post('/create', function (req, res, next) {
 	var method = req.body.method;
 	var amount = parseFloat(req.body.amount);
-	console.log(amount.toFixed(2));
 
 	if (!req.session.cart) {
 		return res.redirect('/shopping-cart');
 	}
 	var cart = new Cart(req.session.cart);
 	products = cart.generateArray();
-	var payment = {
+	var create_payment = {
 		"intent": "sale",
 		"payer": {
 			 "payment_method": "paypal"
@@ -208,12 +206,11 @@ router.post('/create', function (req, res, next) {
 				"currency": "USD",
 				"sku": products[i].item._id
 			}
-			payment.transactions[0].item_list.items.push(item)
+			create_payment.transactions[0].item_list.items.push(item)
 	}
-	
 	if (method === 'paypal') {
-		payment.payer.payment_method = 'paypal';
-		payment.redirect_urls = {
+		create_payment.payer.payment_method = 'paypal';
+		create_payment.redirect_urls = {
 			"return_url": "http://localhost:3000/execute",
 			"cancel_url": "http://localhost:3000/cancel"
 		};
@@ -230,74 +227,54 @@ router.post('/create', function (req, res, next) {
 				}
 			}
 		];
-		payment.payer.payment_method = 'credit_card';
-		payment.payer.funding_instruments = funding_instruments;
+		create_payment.payer.payment_method = 'credit_card';
+		create_payment.payer.funding_instruments = funding_instruments;
 	}
-
-// console.log(JSON.stringify(payment));
-// var payment = {
-//     "intent": "sale",
-//     "payer": {
-//         "payment_method": "paypal"
-//     },
-//     "redirect_urls": {
-//         "return_url": "http://return.url",
-//         "cancel_url": "http://cancel.url"
-//     },
-//     "transactions": [{
-//         "item_list": {
-//             "items": [{
-//                 "name": "item",
-//                 "sku": "item",
-//                 "price": "1.00",
-//                 "currency": "USD",
-//                 "quantity": 1
-//             },{
-//                 "name": "item2",
-//                 "sku": "item2",
-//                 "price": "2.00",
-//                 "currency": "USD",
-//                 "quantity": 1
-//             }]
-//         },
-//         "amount": {
-//             "currency": "USD",
-//             "total": "3.00"
-//         },
-//         "description": "This is the payment description."
-//     }]
-// };
-	console.log(JSON.stringify(payment));
-
-	paypal.payment.create(payment, function (error, payment) {
-		if (error) {
-			console.log(error);
-			res.render('error', { 'error': error });
+//
+// Send the payment request to paypal
+// PP will respond with a payment record that includes a redirect url
+// We'll store the payment in a document and then redirect the user
+// When the user authorizes, paypal will callback our /execute route and we'll complete the transaction
+//
+	console.log(create_payment);
+	paypal.payment.create(create_payment, function (err, payment) {
+		if (err) {
+			errorMsg = req.flash('error',"Error sending payment to paypal.");
+			console.log('Payment ' + payment._id + ' not sent to paypal.');
+			res.redirect('/')
 		} else {
 			req.session.paymentId = payment.id;
-			console.log('Create Payment' + payment);
-			newPayment = Payment(payment);
-			newPayment.save(function(err,newpayment) {
+			console.log(payment.id)
+			var ourPayment = payment;
+			ourPayment.user = req.user._id;
+			var newPayment = new Payment(ourPayment);
+			console.log(newPayment);
+			newPayment.save(function(err, newpayment) {
 				if (err) {
-					errMsg = req.flash('error')[0]
-					res.render('shop/shopping-cart',{errMsg,noError:!errMsg});
+					errorMsg = req.flash('error',err.message);
+					console.log('error: '+ err.message);
+					return res.redirect('/shopping-cart');
 				}
-				console.log('Payment ' + newpayment._id + ' successfully created.');
-				errMsg = "Payment saved";
-			});
-			var redirectUrl;
-	 		if(payment.payer.payment_method === 'paypal') {
-	 			for(var i=0; i < payment.links.length; i++) {
-	 				var link = payment.links[i];
-	 				if (link.method === 'REDIRECT') {
-	 					redirectUrl = link.href;
-	 				}
-	 			}
-	 		}
-			res.redirect(redirectUrl);
+				console.log('Payment ' + newPayment._id + ' successfully created.');
+				var redirectUrl;
+		 		if(payment.payer.payment_method === 'paypal') {
+		 			var done = 0;
+		 			for(var i=0; i < payment.links.length; i++) {
+		 				done++;
+		 				var link = payment.links[i];
+		 				if (link.method === 'REDIRECT') {
+		 					redirectUrl = link.href;
+		 				}
+		 				if (done==payment.links.length) {
+		 					return res.redirect(redirectUrl);
+		 				}
+		 			}
+		 		}
+	 		});
 		}
 	});
 });
+
 
 // exports.execute = function (req, res) {
 // 	var paymentId = req.session.paymentId;
@@ -316,18 +293,59 @@ router.post('/create', function (req, res, next) {
 
 
 router.get('/execute', function (req, res, next) {
-	var paymentId = req.session.paymentId;
-	var payerId = req.param('PayerID');
-
-	var details = { "payer_id": payerId };
+	var paymentId = req.query.paymentId;
+	var token = req.query.token;
+	var PayerID = req.query.PayerID
+	console.log(req.user);
+	var details = { "payer_id": PayerID };
 	var payment = paypal.payment.execute(paymentId, details, function (error, payment) {
 		if (error) {
 			console.log(error);
 			res.render('error', { 'error': error });
 		} else {
-			res.render('execute', { 'payment': payment });
+			// Update payment record with new state - should be approved.
+			Payment.find({id: paymentId},function(err,paymentDocument) {
+				if (err) {
+					res.render('error',{'error': error});
+				}
+				console.log(paymentDocument);
+				console.log(paymentDocument.user);
+				Payment.update({id: paymentId},{state: payment.state}, function(err, numAffected) {
+					if (err) {
+						res.render('error', { 'error': err});
+						exit();
+					}
+					console.log("Payment Record Updated with Payment State " + payment.state);
+					console.log(payment.transactions)
+					
+					User.update(
+				        {
+				        	_id: req.user._id
+				        },
+				        {
+				        	$push: {"orders": {"paymentId": paymentId, "state": payment.state}}
+				        },
+				        function(err, userDocument) {
+				            if (err) {
+				            	console.log(err);
+				            	req.flash('error', err.message);
+				            	res.redirect('/');
+				            }
+				        }
+				    );
+			    });
+			    req.flash('success', "Successfully processed payment!");
+				req.cart = null;
+				res.redirect('/');
+			})
+			// res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
 		}
 	});
+});
+
+router.get('/complete', function(req, res, next) {
+	var messages = req.flash('error');
+	res.render('shop/paypal-test', {error: req.flash('error')[0]});
 });
 
 exports.cancel = function (req, res) {
