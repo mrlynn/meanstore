@@ -20,20 +20,27 @@ router.get('/profile', isLoggedIn, function(req,res,next) {
 			return res.write('Error');
 		}
 	});
-	console.log(payments);
-	res.render('user/profile', {layout:'fullpage.hbs',user: req.user, payments: payments,hasPayments:0});
+	// console.log(payments);
+	// res.render('user/profile', {layout:'fullpage.hbs',user: req.user, payments: payments,hasPayments:0});
 
-	// Order.find('{user: req.user}', function(err, orders) {
-	// 	if (err) {
-	// 		return res.write('Error');
-	// 	}
-	// 	var cart;
-	// 	orders.forEach(function(order) {
-	// 		cart = new Cart(order.cart);
-	// 		order.items = cart.generateArray();
-	// 	});
-	// 	res.render('user/profile', {user: req.user, orders: orders, payments: payments});
-	// });
+	Order.find('{user: req.user, status: "approved"}', function(err, orders) {
+		if (err) {
+			return res.write('Error');
+		}
+		var cart;
+		orders.forEach(function(order) {
+			Payment.find({id:order.paymentId},function(err,paymentDoc) {
+				console.log("Payment " + paymentDoc.state);
+				console.log("Order " + order.status);
+				if (paymentDoc.state != order.status) {
+					order.status = "Payment not completed.";
+				}
+			});
+			cart = new Cart(order.cart);
+			order.items = cart.generateArray();
+		});
+		res.render('user/profile', {layout:'fullpage.hbs',user: req.user, orders: orders, payments: payments,hasPayments:1});
+	});
 });
 router.get('/logout', isLoggedIn, function(req,res,next) {
 	req.session.destroy()

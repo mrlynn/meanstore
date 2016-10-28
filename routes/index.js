@@ -50,7 +50,7 @@ router.post('/add-to-cart', function(req,res,next) {
 	var price = req.body.price;
 	var type = req.body.type;
 	var productId = req.body.productId;
-	console.log(productId);
+	console.log(productId[0]);
 	if (type=='TICKET') {
 	   req.checkBody("email", "Enter a valid email address.").isEmail();
 	}
@@ -153,7 +153,7 @@ router.get('/checkout', isLoggedIn, function(req,res, next) {
 	successMsg = req.flash('success')[0];
 	var cart = new Cart(req.session.cart);
 	var errorMsg = req.flash('error')[0];
-	res.render('shop/checkout', {products: cart.generateArray(),total: cart.totalPrice, user: req.user, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
+	res.render('shop/checkout', {products: cart.generateArray(),totalPrice: cart.totalPrice.toFixed(2), user: req.user, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
 });
 
 router.post('/checkout', function (req, res, next) {
@@ -236,6 +236,8 @@ router.post('/create', function (req, res, next) {
 			}
 		}]
 	};
+
+
 	var item_list = [];
 	for (var i = 0, len = products.length; i < len; i++) {
 			var price = parseFloat(products[i].price);
@@ -297,6 +299,23 @@ router.post('/create', function (req, res, next) {
 					console.log('error: '+ err.message);
 					return res.redirect('/shopping-cart');
 				}
+				// Create Order Record with a pending status.
+				var order = new Order({
+				    user: req.user,
+				    cart: cart,
+				    address: req.body.addr1,
+				    city: req.body.city,
+				    state: req.body.state,
+				    zipcode: req.body.zipcode,
+				    paymentId: payment.id,
+				    status: 'pending'
+				});
+				order.save(function(err) {
+					if (err) {
+						req.flash('error','Unable to save order.');
+						res.redirect('/');
+					}
+				})
 				console.log('Payment ' + newPayment._id + ' successfully created.');
 				var redirectUrl;
 		 		if(payment.payer.payment_method === 'paypal') {
@@ -358,37 +377,37 @@ router.get('/execute', function (req, res, next) {
 						exit();
 					}
 					console.log("Payment Record Updated with Payment State " + payment.state);
-					console.log(payment.transactions)
-					var order = new Order({
-						user: req.user,
-						cart: cart,
-						address: req.body.address,
-						city: req.body.city,
-						state: req.body.state,
-						zipcode: req.body.zipcode
-
+					Order.findOneAndUpdate({paymentId: payment.id},{status: payment.state},{new:true},function (err, newOrder) {
+						if (err) {
+							req.flash('error','Unable to save order.');
+							return res.redirect('/');
+						}
+						console.log('Order record updated');
+						User.findOneAndUpdate(
+							{
+								_id:req.user._id
+							},{
+								$push:{
+									"orders": newOrder
+								}
+							},{
+								new:true,
+								safe: true,
+								upsert: true
+							},function(err,newUser) {
+							if (err) {
+								req.flash('error','Unable to update user record');
+								return res.redirect('/');
+							}
+							console.log('User recorded updated');
+						});
 					});
-					User.update(
-				        {
-				        	_id: req.user._id
-				        },
-				        {
-				        	$push: {"orders": {"paymentId": paymentId, "state": payment.state}}
-				        },
-				        function(err, userDocument) {
-				            if (err) {
-				            	console.log(err);
-				            	req.flash('error', err.message);
-				            	res.redirect('/');
-				            }
-				        }
-				    );
 			    });
 			    req.flash('success', "Successfully processed payment!");
 				req.cart = null;
 				var cart = new Cart({});
 				req.session.cart = cart;
-				res.redirect('/');
+				return res.redirect('/');
 			})
 			// res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
 		}
@@ -400,9 +419,21 @@ router.get('/complete', function(req, res, next) {
 	res.render('shop/paypal-test', {error: req.flash('error')[0]});
 });
 
-exports.cancel = function (req, res) {
-  res.render('cancel');
-};
+router.get('/cancel', function (req, res) {
+	var paymentId = req.query.paymentId;
+	var token = req.query.token;
+	var PayerID = req.query.PayerID
+	console.log(req.user);
+	var details = { "payer_id": PayerID };
+	Payment.update({id: paymentId},{state: payment.state}, function(err, numAffected) {
+		if (err) {
+			res.render('error', { 'error': err});
+			exit();
+		}
+		successMsg = req.flash('success','Purchase Cancell');
+		return res.render('/');
+	});
+});
 
 
 router.init = function(c) {

@@ -50,7 +50,41 @@ var userSchema = new Schema({
 	},
 	created: {
 		type: Date, default: Date.now()
-	}
+	},
+	orders:[{
+		order: {
+			type: String,
+		},
+		paymentId: {
+			type: String
+		},
+		state: {
+			type: String
+		},
+        items: [{
+            "name": {
+              type: String
+            },
+            "sku": {
+              type: String
+            },
+            "price": {
+              type: String
+            },
+            "currency": {
+              type: String
+            },
+            "quantity": {
+              type: Number
+            },
+            "description": {
+              type: String
+            },
+            "tax": {
+              type: String
+            }
+        }]
+	}]
 });
 
 userSchema.methods.encryptPassword = function(password) {

@@ -48,6 +48,26 @@ var schema = new Schema({
 	update: {
 		type: Date,
 		default: Date.now()
+	},
+	soldCount: {
+		type: Number
+	},
+	sku: {
+		type: String
+	},
+	categories: [{
+		id: {
+			type: Schema.Types.ObjectId, ref: 'Category'
+		},
+		name: {
+			type: String
+		}
+	}],
+	author: {
+		type: String
+	},
+	shippingWeight: {
+		type: String
 	}
 });
 
@@ -74,7 +94,6 @@ schema.virtual('isApparel')
 		}
 	return false;
 });	
-
 schema.methods.setPrice = function(price) {
 	this.price = price;
 };

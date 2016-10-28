@@ -11,6 +11,7 @@ var orderSchema = new Schema({
 	telephone: {type: String, required: false},
 	name: {type: String, required: false},
 	paymentId: {type: String, required: false},
+	status: {type: String, required: false},
 	owner: {
 		name: {
 			type: String,
