@@ -1,45 +1,43 @@
 <div class="container">
 	{{# each products }}
 	<div class="row">
-		<div class="col-md-12">
-			{{# each this}}
-			<div class="col-sm-6 col-md-4">
-				<div class="thumbnail">
-					<div class="vertical-center thumbnail-image-container">
-						<div class="form-group">
-							<img class="img-responsive" src="{{ this.imagePath }}" alt="...">
-							<label for="title">Image Path</label>
-							<input type='text' value='{{this.imagePath}}' class="input-sm">
-						</div>
-					</div>
+		{{# each this}}
+		<div class="col-sm-6 col-md-8">
+			<div class="thumbnail">
+				<div class="vertical-center thumbnail-image-container">
 					<div class="form-group">
-						<label for="title">Title</label>
-						<input class="form-control input-sm" name="title" value="{{this.title}}">
+						<img class="img-responsive" src="{{ this.imagePath }}" alt="...">
+						<label for="title">Image Path</label>
+						<input type='text' value='{{this.imagePath}}' class="input-sm">
 					</div>
-					<div class="form-group">
-						<label for="title">Description</label>
-						<textarea class="form-control" name="description" rows=10 cols=30>{{this.title}}</textarea>
-					</div>
-					<form action='add-to-cart' method='POST'>
-						<div class="form-group">
-							<input type='hidden' id='id' name='id' value='{{ this._id }}'>
-							<label for="type">Type</label>
-							<select class="form-control input-sm" name="type">
-								<option name="APPAREL">Apparel</option>
-								<option name="TICKET">Event Ticket</option>
-								<option name="SIMPLE">Simple Product</option>
-								<option name="VARPRICE">Variable Price</option>
-							</select>
-						</div>
-						<div "form-group">
-							<label for="price">Price</label>
-							<input type='text' id='price' name='price' value='{{ this.price }}'>
-						</div>
-						<p class="text-center">
-							<input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
-						</p>
-					</form>
 				</div>
+				<div class="form-group">
+					<label for="title">Title</label>
+					<input class="form-control input-sm" name="title" value="{{this.title}}">
+				</div>
+				<div class="form-group">
+					<label for="title">Description</label>
+					<textarea class="form-control" name="description" rows=10 cols=30>{{this.title}}</textarea>
+				</div>
+				<form action='add-to-cart' method='POST'>
+					<div class="form-group">
+						<input type='hidden' id='id' name='id' value='{{ this._id }}'>
+						<label for="type">Type</label>
+						<select class="form-control input-sm" name="type">
+							<option name="APPAREL">Apparel</option>
+							<option name="TICKET">Event Ticket</option>
+							<option name="SIMPLE">Simple Product</option>
+							<option name="VARPRICE">Variable Price</option>
+						</select>
+					</div>
+					<div "form-group">
+						<label for="price">Price</label>
+						<input type='text' id='price' name='price' value='{{ this.price }}'>
+					</div>
+					<p class="text-center">
+						<input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
+					</p>
+				</form>
 			</div>
 		</div>
 		{{/each}}

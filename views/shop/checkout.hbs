@@ -1,152 +1,155 @@
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><a href="/shop/shopping-cart">Shopping Cart</a></li>
+  <li class="active">Checkout</li>
+</ol>
+{{#if products}}
+<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
+	{{errorMsg}}
+</div>
 <div class="row">
-	<div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-		<h1>Checkout</h1>
-		<h3>Your Total: ${{total}}</h3>
-		<div id="charge-error" class="alert alert-danger {{#if noErrors}}hidden{{/if}}">
-			{{errMsg}}
-		</div>
-		<form action="/checkout" method="post" id="checkout-form">
-			<div class="panel-body">
-				<div class="table-responsive">
-					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-						<div class="panel-body">
-							<div class="form-group">
-								<label class="col-md-8 control-label">First Name</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-										<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
-									</div>
-								</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<form action="/create" method="post">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-md-4 control-label">First Name</label>
+						<label class="col-md-4 control-label">Last Name</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+								<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+								<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
 							</div>
-							<div class="form-group">
-								<label class="col-md-8 control-label" >Last Name</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-										<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-md-8 control-label">E-Mail</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-										<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							
-							<div class="form-group">
-								<label class="col-md-8 control-label">Phone #</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-										<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							
-							<div class="form-group">
-								<label class="col-md-8 control-label">Address</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-										<input name="address1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							
-							<div class="form-group">
-								<label class="col-md-8 control-label">City</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-										<input name="city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-md-4 control-label">State</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-										<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
-									</div>
-								</div>
-							</div>
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-md-8 control-label">Zip Code</label>
-								<div class="col-md-8 inputGroupContainer">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-										<input name="zipcode" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
-									</div>
-								</div>
-							</div>
-							
-							<input type="hidden" name="cmd" value="_cart">
-							<input type="hidden" name="business" value="assistant@sepennaa.org">
-							<input type="hidden" name="currency_code" value="USD">
-							<input type="hidden" name="return" value="http://roundup.aasepia.org/complete">
-							<input type="hidden" name="cancel_return" value="http://aasepia.org/cancel">
-							<input type="hidden" name="cn" value="2017 SEPIA ROUNDUP">
-							<input type="hidden" name="no_shipping" value="1">
-							<input type="hidden" name="rm" value="2"> <!-- the buyer's browser is redirected to the return url using POST -->
-							<!-- Text input-->
 						</div>
-						<table class="table table-condensed">
-							<thead>
-								<tr>
-									<td><strong>ITEM</strong></td>
-									<td><strong>QTY</STRONG></td>
-									<td><strong>PRICE</strong></td>
-									<td>&nbsp;</td>
-								</tr>
-							</thead>
-							<tbody>
-								<input type="hidden" name="upload" value="1">
-								{{# each products }}
-								<input type="hidden" name="item_name_{{inc @index }}" value="{{this.item.title}}">
-								<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
-								<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
-								
-								<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
-								<tr>
-									<td>{{this.item.title}}</td>
-									<td>{{this.qty}}</td>
-									<td text-align="right">${{this.price}}</td>
-									<td>
-										<div class="btn-group pull-right">
-											<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
-											<ul class="dropdown-menu">
-												<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
-												<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
-												<li><a href="/empty-cart">Remove All</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								{{/each}}
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td>Total: </td>
-								<td text-align="right">${{totalPrice}}</td>
-								<td>&nbsp;</td>
-							</tr>
-						</tbody>
-					</table>
+					</div>
 					
-					<input type="hidden" name="amount" value="{{totalPrice}}">
-					<input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-				</form>
-			</div>
+					<div class="form-group">
+						<label class="col-md-8 control-label">E-Mail</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+								<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+							</div>
+						</div>
+					</div>
+					<!-- Text input-->
+					
+					<div class="form-group">
+						<label class="col-md-8 control-label">Phone #</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+								<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
+							</div>
+						</div>
+					</div>
+					<!-- Text input-->
+					
+					<div class="form-group">
+						<label class="col-md-8 control-label">Address</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+								<input name="address1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
+							</div>
+						</div>
+					</div>
+					<!-- Text input-->
+					
+					<div class="form-group">
+						<label class="col-md-8 control-label">City</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+								<input name="city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-4 control-label">State</label>
+						<label class="col-md-4 control-label">Zip</label>
+						<div class="col-md-8 inputGroupContainer">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+								<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+								<input name="zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
+							</div>
+						</div>
+					</div>
+					
+					<input type="hidden" name="cmd" value="_cart">
+					<input type="hidden" name="business" value="assistant@sepennaa.org">
+					<input type="hidden" name="currency_code" value="USD">
+					<input type="hidden" name="return" value="http://roundup.aasepia.org/complete">
+					<input type="hidden" name="cancel_return" value="http://aasepia.org/cancel">
+					<input type="hidden" name="cn" value="2017 SEPIA ROUNDUP">
+					<input type="hidden" name="no_shipping" value="1">
+					<input type="hidden" name="rm" value="2"> <!-- the buyer's browser is redirected to the return url using POST -->
+					<!-- Text input-->
+				</div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<td><strong>ITEM</strong></td>
+							<td><strong>QTY</STRONG></td>
+							<td><strong>PRICE</strong></td>
+							<td><strong>TOTAL</strong></td>
+							<td>&nbsp;</td>
+						</tr>
+					</thead>
+					<tbody>
+						<input type="hidden" name="upload" value="1">
+						{{# each products }}
+						<input type="hidden" name="item_name_{{inc @index }}" value="{{this.item.title}}">
+						<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
+						<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
+						<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
+						<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
+						<tr>
+							<td>{{this.item.title}}</td>
+							<td>{{this.qty}}</td>
+							<td text-align="right">${{this.price}}</td>
+							<td text-align="right">${{this.itemTotal}}</td>
+							<td>
+								<div class="btn-group pull-right">
+									<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
+										<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
+										<li><a href="/empty-cart">Remove All</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+						{{/each}}
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Total: </td>
+						<td text-align="right">${{totalPrice}}</td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			<input type='submit' value='Checkout' class='btn btn-primary'>
+			<input type="hidden" name="amount" value="{{totalPrice}}">
+			<input type="hidden" name="method" value="paypal">
+		</form>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
 		</div>
+	</div>
+	{{else}}
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+			<h2>No items in Cart</h2>
+		</div>
+	</div>
+	{{/if}}

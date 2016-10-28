@@ -2,6 +2,12 @@ body {
   padding: 0px;
   font: 14px "Proxima Nova", Helvetica, Arial, sans-serif;
 }
+.signin-page {
+    min-height: 600px;
+}
+.signup-page {
+    min-height: 600px;
+}
 
 a {
   color: #00B7FF;
@@ -323,12 +329,12 @@ p{
     border-bottom: 2px solid #4B8E4B;
 }
 .thumbnail{
-    opacity:0.70;
+    opacity:1.0;
     -webkit-transition: all 0.5s; 
     transition: all 0.5s;
 }
 .thumbnail:hover{
-    opacity:1.00;
+    opacity:4.00;
     box-shadow: 0px 0px 10px #4bc6ff;
 }
 .line{

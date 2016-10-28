@@ -4,25 +4,36 @@ var Product = require('../models/product');
 var csrf = require('csurf');
 var passport = require('passport');
 var User = require('../models/user');
+var Payment = require('../models/payment');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
-
+var ObjectId = require('mongoose').Types.ObjectId; 
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
-
 router.get('/profile', isLoggedIn, function(req,res,next) {
-	Order.find('{user: req.user}', function(err, orders) {
+	payments = {};
+	console.log(req.user._id);
+	Payment.find({}, function(err,payments) {
 		if (err) {
+			console.log('err:' + err);
 			return res.write('Error');
 		}
-		var cart;
-		orders.forEach(function(order) {
-			cart = new Cart(order.cart);
-			order.items = cart.generateArray();
-		});
-		res.render('user/profile', {user: req.user, orders: orders});
 	});
+	console.log(payments);
+	res.render('user/profile', {layout:'fullpage.hbs',user: req.user, payments: payments,hasPayments:0});
+
+	// Order.find('{user: req.user}', function(err, orders) {
+	// 	if (err) {
+	// 		return res.write('Error');
+	// 	}
+	// 	var cart;
+	// 	orders.forEach(function(order) {
+	// 		cart = new Cart(order.cart);
+	// 		order.items = cart.generateArray();
+	// 	});
+	// 	res.render('user/profile', {user: req.user, orders: orders, payments: payments});
+	// });
 });
 router.get('/logout', isLoggedIn, function(req,res,next) {
 	req.session.destroy()
@@ -36,7 +47,7 @@ router.use('/', notLoggedIn, function(req,res,next) {
 
 router.get('/signup', function(req,res,next) {
 	var messages = req.flash('error');
-	res.render('user/signup', {csrfToken: req.csrfToken(), message: messages, hasErrors: messages.length > 0});
+	res.render('user/signup', {layout: 'fullpage.hbs', csrfToken: req.csrfToken(), message: messages, hasErrors: messages.length > 0});
 });
 
 router.post('/signup', passport.authenticate('local.signup', {
@@ -55,7 +66,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 router.get('/signin', function(req,res,next) {
 	var messages = req.flash('error');
-	res.render('user/signin', {csrfToken: req.csrfToken(), message: messages, hasErrors: messages.length > 0});
+	res.render('user/signin', {layout: 'fullpage.hbs',csrfToken: req.csrfToken(), message: messages, hasErrors: messages.length > 0});
 });
 
 router.post('/signin', passport.authenticate('local.signin', {

@@ -1,3 +1,4 @@
+
 {{#if products}}
 <div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
 			{{errorMsg}}
@@ -10,8 +11,8 @@
 		<div class="panel-heading"><h3>Items in Cart</h3></div>
 		<div class="panel-body">
 			<div class="table-responsive">
-{{!-- 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
- --}}				<form action="/create" method="post">	
+{{!-- 				<form action="/create" method="post">	
+ --}}				<form action="/checkout" method="get">	
  					<div class="panel-body">
 						<div class="clearfix"></div>
 						<!-- Text input-->

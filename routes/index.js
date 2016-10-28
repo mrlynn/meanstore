@@ -31,7 +31,16 @@ router.get('/', function(req, res, next) {
     	// 	user: user
      //   	});
        	// res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
-       	 res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
+       	 res.render('shop/shop', {
+       	 	layout:'layout.hbs',
+       	 	products: productChunks,
+       	 	user: req.user, 
+       	 	errorMsg: errorMsg,
+       	 	noErrorMsg:!errorMsg,
+       	 	successMsg: successMsg,
+       	 	noMessage:!successMsg,
+       	 	isLoggedIn:req.isAuthenticated()
+       	 });
 	});
 });
 
@@ -76,7 +85,7 @@ router.get('/product/:id/', function(req,res,next) {
 			// replace with err handling
 			return res.redirect('/');
 		}
-		res.render('shop/product',{product: null, errorMsg: "Product not found.",noErrorMsg:0})
+		res.render('shop/product',{layout:'fullpage.hbs',product: null, errorMsg: "Product not found.",noErrorMsg:0})
 
 	});
 });
@@ -140,7 +149,23 @@ router.get('/checkout', isLoggedIn, function(req,res, next) {
 	if (!req.session.cart) {
 		return res.redirect('/shopping-cart');
 	}
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
 	var cart = new Cart(req.session.cart);
+	var errorMsg = req.flash('error')[0];
+	res.render('shop/checkout', {products: cart.generateArray(),total: cart.totalPrice, user: req.user, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
+});
+
+router.post('/checkout', function (req, res, next) {
+	var method = req.body.method;
+	var amount = parseFloat(req.body.amount);
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
+	if (!req.session.cart) {
+		return res.redirect('/shopping-cart');
+	}
+	var cart = new Cart(req.session.cart);
+	products = cart.generateArray();
 	var errorMsg = req.flash('error')[0];
 	res.render('shop/checkout', {total: cart.totalPrice, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
 });
@@ -257,7 +282,7 @@ router.post('/create', function (req, res, next) {
 	paypal.payment.create(create_payment, function (err, payment) {
 		if (err) {
 			errorMsg = req.flash('error',"Error sending payment to paypal.");
-			console.log('Payment ' + payment._id + ' not sent to paypal.');
+			console.log('Payment not sent to paypal.' + err.message);
 			res.redirect('/')
 		} else {
 			req.session.paymentId = payment.id;
@@ -334,7 +359,15 @@ router.get('/execute', function (req, res, next) {
 					}
 					console.log("Payment Record Updated with Payment State " + payment.state);
 					console.log(payment.transactions)
-					
+					var order = new Order({
+						user: req.user,
+						cart: cart,
+						address: req.body.address,
+						city: req.body.city,
+						state: req.body.state,
+						zipcode: req.body.zipcode
+
+					});
 					User.update(
 				        {
 				        	_id: req.user._id
@@ -385,6 +418,7 @@ function userInfo(req,res,next) {
 	}
 	return "No User";
 }
+
 
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
