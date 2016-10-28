@@ -1,0 +1,94 @@
+<div class="row">
+  <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+    <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+      {{successMsg}}
+    </div>
+    <div id="warning" class="alert alert-warning" {{#if noErrorMsg}}hidden{{/if}}>
+      {{errorMsg}}
+    </div>
+  </div>
+</div>
+<div class="container">
+  {{# each products }}
+  <div class="row">
+    <!-- BEGIN PRODUCTS -->
+    {{# each this}}
+    <form action='/add-to-cart' method='POST'>
+      <div class="col-md-3 col-sm-6">
+        <span class="thumbnail">
+          <img class="img-responsive" src="{{ this.imagePath }}" alt="...">
+          <h4>{{this.title}}</h4>
+          <p>{{this.description}}</p>
+          {{this.item._id}}
+          <input type='hidden' id='productId' name='productId' value='{{ this._id }}'>
+          <input type='hidden' id='type' name='type' value='APPAREL'>
+          {{#if this.isVariable}}
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type='text' class="form-control input-sm" id='price' name='price' value='{{ this.price }}'>
+            <input type='hidden' id='type' name='type' value='VARIABLE'>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-6">
+              <input type='submit' value='Add to Cart' class="btn btn-success right" role="button">
+            </div>
+          </div>
+          {{else}}
+          {{#if this.isApparel}}
+          <input type='hidden' id='price' name='price' value='{{ this.price }}'>
+          <select class="form-control input-sm" name="size">
+            {{#each this.options}}
+            <option name="{{value}}">{{name}}</option>
+            {{/each}}
+          </select>
+          <input type='hidden' id='type' name='type' value='APPAREL'>
+          <hr class="line">
+          <div class="row">
+            <div class="col-md-6 col-sm-6">
+              <p class="price">${{this.price}}</p>
+            </div>
+            <div class="col-md-6 col-sm-6">
+              <input type='submit' value='Add to Cart' class="btn btn-success right" role="button">
+            </div>
+          </div>
+          {{else}}
+          {{#if this.isTicket}}
+          <input type='hidden' id='price' name='price' value='{{ this.price }}'>
+          <input type='hidden' id='type' name='type' value='TICKET'>
+          <div class="row">
+            <div class="col-md-6 col-sm-6">
+              <label for='Name'>Name for Ticket</label>
+              <input class='form-control input-sm' type='text' name='name' value="{{../../user.first_name}}">
+              <label for='Name'>Email</label>
+              <input class='form-control input-sm' type='text' name='email' value="{{../../user.email}}">
+            </div>
+            <hr class="line">
+            <div class="col-md-6 col-sm-6">
+              <p class="price">${{this.price}}</p>
+            </div>
+            <div class="col-md-6 col-sm-6">
+              <input type='submit' value='Add to Cart' class="btn btn-success right" role="button">
+            </div>
+          </div>
+          {{else}}
+          <input type='hidden' id='price' name='price' value='{{ this.price }}'>
+          <input type='hidden' id='type' name='type' value='SIMPLE'>
+          <hr class="line">
+          <div class="row">
+            <div class="col-md-6 col-sm-6">
+              <p class="price">${{this.price}}</p>
+            </div>
+            <div class="col-md-6 col-sm-6">
+              <input type='submit' value='Add to Cart' class="btn btn-success right" role="button">
+            </div>
+          </div>
+          {{/if}}
+          {{/if}}
+          {{/if}}
+        </span>
+      </div>
+      {{/each}}
+      <!-- END PRODUCTS -->
+    </div>
+    {{/each}}
+  </div>
