@@ -17,8 +17,10 @@ var fs = require('fs');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var strongAgent = require('strong-agent');
+var breadcrumbs = require('express-breadcrumbs');
 
 var fs = require('fs');
+
 
 require('./config/pp-config');
 
@@ -31,6 +33,7 @@ require('./config/pp-config');
 // }
 
 var app = express();
+
 
 mongoose.connect('localhost:27017/roundup');
 mongoose.Promise = global.Promise;
@@ -63,6 +66,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
+app.use(breadcrumbs.init());
+ 
+// Set Breadcrumbs home information 
+app.use(breadcrumbs.setHome());
 
 app.use(session({
   secret:'mysecret',

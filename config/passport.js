@@ -70,7 +70,8 @@ passport.use('local.signup', new LocalStrategy({
         }
         var newUser = new User();
         newUser.email = email;
-        newUser.password = newUser.encryptPassword(password);
+        // newUser.password = newUser.encryptPassword(password);
+        newUser.password = req.body.password;
         newUser.first_name = req.body.first_name;
         newUser.last_name = req.body.last_name;
         newUser.addr1 = req.body.addr1;

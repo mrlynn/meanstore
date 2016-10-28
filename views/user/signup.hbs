@@ -1,5 +1,6 @@
 <nav class="navbar navbar-default ">
 </nav><div class="container">
+<div class="container signin-page">
 <div class="row">
 		<h1>Sign Up</h1>
 		{{#if hasErrors }}
@@ -89,4 +90,7 @@
 			<input type="hidden" name="_csrf" value="{{ csrfToken }}">
 			<button class="btn btn-default" type="submit">Update</button>
 		</form>
+		<p class="pull-left">Need an account? <a href="/user/signup">Sign Up</a></p>
+			<p class="pull-right">Forgot? <a href="/user/forgot">Reset</a></p>
 </div></div>
+</div>
