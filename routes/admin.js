@@ -14,84 +14,85 @@ router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	var totalTickets = totalTicketsSold();
-	console.log("Total Tickets " + totalTickets);
-	Product.find(function(err,docs) {
-		productChunks = [];
-		chunkSize = 5;
-		for (var i = (5-chunkSize); i < docs.length; i += chunkSize) {
-			productChunks.push(docs.slice(i,i+chunkSize))
-		}
-    	// res.render('shop/index', {
-    	// 	title: 'MEAN Store', 
-    	// 	products: productChunks,
-    	// 	user: user
-        //   	});
-       	res.render('admin/index', {layout: 'admin.hbs',products: productChunks, noErrors:1});
+    var tot = totalSales(function(err,next) {
+    	if (err) {
+    		console.log(err.message);
+    		return res.error('err');
+    	}
+     	console.log('back with total ', tot);
 
-	});
+    });
+    Order.find({}, function(err, docs) {
+        console.log("orders: " + docs);
+        Product.find(function(err, products) {
+            productChunks = [];
+            chunkSize = 5;
+            for (var i = (5 - chunkSize); i < products.length; i += chunkSize) {
+                productChunks.push(docs.slice(i, i + chunkSize))
+            }
+            // res.render('shop/index', {
+            // 	title: 'MEAN Store', 
+            // 	products: productChunks,
+            // 	user: user
+            //   	});
+            res.render('admin/index', {
+                layout: 'admin.hbs',
+                products: products,
+                totalSales: tot,
+                orders: docs,
+                noErrors: 1
+            });
+        });
+    });
+});
+
+router.get('/orders', function(req, res, next) {
+	res.render('admin/orders',{layout: "adminPage"});
 });
 
 router.post('/product/:id', function(req, res, next) {
-	productID = req.params.id;
-	Product.findById(req.params.id, function(err, product) {
-		product.title = req.body.title;
-		product.description = req.body.description;
-		product.price = req.body.price;
-		product.type = req.body.price;
-		product.updated = Date.now();
-		product.imagePath = req.body.imagePath;
-	});
-	product.save(function(err) {
-		if (!err) {
-			console.log("updated");
-		} else {
-			console.log(err);
-		}
-       	res.render('admin/index', {products: productChunks, noErrors:1});
-	})
-});
-
-router.get('/product/:id', function(req, res, next) {
-	productID = req.params.id;
-
-	Product.findById(productID,function(err,product) {
-		if (!err) {
-			res.render('admin/product',{product: product});
-		}
-	})
-
-	res.render
-
+    productID = req.params.id;
+    Product.findById(req.params.id, function(err, product) {
+        product.title = req.body.title;
+        product.description = req.body.description;
+        product.price = req.body.price;
+        product.type = req.body.price;
+        product.updated = Date.now();
+        product.imagePath = req.body.imagePath;
+    });
+    product.save(function(err) {
+        if (!err) {
+            console.log("updated");
+        } else {
+            console.log(err);
+        }
+        res.render('admin/index', {
+            products: productChunks,
+            noErrors: 1
+        });
+    })
 });
 
 module.exports = router;
 
-var getBalance = function(req,res,next) {
-    Payment.aggregate([
-        { $unwind: "$transactions" },
-        { $group: {
-            _id: "$_id",
-            amount: { $sum: "$records.amount"  }
-        }}
-    ], function (err, result) {
-        if (err) {
-            console.log(err);
-            return;
+var totalSales = function() {
+    Order.aggregate({
+        $match: {
+            "status": "approved"
         }
-        console.log(result);
+    }, {
+        $group: {
+            _id: null,
+            'Total': {
+                $sum: '$cart.totalPrice'
+            }
+        }
+    }, function(err, doc) {
+    	if (err) {
+    		console.log("err: " + err.message);
+    	}
+        console.log('Total ', doc[0].Total);
+		return doc;
+
     });
-}
-var totalTicketsSold = function(req, res, next) {
-	return 99;
-}
-var totalSales = function(req, res, next) {
-	Payments.find({},function(err,payments) {
-		req.totalSales
-	})
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	req.session.oldUrl = req.url;
-	res.redirect('/user/signin');	
 }

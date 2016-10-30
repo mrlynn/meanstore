@@ -37,15 +37,6 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
         }
         var cart;
         orders.forEach(function(order) {
-            Payment.find({
-                id: order.paymentId
-            }, function(err, paymentDoc) {
-                console.log("Payment " + paymentDoc.state);
-                console.log("Order " + order.status);
-                if (paymentDoc.state != order.status) {
-                    order.status = "Payment not completed.";
-                }
-            });
             cart = new Cart(order.cart);
             order.items = cart.generateArray();
         });
@@ -53,7 +44,6 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
             layout: 'fullpage.hbs',
             user: req.user,
             orders: orders,
-            payments: payments,
             hasPayments: 1
         });
     });
@@ -67,7 +57,8 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
 router.get('/forgot', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-
+	errorMsg = 0;
+	successMsg = 0;
    	 res.render('user/forgot', {
    	 	layout:'fullpage.hbs',
    	 	user: req.user, 
@@ -83,7 +74,7 @@ router.get('/forgot', function(req, res, next) {
 router.post('/forgot', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-    async.waterfall([
+	async.waterfall([
         function(done) {
             crypto.randomBytes(20, function(err, buf) {
                 var token = buf.toString('hex');
@@ -96,7 +87,17 @@ router.post('/forgot', function(req, res, next) {
             }, function(err, user) {
                 if (!user) {
                     req.flash('error', 'No account with that email address exists.');
-                    return res.redirect('/user/forgot');
+                    console.log('no account with that email.');
+                    return res.render('user/forgot', {
+				   	 	layout:'fullpage.hbs',
+				   	 	user: req.user, 
+				   	 	errorMsg:"foo",
+				   	 	noErrorMsg:!errorMsg,
+				   	 	successMsg:successMsg,
+				   	 	noMessage:!successMsg,
+				   	 	isLoggedIn:req.isAuthenticated(),
+				   	 	csrfToken: req.csrfToken()
+				   	 });
                 }
                 user.resetPasswordToken = token;
                 user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
@@ -107,7 +108,6 @@ router.post('/forgot', function(req, res, next) {
             });
         },
         function(token, user, done) {
-
             // // var smtpTransport = nodemailer.createTransport('SMTP', {
             //   service: 'SendGrid',
             //   auth: {
@@ -125,9 +125,7 @@ router.post('/forgot', function(req, res, next) {
             //         pass: 'yourpassword!'
             //     }
             // };
-            console.log(smtpConfig.connectString);
             var transporter = nodemailer.createTransport(smtpConfig.connectString);
-
             var mailOptions = {
                 to: user.email,
                 from: 'techadmin@sepennaa.org',
@@ -138,12 +136,39 @@ router.post('/forgot', function(req, res, next) {
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
             transporter.sendMail(mailOptions, function(err) {
-                req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-                done(err, 'done');
+            	 if (!err) { 
+	                 successMsg = req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+				   	 res.render('user/forgot', {
+				   	 	layout:'fullpage.hbs',
+				   	 	user: req.user, 
+				   	 	errorMsg: errorMsg,
+				   	 	noErrorMsg:!errorMsg,
+				   	 	successMsg: successMsg,
+				   	 	noMessage:!successMsg,
+				   	 	isLoggedIn:req.isAuthenticated(),
+				   	 	csrfToken: req.csrfToken()
+				   	 });
+			   	} else {
+			   		 errorMsg = 'test'; //req.flash('error', 'A problem has occurred while sending the email.');
+				   	 res.render('user/forgot', {
+				   	 	layout:'fullpage.hbs',
+				   	 	user: req.user, 
+				   	 	errorMsg: errorMsg,
+				   	 	noErrorMsg:!errorMsg,
+				   	 	successMsg: successMsg,
+				   	 	noMessage:!successMsg,
+				   	 	isLoggedIn:req.isAuthenticated(),
+				   	 	csrfToken: req.csrfToken()
+				   	 });
+			   	}
             });
         }
     ], function(err) {
-        if (err) return next(err);
+        if (err) {
+        	// errorMsg = req.flash('error','A problem has occurred ' + err);
+        	 errorMsg = 'teststs'
+        	return next(err);
+        }
         res.redirect('/user/forgot');
     });
 });
@@ -153,7 +178,7 @@ router.get('/reset/:token', function(req, res) {
 	var errorMsg = req.flash('error')[0];
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
     if (!user) {
-      req.flash('error', 'Password reset token is invalid or has expired.');
+      errorMsg = req.flash('error', 'Password reset token is invalid or has expired.');
       return res.redirect('/user/forgot');
     }
     res.render('user/reset', {
@@ -175,7 +200,7 @@ router.post('/reset/:token', function(req, res) {
     function(done) {
       User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
         if (!user) {
-          req.flash('error', 'Password reset token is invalid or has expired.');
+          errorMsg = req.flash('error', 'Password reset token is invalid or has expired.');
           return res.redirect('back');
         }
 

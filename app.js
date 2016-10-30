@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
+var paginateHelper = require('express-handlebars-paginate');
 var mongoose = require('mongoose');
 var session = require('express-session');
 var passport = require('passport');
@@ -18,6 +19,7 @@ var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
+
 
 var fs = require('fs');
 

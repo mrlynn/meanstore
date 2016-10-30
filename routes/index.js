@@ -403,11 +403,14 @@ router.get('/execute', function (req, res, next) {
 						});
 					});
 			    });
-			    req.flash('success', "Successfully processed payment!");
-				req.cart = null;
-				var cart = new Cart({});
-				req.session.cart = cart;
-				return res.redirect('/');
+			    logSale(function(err) {
+					req.flash('success', "Successfully processed payment!");
+					req.cart = null;
+					var cart = new Cart({});
+					req.session.cart = cart;
+					return res.redirect('/');
+			    })
+			    
 			})
 			// res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
 		}
@@ -441,6 +444,12 @@ router.init = function(c) {
 	paypal.configure(c.api);
 }
 
+router.logSale = function(req,res,next) {
+	user = req.user;
+	console.log("In logSale");
+
+}
+
 module.exports = router;
 
 function userInfo(req,res,next) {
@@ -449,7 +458,6 @@ function userInfo(req,res,next) {
 	}
 	return "No User";
 }
-
 
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
