@@ -13,11 +13,11 @@ var orderSchema = new Schema({
 	paymentId: {type: String, required: false},
 	status: {type: String, required: false},
 	owner: {
-		name: {
+		ticket_name: {
 			type: String,
 			required: false
 		},
-		email: {
+		ticket_email: {
 			type: String,
 			required: false
 		}

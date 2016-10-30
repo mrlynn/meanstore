@@ -9,6 +9,10 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var validator = require('express-validator');
 var util = require('util');
+var nodemailer = require('nodemailer');
+var smtpConfig = require('../config/smtp-config.js');
+
+
 "use strict";
 
 var paypal = require('paypal-rest-sdk');
@@ -46,14 +50,23 @@ router.get('/', function(req, res, next) {
 
 router.post('/add-to-cart', function(req,res,next) {
 	var successMsg = req.flash('success')[0];
+	var ticket_name = req.body.ticket_name || null;
+	var ticket_email = req.body.ticket_email || null;
 	var errorMsg = req.flash('error')[0];
-	var price = req.body.price;
-	var type = req.body.type;
-	var productId = req.body.productId;
-	console.log(productId[0]);
+	var price = req.body.price || null;
+	var type = req.body.type || null;
+	var productId = req.body.productId || null;
 	if (type=='TICKET') {
-	   req.checkBody("email", "Enter a valid email address.").isEmail();
+	   req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
 	}
+	var errors = req.validationErrors();
+	if (errors) {
+	    returnObject = {  errorMsg: errors, noErrorMsg: false, noMessage: true};
+	    req.flash('error','Invalid email address.  Please re-enter.');
+	    console.log(returnObject);
+	    return res.redirect('/');
+	} 
+
 	// var errors = req.validationErrors();
 	// if (errors) {
 	// 	errorMsg=req.flash('error','There have been validation errors: ' + util.inspect(errors), 400);
@@ -71,8 +84,9 @@ router.post('/add-to-cart', function(req,res,next) {
 
 			return res.redirect('/');
 		}
-		cart.add(product, product.id, price, size);
+		cart.add(product, product.id, price, size, ticket_name, ticket_email, type );
 		req.session.cart = cart; // store cart in session
+		req.flash('success','Item successfully added to cart.');
 		res.redirect('/');
 	});
 });
@@ -250,6 +264,10 @@ router.post('/create', function (req, res, next) {
 				"currency": "USD",
 				"sku": products[i].item._id
 			}
+			// if (products[i].type=="TICKET") {
+			// 	item.ticket_name = products[i].ticket_name;
+			// 	item.ticket_email = products[i].ticket_email;
+			// }
 			create_payment.transactions[0].item_list.items.push(item)
 	}
 	if (method === 'paypal') {
@@ -369,8 +387,6 @@ router.get('/execute', function (req, res, next) {
 				if (err) {
 					res.render('error',{'error': error});
 				}
-				console.log(paymentDocument);
-				console.log(paymentDocument.user);
 				Payment.update({id: paymentId},{state: payment.state}, function(err, numAffected) {
 					if (err) {
 						res.render('error', { 'error': err});
@@ -399,18 +415,27 @@ router.get('/execute', function (req, res, next) {
 								req.flash('error','Unable to update user record');
 								return res.redirect('/');
 							}
+							var mailOptions = {
+				                to: newUser.email,
+				                from: 'techadmin@sepennaa.org',
+				                subject: 'SEPIA Roundup Purchase',
+				                text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
+				                    'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+				            };
+				            transporter.sendMail(mailOptions, function(err) {
+				            });
 							console.log('User recorded updated');
 						});
 					});
 			    });
-			    logSale(function(err) {
-					req.flash('success', "Successfully processed payment!");
-					req.cart = null;
-					var cart = new Cart({});
-					req.session.cart = cart;
-					return res.redirect('/');
-			    })
-			    
+				req.flash('success', "Successfully processed payment!");
+				var transporter = nodemailer.createTransport(smtpConfig.connectString);
+	            
+				req.cart = null;
+				var cart = new Cart({});
+				req.session.cart = cart;
+
+				res.redirect('/');
 			})
 			// res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
 		}
@@ -438,16 +463,9 @@ router.get('/cancel', function (req, res) {
 	});
 });
 
-
 router.init = function(c) {
 	config = c;
 	paypal.configure(c.api);
-}
-
-router.logSale = function(req,res,next) {
-	user = req.user;
-	console.log("In logSale");
-
 }
 
 module.exports = router;

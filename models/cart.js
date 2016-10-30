@@ -1,19 +1,28 @@
+var User = require('../models/user');
 module.exports = function Cart(oldCart) {
 	// every call comes with the existing / old cart
 	this.items = oldCart.items || {};
 	this.totalQty = oldCart.totalQty || 0;
 	this.totalPrice = Number(oldCart.totalPrice) || 0;
 	// add item to cart
-	this.add = function(item, id, price, size) {
+	this.add = function(item, id, price, size, name, email,type) {
 		var storedItem = this.items[id];
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0};
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, type: type};
 		}
 		storedItem.qty++;
 		storedItem.price = price;
+		storedItem.type = type;
+		if (type=='TICKET') {
+			storedItem.ticket_name = name;
+			storedItem.ticket_email = email;
+		} else {
+			if (type=='APPAREL') {
+				storedItem.size = size;
+			}
+		}
 		storedItem.itemTotal = Number(price * storedItem.qty);
-		storedItem.size = size;
 		this.totalQty++;
 		this.totalPrice += Number(price);
 	};
@@ -21,7 +30,7 @@ module.exports = function Cart(oldCart) {
 		this.items = {};
 		this.totalQty = 0;
 		this.totalPrice = 0;
-		storedItem = {item: {}, qty: 0, price: 0, size: 0};
+		storedItem = {item: {}, qty: 0, price: 0, size: 0, ticket_name: '', ticket_email: ''};
 	};
 	this.reduce = function(item, id, price, size) {
 		var storedItem = this.items[id];
