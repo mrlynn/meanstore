@@ -38,12 +38,15 @@ router.get('/', function(req, res, next) {
             // 	products: productChunks,
             // 	user: user
             //   	});
+            req.session.shopUrl = "/books";
             res.render('shop/books', {
                 layout: 'books.hbs',
                 products: books,
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
                 errorMsg: errorMsg,
+                user: req.user, 
+                isLoggedIn:req.isAuthenticated(),
                 successMsg: successMsg
             });
         });

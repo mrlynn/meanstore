@@ -29,6 +29,7 @@ router.get('/', function(req, res, next) {
 		for (var i = (4-chunkSize); i < docs.length; i += chunkSize) {
 			productChunks.push(docs.slice(i,i+chunkSize))
 		}
+		req.session.shopUrl = "/";
     	// res.render('shop/index', {
     	// 	title: 'MEAN Store', 
     	// 	products: productChunks,
@@ -56,6 +57,9 @@ router.post('/add-to-cart', function(req,res,next) {
 	var price = req.body.price || null;
 	var type = req.body.type || null;
 	var productId = req.body.productId || null;
+	var shopUrl = req.session.shopUrl || '/';
+	console.log("product id: " + productId);
+
 	if (type=='TICKET') {
 	   req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
 	}
@@ -64,7 +68,7 @@ router.post('/add-to-cart', function(req,res,next) {
 	    returnObject = {  errorMsg: errors, noErrorMsg: false, noMessage: true};
 	    req.flash('error','Invalid email address.  Please re-enter.');
 	    console.log(returnObject);
-	    return res.redirect('/');
+	    return res.redirect(shopUrl);
 	} 
 
 	// var errors = req.validationErrors();
@@ -76,7 +80,6 @@ router.post('/add-to-cart', function(req,res,next) {
 	var size = req.body.size || null;
 	// if we have a cart, pass it - otherwise, pass an empty object
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
-
 	Product.findById(productId, function(err, product) {
 		if (err) {
 			// replace with err handling
@@ -87,7 +90,7 @@ router.post('/add-to-cart', function(req,res,next) {
 		cart.add(product, product.id, price, size, ticket_name, ticket_email, type );
 		req.session.cart = cart; // store cart in session
 		req.flash('success','Item successfully added to cart.');
-		res.redirect('/');
+		res.redirect(shopUrl);
 	});
 });
 
@@ -105,8 +108,9 @@ router.get('/product/:id/', function(req,res,next) {
 });
 
 router.get('/add-to-cart/:id/', function(req,res,next) {
+	var shopUrl = req.session.shopUrl || "/";
 	var productId = req.params.id;
-	console.log(req.params);
+	console.log(req.url);
 	// if we have a cart, pass it - otherwise, pass an empty object
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -117,8 +121,7 @@ router.get('/add-to-cart/:id/', function(req,res,next) {
 		}
 		cart.add(product, product.id, product.price);
 		req.session.cart = cart; // store cart in session
-		console.log(req.session.cart);
-		res.redirect('/');
+		res.redirect(shopUrl);
 	});
 });
 

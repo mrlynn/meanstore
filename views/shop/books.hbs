@@ -35,9 +35,9 @@
                                     <td><h4>{{this.category}}</h4></td>
                                     <td class="text-right"><h4>${{this.price}}</h4></td>
                                     <td class="center">
-                                        {{#if ../../isLoggedIn}}
+                                        {{#if ../isLoggedIn}}
                                         <p class="text-center">
-                                            <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
+                                            <a href="/add-to-cart/{{this._id}}" class="btn btn-primary add-to-cart" data-id="{{this._id}}" role="button">Add to cart</a>
                                         </p>
                                         {{else}}
                                         <p class="text-center">

@@ -8,7 +8,7 @@ var schema = new Schema({
 	},
 	imagePath: {
 		type: String, 
-		required: true
+		required: false
 	},
 	name: {
 		type: String,
@@ -20,7 +20,7 @@ var schema = new Schema({
 	},
 	description: {
 		type: String,
-		required: true
+		required: false
 	},
 	price: {
 		type: Number,
@@ -28,7 +28,7 @@ var schema = new Schema({
 	},
 	productType: {
 		type: String,
-		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE'],
+		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE','BOOK','PAMPHLET','AUDIO','DIGITAL','LITERATURE'],
 		required: true
 	},
 	options: [{
@@ -53,6 +53,9 @@ var schema = new Schema({
 		type: Number
 	},
 	sku: {
+		type: String
+	},
+	category: {
 		type: String
 	},
 	categories: [{
