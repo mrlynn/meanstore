@@ -1,9 +1,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div id="carousel">
-            {{> carousel}}
-            </div>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
                     <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
@@ -30,22 +27,17 @@
                             <tbody>
                                 {{# each products }}
                                 <tr class="odd gradeX">
-                                    <form action="add-to-cart" method="POST">
+                                    <form action="/edit" method="POST">
                                     <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                     <td><h3>{{this.name}}</h3>{{this.title}}</td>
                                     <td><h4>{{this.category}}</h4></td>
                                     <td class="text-right"><h4>${{this.price}}</h4></td>
                                     <td class="center">
-                                        {{#if ../isLoggedIn}}
                                         <p class="text-center">
-                                            <a href="/add-to-cart/{{this._id}}" class="btn btn-primary add-to-cart" data-id="{{this._id}}" role="button">Add to cart</a>
+                                        <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary" role="button">Edit</a>
                                         </p>
-                                        {{else}}
-                                        <p class="text-center">
-                                            <a href="/user/signin" class="btn btn-primary add-to-cart" role="button">Sign in to Buy</a>
-                                        </p>
-                                        {{/if}}
                                     </td>
+                                    </form>
                                 </tr>
                                 {{/each}}
                             </tbody>

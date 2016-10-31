@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
+var searchplugin = require('mongoose-search-plugin');
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');

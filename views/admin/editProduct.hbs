@@ -1,0 +1,74 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+			<div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+				{{successMsg}}
+			</div>
+			<div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+				{{errorMsg}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 col-sm-8">
+			<div class="thumbnail">
+				<div class="vertical-center thumbnail-image-container">
+					<form action='edit-product' method='post'>
+						<input type="hidden" name="id" value="{{product._id}}">
+						{{#if product.imagePath }}
+						<img class="img-responsive" src="../../{{ product.imagePath }}" alt="...">
+						{{/if}}
+					</div>
+				</div>
+				<div class="form-group">
+					
+					<label for="title">Image Path</label>
+					<input type='text' value='{{product.imagePath}}' class="input-sm">
+				</div>
+				<div class="form-group">
+					<label for="name">Name</label>
+					<input class="form-control input-sm" name="name" value="{{product.name}}">
+				</div>
+				<div class="form-group">
+					<label for="title">Title</label>
+					<input class="form-control input-sm" name="title" value="{{product.title}}">
+				</div>
+				<div class="form-group">
+					<label for="title">Description</label>
+					<textarea class="form-control" name="description" rows=10 cols=30>{{product.title}}</textarea>
+				</div>
+				<div class="form-group">
+					<label for="type">Type</label>
+					<select class="form-control input-sm" name="type">
+						<option name="APPAREL">Apparel</option>
+						<option name="TICKET">Event Ticket</option>
+						<option name="SIMPLE">Simple Product</option>
+						<option name="VARPRICE">Variable Price</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<table class='table'>
+					<thead>
+					<th>Name</th><th>Value</th>
+					</thead>
+					<tbody>
+				    {{#each product.attributes}}
+					<tr><td><input type=text name='name' value='{{this.name}}'></td>
+					<td><input type=text name='value' value='{{this.value}}'></td>
+					</tr>
+					{{/each}}
+					</tbody>
+					</table>
+				</div>
+				<div class="form-group">
+					<label for="price">Price</label>
+					<input type='text' class="form-control text-right" id='price' name='price' value='{{ product.price }}'>
+				</div>
+				<p class="text-center">
+					<input type='submit' value='Update' class="btn btn-primary" role="button">
+				</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

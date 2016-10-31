@@ -55,17 +55,6 @@ var products = [
 	}),
 	new Product({
 		category: 'Round-up',
-		order: 99,
-		imagePath: 'images/heart.png',
-		name: 'AA Big Book',
-		title: 'The Big Book of Alcoholics Anonymous',
-		description: 'This is the Fourth Edition of the Big Book, the basic text for Alcoholics Anonymous.',
-		price: 0,
-		productType: 'VARPRICE',
-		isbn: '978-1-893007-17-8'
-	}),
-	new Product({
-		category: 'Round-up',
 		order: 2,
 		imagePath: 'images/tee-shirt.jpg',
 		name: 'teeshirt-small',

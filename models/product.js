@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
@@ -31,6 +32,16 @@ var schema = new Schema({
 		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE','BOOK','PAMPHLET','AUDIO','DIGITAL','LITERATURE'],
 		required: true
 	},
+	attributes: [{
+		name: {
+			type: String,
+			required: false
+		},
+		value: {
+			type: String,
+			required: false
+		}
+	}],
 	options: [{
 		name: {
 			type: String,

@@ -23,29 +23,55 @@ var books = [
         "title": "AA Big Book - Soft Cover",
         "price": 9.1,
         "category": "Books",
-        "productType": "LITERATURE"
+        "productType": "LITERATURE",
+        "attributes": [{
+			name: 'pages',
+			value: '433'
+		},{
+			name: 'weight',
+			value: '2lbs'
+		}]
     }),
     new Product({
         "name": "Big Book - Mini",
         "title": "Mini Big Book - first 164 pages",
         "price": 5,
         "category": "Books",
-        "productType": "LITERATURE"
-    }),
+        "productType": "LITERATURE",
+        "attributes": [{
+			name: 'pages',
+			value: '164'
+		},{
+			name: 'weight',
+			value: '2lbs'
+		}]    }),
     new Product({
         "name": "Big Book - Large Print",
         "title": "AA Big Book - Large Print",
         "price": 10.3,
         "category": "Books",
-        "productType": "LITERATURE"
-    }),
+        "productType": "LITERATURE",
+        "attributes": [{
+			name: 'pages',
+			value: '433'
+		},{
+			name: 'weight',
+			value: '2.5lbs'
+		}]    }),
     new Product({
         "name": "Big Book - Large (1st 164)",
         "title": "LG Print Big Book - first 164 pages",
         "price": 6,
         "category": "Books",
-        "productType": "LITERATURE"
-    }),
+        "productType": "LITERATURE",
+        "attributes": [{
+			name: 'pages',
+			value: '164'
+		},{
+			name: 'weight',
+			value: '1.3lbs'
+		}]    
+	}),
     new Product({
         "name": "Big Book - Braile",
         "title": "AA Big Book - Braille",

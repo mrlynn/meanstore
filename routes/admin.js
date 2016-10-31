@@ -14,6 +14,8 @@ router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
     var tot = totalSales(function(err,next) {
     	if (err) {
     		console.log(err.message);
@@ -38,6 +40,10 @@ router.get('/', function(req, res, next) {
             res.render('admin/index', {
                 layout: 'admin.hbs',
                 products: products,
+                errorMsg: errorMsg,
+                successMsg: successMsg,
+                noErrorMsg: !errorMsg,
+                noMessage: !successMsg,
                 totalSales: tot,
                 orders: docs,
                 noErrors: 1
@@ -45,6 +51,70 @@ router.get('/', function(req, res, next) {
         });
     });
 });
+
+
+
+/* GET home page. */
+router.get('/products', function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0]
+    var conditions = {
+    }
+    Product.find(conditions, function(err, books) {
+        if (err) {
+            req.flash('error','Error while retrieving products.');
+            return res.redirect('/books');
+        }
+        console.log("orders: " + books);
+        Product.find(function(err, books) {
+            // productChunks = [];
+            // chunkSize = 5;
+            // for (var i = (5 - chunkSize); i < books.length; i += chunkSize) {
+            //     productChunks.push(books.slice(i, i + chunkSize))
+            // }
+            // res.render('shop/index', {
+            // 	title: 'MEAN Store', 
+            // 	products: productChunks,
+            // 	user: user
+            //   	});
+            req.session.shopUrl = "/books";
+            res.render('admin/products', {
+                layout: 'books.hbs',
+           	 	csrfToken: req.csrfToken(),
+                products: books,
+                noMessage: !successMsg,
+                noErrorMsg: !errorMsg,
+                errorMsg: errorMsg,
+                user: req.user, 
+                isLoggedIn:req.isAuthenticated(),
+                successMsg: successMsg
+            });
+        });
+    });
+});
+
+router.get('/edit-product/:id', function(req, res, next) {
+	productId = req.params.id;
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
+	Product.findById(req.params.id, function(err, product) {
+    	if (err) {
+    		req.flash('error','Error: ' + err.message);
+    		return res.redirect('/admin');
+    	}
+    	console.log("product: " + product);
+    	res.render('admin/editProduct',{
+    		product: product,
+    		layout: 'fullpage.hbs',
+    		product: product,
+    		errorMsg: errorMsg,
+    		successMsg: successMsg,
+    		noErrorMsg: !errorMsg,
+    		noMessage: !successMsg
+
+    	})
+    });
+})
 
 router.get('/orders', function(req, res, next) {
 	res.render('admin/orders',{layout: "adminPage"});

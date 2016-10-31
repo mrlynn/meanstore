@@ -275,9 +275,11 @@ router.post('/create', function (req, res, next) {
 	}
 	if (method === 'paypal') {
 		create_payment.payer.payment_method = 'paypal';
+		return_url = "http://" + req.headers.host + "/execute";
+		cancel_url = "http://" + req.headers.host + "/cancel";
 		create_payment.redirect_urls = {
-			"return_url": "http://localhost:3000/execute",
-			"cancel_url": "http://localhost:3000/cancel"
+			"return_url": return_url,
+			"cancel_url": cancel_url
 		};
 	} else if (method === 'credit_card') {
 		var funding_instruments = [
@@ -451,6 +453,43 @@ router.get('/cancel', function (req, res) {
 	});
 });
 
+router.post('/search', function(req, res, next) {
+	var q = req.body.q;
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	// Product.find({$text: { $search: q}}, function(err,docs) {
+
+
+	Product.find(
+        { $text : { $search : q } }, 
+        { score : { $meta: "textScore" } }
+    )
+    .sort({ score : { $meta : 'textScore' } })
+    .exec(function(err, results) {
+		// count of all matching objects 
+		if (err) {
+			req.flash('error',"An error has occurred.");
+			return res.redirect('/');
+		}
+		if (!results) {			
+			req.flash('error',"No products found.");
+			return res.redirect('/');
+		}
+		
+		req.session.shopUrl = "/";
+      	res.render('shop/books', {
+       	 	layout:'books.hbs',
+       	 	products: results,
+       	 	user: req.user, 
+       	 	errorMsg: errorMsg,
+       	 	noErrorMsg:!errorMsg,
+       	 	successMsg: successMsg,
+       	 	noMessage:!successMsg,
+       	 	isLoggedIn:req.isAuthenticated()
+       	 });    });
+
+
+});
 
 router.init = function(c) {
 	config = c;

@@ -1,5 +1,15 @@
 <div class="container">
-	{{# each products }}
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+                    <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+                        {{successMsg}}
+                    </div>
+                    <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+                        {{errorMsg}}
+                    </div>
+                </div>
+            </div>
+   	{{# each products }}
 	<div class="row">
 		{{# each this}}
 		<div class="col-sm-6 col-md-8">
