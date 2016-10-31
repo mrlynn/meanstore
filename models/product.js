@@ -29,7 +29,7 @@ var schema = new Schema({
 	},
 	productType: {
 		type: String,
-		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE','BOOK','PAMPHLET','AUDIO','DIGITAL','LITERATURE'],
+		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE','BOOK','PAMPHLET','AUDIO','DIGITAL','LITERATURE','ELECTRONICS'],
 		required: true
 	},
 	attributes: [{
