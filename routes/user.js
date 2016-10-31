@@ -57,23 +57,19 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
 router.get('/forgot', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	errorMsg = 0;
-	successMsg = 0;
-   	 res.render('user/forgot', {
-   	 	layout:'fullpage.hbs',
-   	 	user: req.user, 
-   	 	errorMsg: errorMsg,
-   	 	noErrorMsg:!errorMsg,
-   	 	successMsg: successMsg,
-   	 	noMessage:!successMsg,
-   	 	isLoggedIn:req.isAuthenticated(),
-   	 	csrfToken: req.csrfToken()
-   	 });
+	res.render('user/forgot', {
+		layout:'fullpage.hbs',
+		user: req.user, 
+		errorMsg: errorMsg,
+		noErrorMsg:!errorMsg,
+		successMsg: successMsg,
+		noMessage:!successMsg,
+		isLoggedIn:req.isAuthenticated(),
+		csrfToken: req.csrfToken()
+	});
 });
 
 router.post('/forgot', function(req, res, next) {
-	var successMsg = req.flash('success')[0];
-	var errorMsg = req.flash('error')[0];
 	async.waterfall([
         function(done) {
             crypto.randomBytes(20, function(err, buf) {
@@ -88,21 +84,15 @@ router.post('/forgot', function(req, res, next) {
                 if (!user) {
                     req.flash('error', 'No account with that email address exists.');
                     console.log('no account with that email.');
-                    return res.render('user/forgot', {
-				   	 	layout:'fullpage.hbs',
-				   	 	user: req.user, 
-				   	 	errorMsg:"foo",
-				   	 	noErrorMsg:!errorMsg,
-				   	 	successMsg:successMsg,
-				   	 	noMessage:!successMsg,
-				   	 	isLoggedIn:req.isAuthenticated(),
-				   	 	csrfToken: req.csrfToken()
-				   	 });
+                    return res.redirect('/user/forgot');
                 }
                 user.resetPasswordToken = token;
                 user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
                 user.save(function(err) {
+                	if (err) {
+                		req.flash('error','An error occurred.');
+                	}
                     done(err, token, user);
                 });
             });
@@ -137,36 +127,17 @@ router.post('/forgot', function(req, res, next) {
             };
             transporter.sendMail(mailOptions, function(err) {
             	 if (!err) { 
-	                 successMsg = req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-				   	 res.render('user/forgot', {
-				   	 	layout:'fullpage.hbs',
-				   	 	user: req.user, 
-				   	 	errorMsg: errorMsg,
-				   	 	noErrorMsg:!errorMsg,
-				   	 	successMsg: successMsg,
-				   	 	noMessage:!successMsg,
-				   	 	isLoggedIn:req.isAuthenticated(),
-				   	 	csrfToken: req.csrfToken()
-				   	 });
+	                 req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+				   	 res.redirect('/user/forgot');
 			   	} else {
-			   		 errorMsg = 'test'; //req.flash('error', 'A problem has occurred while sending the email.');
-				   	 res.render('user/forgot', {
-				   	 	layout:'fullpage.hbs',
-				   	 	user: req.user, 
-				   	 	errorMsg: errorMsg,
-				   	 	noErrorMsg:!errorMsg,
-				   	 	successMsg: successMsg,
-				   	 	noMessage:!successMsg,
-				   	 	isLoggedIn:req.isAuthenticated(),
-				   	 	csrfToken: req.csrfToken()
-				   	 });
+			   		 req.flash('error', 'A problem has occurred while sending the email.');
+				   	 return res.redirect('/user/forgot');
 			   	}
             });
         }
     ], function(err) {
         if (err) {
-        	// errorMsg = req.flash('error','A problem has occurred ' + err);
-        	 errorMsg = 'teststs'
+        	req.flash('error','A problem has occurred ' + err);
         	return next(err);
         }
         res.redirect('/user/forgot');
