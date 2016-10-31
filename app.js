@@ -16,6 +16,7 @@ var routes = require('./routes/index');
 var fs = require('fs');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
+var bookRoutes = require('./routes/books');
 var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
 
@@ -95,6 +96,7 @@ app.use(function(req,res,next) {
   next();
 })
 
+app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/', routes);

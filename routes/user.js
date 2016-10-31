@@ -167,6 +167,13 @@ router.get('/reset/:token', function(req, res) {
 router.post('/reset/:token', function(req, res) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
+	pass = req.body.password;
+	conf = req.body.confirmation;
+	token = req.params.token;
+	if (pass != conf) {
+		req.flash('error', 'Email and confirmation do not match.');
+		res.redirect('/user/reset/'+token);
+	}
   async.waterfall([
     function(done) {
       User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
@@ -197,21 +204,15 @@ router.post('/reset/:token', function(req, res) {
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        successMsg = req.flash('success', 'Success! Your password has been changed.');
+        req.flash('success', 'Success! Your password has been changed.');
         done(err);
       });
     }
   ],function(err) {
   		if (err) {
-  			errorMsg = req.flash('error','Unknown Error during reset.')
-  			res.render('user/reset', {
-		        user: req.user,
-		    	errorMsg: errorMsg,
-		   	 	noErrorMsg:!errorMsg,
-		   	 	successMsg: successMsg,
-		   	 	csrfToken: req.csrfToken(),
-		   	 	noMessage:!successMsg,
-		    });
+  			req.flash('error','Unknown Error during reset.')
+  			res.redirect('user/reset');
+		   
 		}
     });
 });

@@ -4,6 +4,7 @@ mongoose.connect('localhost:27017/roundup')
 
 var products = [
 	new Product({
+		category: 'Round-up',
 		order: 0,
 		imagePath: 'images/ticket.jpg',
 		name: 'ticket',
@@ -13,6 +14,7 @@ var products = [
 		productType: 'TICKET'
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 1,
 		imagePath: 'images/banquet.jpg',
 		name: 'banquet',
@@ -22,6 +24,7 @@ var products = [
 		productType: 'TICKET'
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 1,
 		imagePath: 'images/test.png',
 		name: 'test',
@@ -31,6 +34,7 @@ var products = [
 		productType: 'TICKET'
 	}),	
 	new Product({
+		category: 'Round-up',
 		order: 99,
 		imagePath: 'images/ticket.jpg',
 		name: 'scholarship',
@@ -40,6 +44,7 @@ var products = [
 		productType: 'SIMPLE'
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 99,
 		imagePath: 'images/heart.png',
 		name: 'donation',
@@ -49,6 +54,7 @@ var products = [
 		productType: 'VARPRICE'
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 99,
 		imagePath: 'images/heart.png',
 		name: 'AA Big Book',
@@ -59,6 +65,7 @@ var products = [
 		isbn: '978-1-893007-17-8'
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 2,
 		imagePath: 'images/tee-shirt.jpg',
 		name: 'teeshirt-small',
@@ -90,6 +97,7 @@ var products = [
 		]
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 3,
 		imagePath: 'images/tee-shirt.jpg',
 		name: 'teeshirt-large',
@@ -113,6 +121,7 @@ var products = [
 		]
 	}),
 	new Product({
+		category: 'Round-up',
 		order: 4,
 		imagePath: 'images/hoodie.jpg',
 		name: 'hoodie-small',
@@ -151,6 +160,7 @@ var products = [
 		description: 'Hooded Sweatshirt with Round-up Logo. Sizes 2XL through 4XL. Choose specific size when you arrive.',
 		price: 25,
 		productType: 'APPAREL',
+		category: 'Round-up',
 		options: [
 			{
 				name: '2XL',
@@ -169,6 +179,7 @@ var products = [
 	new Product({
 		order: 5,
 		imagePath: 'images/hoodie.jpg',
+		category: 'Round-up',
 		name: 'hoodie-large',
 		title: 'Overfed Orangutan',
 		description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur hic deleniti commodi vero totam sapiente magnam, amet blanditiis ullam fuga nesciunt, ab accusamus eveniet consectetur. Enim aut quis neque labore.',
@@ -177,6 +188,7 @@ var products = [
 	}),
 	new Product({
 		order: 5,
+		category: 'Round-up',
 		imagePath: 'images/hoodie.jpg',
 		name: 'hoodie-large',
 		title: 'Bloated Buffalo',

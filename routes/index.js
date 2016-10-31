@@ -13,7 +13,6 @@ var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 
-
 "use strict";
 
 var paypal = require('paypal-rest-sdk');
@@ -24,7 +23,7 @@ var config = {};
 router.get('/', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	Product.find(function(err,docs) {
+	Product.find({productType: { $ne: 'LITERATURE'}},function(err,docs) {
 		productChunks = [];
 		chunkSize = 4;
 		for (var i = (4-chunkSize); i < docs.length; i += chunkSize) {
@@ -355,23 +354,6 @@ router.post('/create', function (req, res, next) {
 	});
 });
 
-
-// exports.execute = function (req, res) {
-// 	var paymentId = req.session.paymentId;
-// 	var payerId = req.param('PayerID');
-
-// 	var details = { "payer_id": payerId };
-// 	var payment = paypal.payment.execute(paymentId, details, function (error, payment) {
-// 		if (error) {
-// 			console.log(error);
-// 			res.render('error', { 'error': error });
-// 		} else {
-// 			res.render('execute', { 'payment': payment });
-// 		}
-// 	});
-// };
-
-
 router.get('/execute', function (req, res, next) {
 	var paymentId = req.query.paymentId;
 	var token = req.query.token;
@@ -429,7 +411,6 @@ router.get('/execute', function (req, res, next) {
 						});
 					});
 			    });
-			    console.log('id: ' + req.user._id)
 			    var cart = new Cart(req.session.cart);
 				products = cart.generateArray();
 				req.flash('success', "Successfully processed payment!");

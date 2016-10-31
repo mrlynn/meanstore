@@ -347,4 +347,10 @@ p{
     }
 }
 
+@media (max-width:800px) {
+    #carousel {
+        display:none !important;
+    }
+}
+
 
