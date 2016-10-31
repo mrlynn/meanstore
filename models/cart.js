@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Ticket = require('../models/ticket');
 module.exports = function Cart(oldCart) {
 	// every call comes with the existing / old cart
 	this.items = oldCart.items || {};
@@ -62,4 +63,31 @@ module.exports = function Cart(oldCart) {
 		}
 		return arr;
 	};
+	this.ticketSale = function(products,user) {
+		if (!products) {
+			console.log('no products');
+			return
+		}
+
+		console.log('in ticketSale');
+		var item_list = [];
+		for (var i = 0, len = products.length; i < len; i++) {			
+			console.log(products[i]);
+			if (products[i].type == 'TICKET') {
+				console.log("Product " + i + ' '+ products[i]);
+				ticket = new Ticket({
+					user: user,
+					ticket_email: products[i].ticket_email,
+					ticket_name: products[i].ticket_name,
+					ticket_type: products[i].type
+				})
+				ticket.save(function(err,ticket) {
+					if (err) {
+						console.log('problem saving ticket');
+					}
+					return ticket;
+				});
+			}
+		}
+	}
 };

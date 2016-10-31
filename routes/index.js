@@ -5,6 +5,7 @@ var Product = require('../models/product');
 var Order = require('../models/order');
 var User = require('../models/user');
 var Payment = require('../models/payment');
+var Ticket = require('../models/ticket');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var validator = require('express-validator');
@@ -375,7 +376,7 @@ router.get('/execute', function (req, res, next) {
 	var paymentId = req.query.paymentId;
 	var token = req.query.token;
 	var PayerID = req.query.PayerID
-	console.log(req.user);
+
 	var details = { "payer_id": PayerID };
 	var payment = paypal.payment.execute(paymentId, details, function (error, payment) {
 		if (error) {
@@ -398,7 +399,6 @@ router.get('/execute', function (req, res, next) {
 							req.flash('error','Unable to save order.');
 							return res.redirect('/');
 						}
-						console.log('Order record updated');
 						User.findOneAndUpdate(
 							{
 								_id:req.user._id
@@ -424,13 +424,17 @@ router.get('/execute', function (req, res, next) {
 				            };
 				            transporter.sendMail(mailOptions, function(err) {
 				            });
+				            
 							console.log('User recorded updated');
 						});
 					});
 			    });
+			    console.log('id: ' + req.user._id)
+			    var cart = new Cart(req.session.cart);
+				products = cart.generateArray();
 				req.flash('success', "Successfully processed payment!");
 				var transporter = nodemailer.createTransport(smtpConfig.connectString);
-	            
+	            tickets = cart.ticketSale(products,req.user._id);
 				req.cart = null;
 				var cart = new Cart({});
 				req.session.cart = cart;
@@ -462,6 +466,7 @@ router.get('/cancel', function (req, res) {
 		return res.render('/');
 	});
 });
+
 
 router.init = function(c) {
 	config = c;
