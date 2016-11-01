@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Cart = require('../models/cart');
+var Category = require('../models/category');
 var Product = require('../models/product');
 var Order = require('../models/order');
 var passport = require('passport');
@@ -8,8 +9,13 @@ var mongoose = require('mongoose');
 var csrf = require('csurf');
 var User = require('../models/user');
 var Payment = require('../models/payment');
+var fileUpload = require('express-fileupload');
+var fs = require('fs');
+var csv = require('ya-csv');
+var uuid = require('uuid');
 
 var csrfProtection = csrf();
+
 router.use(csrfProtection);
 
 /* GET home page. */
@@ -24,6 +30,7 @@ router.get('/', function(req, res, next) {
      	console.log('back with total ', tot);
 
     });
+
     Order.find({}, function(err, docs) {
         console.log("orders: " + docs);
         Product.find(function(err, products) {
@@ -52,7 +59,57 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* Render file upload for data input */
+router.get('/import', function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0]
+    res.render('admin/import', {
+	    layout: 'admin-page.hbs',
+		csrfToken: req.csrfToken(),
+	    noMessage: !successMsg,
+	    noErrorMsg: !errorMsg,
+	    errorMsg: errorMsg,
+	    user: req.user, 
+	    isLoggedIn:req.isAuthenticated(),
+	    successMsg: successMsg
+	});
+});
 
+/* Recieve posted CSV */
+router.post('/import', function(req, res, next) {
+    var sampleFile;
+    console.log('File name is ' + req.files.csvFile.name);
+    console.log('File size is ' + req.files.csvFile.size);
+    console.log('File size is ' + req.files.csvFile.path);
+ 	var firstHeaders = req.body.header;
+    if (!req.files) {
+    	if (!req.body.csvPaste) {
+        	res.send('No files were uploaded and no data pasted.');
+        	return;
+    	}
+    }
+    csvFile = req.files.csvFile;
+    tmpFile = uuid.v4() + '.csv'
+    csvFile.mv('/var/tmp/' + tmpFile, function(err) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+        	// req.flash('success','File successfully uploaded');
+            // res.send('File uploaded!');
+            var reader = csv.createCsvFileReader('/var/tmp/' + tmpFile, {
+			    'separator': ',',
+			    'quote': '"',
+			    'escape': '"',       
+			    'comment': '',
+			    'columnsFromHeader': firstHeaders
+			});
+			reader.addListener('data', function(data) {
+			    writer.writeRecord([ data[0] ]);
+			});
+			console.log(data);
+        }
+    });
+});
 
 /* GET home page. */
 router.get('/products', function(req, res, next) {

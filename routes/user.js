@@ -31,7 +31,7 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
     // console.log(payments);
     // res.render('user/profile', {layout:'fullpage.hbs',user: req.user, payments: payments,hasPayments:0});
 
-    Order.find('{user: req.user, status: "approved"}', function(err, orders) {
+    Order.find({$and: [{user: req.user}, {status: "approved"}]}, function(err, orders) {
         if (err) {
             return res.write('Error');
         }

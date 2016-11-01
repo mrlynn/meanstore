@@ -1,8 +1,10 @@
-            <div class="col-md-3">
-                <p class="lead">Sections</p>
-                <div class="list-group">
-                    <a href="/" class="list-group-item">ROUND-UP</a>
-                    <a href="/books" class="list-group-item">LITERATURE</a>
-                    <a href="/donations" class="list-group-item">DONATIONS</a>
-                </div>
-            </div>
+{{#if categories}}
+<div class="col-md-2">
+	<p class="lead">Categories</p>
+	<div class="list-group">
+		{{#each categories}}
+		<a href="/category/{{this.slug}}" class="list-group-item">{{this.name}}</a>
+		{{/each}}
+	</div>
+</div>
+{{/if}}

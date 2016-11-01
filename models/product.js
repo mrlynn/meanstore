@@ -24,8 +24,8 @@ var schema = new Schema({
 		required: false
 	},
 	price: {
-		type: Number,
-		required: true
+        type: Number,
+        required: true
 	},
 	productType: {
 		type: String,
@@ -70,9 +70,6 @@ var schema = new Schema({
 		type: String
 	},
 	categories: [{
-		id: {
-			type: Schema.Types.ObjectId, ref: 'Category'
-		},
 		name: {
 			type: String
 		}
@@ -85,13 +82,23 @@ var schema = new Schema({
 	}
 });
 
-schema.virtual('isVariable')
-	.get(function() {
-		if (this.productType=='VARPRICE') {
-			return true;
-		}
-	return false;
+// Getter
+schema.path('price').get(function(num) {
+  return (num / 100).toFixed(2);
 });
+
+// Setter
+// schema.path('price').set(function(num) {
+//   return num * 100;
+// });
+
+// schema.virtual('isVariable')
+// 	.get(function() {
+// 		if (this.productType=='VARPRICE') {
+// 			return true;
+// 		}
+// 	return false;
+// });
 
 schema.virtual('isTicket')
 	.get(function() {

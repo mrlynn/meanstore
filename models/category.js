@@ -6,6 +6,10 @@ var schema = new Schema({
 		type: String,
 		required: true
 	},
+	slug: {
+		type: String,
+		required: false,
+	},
 	description: {
 		type: String
 	},

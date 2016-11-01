@@ -11,9 +11,9 @@
 		<form action="/user/update-profile" method="POST">
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-md-4 control-label">First Name</label>
-					<label class="col-md-4 control-label">Last Name</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-6 control-label">First Name</label>
+					<label class="col-md-6 control-label">Last Name</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 							<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
@@ -24,8 +24,8 @@
 				</div>
 				
 				<div class="form-group">
-					<label class="col-md-8 control-label">E-Mail</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-12 control-label">E-Mail</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
 							<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
@@ -35,8 +35,8 @@
 				<!-- Text input-->
 				
 				<div class="form-group">
-					<label class="col-md-8 control-label">Phone #</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-12 control-label">Phone #</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
 							<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
@@ -46,8 +46,8 @@
 				<!-- Text input-->
 				
 				<div class="form-group">
-					<label class="col-md-8 control-label">Address</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-12 control-label">Address</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 							<input name="address1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
@@ -57,8 +57,8 @@
 				<!-- Text input-->
 				
 				<div class="form-group">
-					<label class="col-md-8 control-label">City</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-12 control-label">City</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 							<input name="city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
@@ -68,9 +68,9 @@
 				<div class="clearfix"></div>
 				<!-- Text input-->
 				<div class="form-group">
-					<label class="col-md-4 control-label">State</label>
-					<label class="col-md-4 control-label">Zip</label>
-					<div class="col-md-8 inputGroupContainer">
+					<label class="col-md-6 control-label">State</label>
+					<label class="col-md-6 control-label">Zip</label>
+					<div class="col-md-12 inputGroupContainer">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
 							<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
@@ -81,7 +81,7 @@
 				</div>
 			</div>
 			<input type="hidden" name="_csrf" value="{{ csrfToken }}">
-			<button class="btn btn-default" type="submit">Update</button>
+			<button class="btn btn-default form-control" type="submit">Update</button>
 		</form>
 	</div>
 	<div class="row">
@@ -91,14 +91,22 @@
 			{{#each orders}}
 			<div class="panel panel-default">
 				<div class="panel-body"><h4>Order Status: {{this.status}}</h4>
-					<ul class="list-group">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Item</th><th>Qty</th><th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
 						{{#each this.items}}
-						<li class="list-group-item">
-							<span class="badge">{{this.price}}</span>
-							{{this.item.name}} | {{ this.qty }}
-						</li>
+							<tr>
+								<td>{{this.item.name}} - {{this.item.title}}</td>
+								<td>{{this.qty}}</td>
+								<td>${{this.price}}</td>
+							</tr>
 						{{/each}}
-					</ul>
+						</tbody>
+					</table>
 				</div>
 				<div class="panel-footer"><p class="text-right"><h2 class="text-right">${{this.cart.totalPrice}}</h2></p></div>
 			</div>

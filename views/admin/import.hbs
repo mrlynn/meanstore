@@ -1,0 +1,36 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 col-md-12">
+			<div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+				{{successMsg}}
+			</div>
+			<div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+				{{errorMsg}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-12">
+				<form ref='uploadForm' 
+				            id='uploadForm' 
+				            action='/admin/import?_csrf={{csrfToken}}' 
+				            method='post' 
+				            encType="multipart/form-data">
+				<div class="form-group">
+					<input type="hidden" name="_csrf" value="{{ csrfToken }}">
+					<label for="csvFile">Choose File</label>
+					<input type="file" class="form-control" name="csvFile"/><br>
+					<label for="header">First Row Headers?</label>
+					<input type="checkbox" class="" name="header" checked>
+				</div>
+				<div class="form-group">
+					<label for="csvPaste">Paste Data</label>
+					<textarea name="csvPaste" class="form-control" cols=30 rows=10/></textarea>
+				</div>
+				<p class="text-center">
+					<input type='submit' value='Import' class="form-control btn btn-primary" role="button">
+				</p>
+			</form>
+		</div>
+	</div>
+</div>

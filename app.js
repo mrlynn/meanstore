@@ -19,7 +19,7 @@ var adminRoutes = require('./routes/admin');
 var bookRoutes = require('./routes/books');
 var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
-
+var fileUpload = require('express-fileupload');
 
 var fs = require('fs');
 
@@ -95,10 +95,12 @@ app.use(function(req,res,next) {
   res.locals.session = req.session; // make sure that session is available in all templates, etc.
   next();
 })
+app.use(fileUpload());
 
 app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
+app.use('/category', routes);
 app.use('/', routes);
 
 // catch 404 and forward to error handler

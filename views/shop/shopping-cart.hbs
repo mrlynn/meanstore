@@ -11,7 +11,7 @@
   <li>Shopping Cart</li>
 </ol>
 <div class="row">
-	<div class="col-sm-8 col-md-8 <col-md-offset-2>	</col-md-offset-2> col-sm-offset-2">
+	<div class="col-sm-12 col-md-12">
 		<div class="panel-heading"><h3>Items in Cart</h3></div>
 		<div class="panel-body">
 			<div class="table-responsive">
@@ -77,7 +77,9 @@
 						</tr>
 					</tbody>
 				</table>
-				<input type='submit' value='Checkout' class='btn btn-primary'>
+				<div class="text-right">
+				<input type='submit' value='Provide Contact Details and Check Out >' class='btn btn-primary text-right'>
+				</div>
 				<input type="hidden" name="amount" value="{{totalPrice}}">
 				<input type="hidden" name="method" value="paypal">
 			</form>

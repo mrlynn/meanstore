@@ -174,8 +174,14 @@ html{
     padding-bottom: 6px;
 }
 
+.category-menu {
+    margin-top: -7px;
+    width: 35px;
+}
+
 .list-group-input-pad select{
     margin-top: -7px;
+    width: 15px;
 }
 
 .top-pad-10{

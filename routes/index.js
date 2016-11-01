@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Cart = require('../models/cart');
+var Category = require('../models/category');
 var Product = require('../models/product');
 var Order = require('../models/order');
 var User = require('../models/user');
@@ -12,6 +13,7 @@ var validator = require('express-validator');
 var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
+var fs = require('fs');
 
 "use strict";
 
@@ -19,34 +21,92 @@ var paypal = require('paypal-rest-sdk');
 require('../config/pp-config.js');
 var config = {};
 
+/* PayPal Info Page */
+router.get('/whypaypal', function(req, res, next) {
+	res.render('shop/whypaypal');
+});
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	Product.find({productType: { $ne: 'LITERATURE'}},function(err,docs) {
-		productChunks = [];
-		chunkSize = 4;
-		for (var i = (4-chunkSize); i < docs.length; i += chunkSize) {
-			productChunks.push(docs.slice(i,i+chunkSize))
-		}
-		req.session.shopUrl = "/";
-    	// res.render('shop/index', {
-    	// 	title: 'MEAN Store', 
-    	// 	products: productChunks,
-    	// 	user: user
-     //   	});
-       	// res.render('shop/index', {products: productChunks,user: req.user, errorMsg: errorMsg,noErrorMsg:!errorMsg,successMsg: successMsg,noMessage:!successMsg});
-       	 res.render('shop/shop', {
-       	 	layout:'layout.hbs',
-       	 	products: productChunks,
-       	 	user: req.user, 
-       	 	errorMsg: errorMsg,
-       	 	noErrorMsg:!errorMsg,
-       	 	successMsg: successMsg,
-       	 	noMessage:!successMsg,
-       	 	isLoggedIn:req.isAuthenticated()
-       	 });
+	Category.find({},function(err,categories) {
+		Product.find({},function(err,docs) {
+			productChunks = [];
+			chunkSize = 4;
+			for (var i = (4-chunkSize); i < docs.length; i += chunkSize) {
+				productChunks.push(docs.slice(i,i+chunkSize))
+			}
+			req.session.shopUrl = "/";
+			res.render('shop/shop', {
+				layout:'layout.hbs',
+				products: productChunks,
+				user: req.user,
+				categories: categories,
+				errorMsg: errorMsg,
+				noErrorMsg:!errorMsg,
+				successMsg: successMsg,
+				noMessage:!successMsg,
+				isLoggedIn:req.isAuthenticated()
+			});
+		});
 	});
+});
+
+/* GET home page. */
+router.get('/category/:slug', function(req, res, next) {
+	var category_slug = req.params.slug;
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	var layout = 'views/layouts/' + category_slug + '.hbs';
+	var shop = 'views/shop/' + category_slug + '.hbs';
+	if (fs.existsSync(layout)) {
+    	layout = category_slug + '.hbs';
+	} else {
+		layout = 'layout.hbs'
+	}	
+	if (fs.existsSync(shop)) {
+    	shop = category_slug;
+	} else {
+		shop = 'shop';
+	}
+	Category.find({}, function(err,categories) {
+
+		Category.findOne({slug: new RegExp(category_slug,'i')}, function(err,category) {
+			if (err) {
+				req.flash('error','Cannot find category');
+				return res.redirect('/');
+			}
+			if (!category) {
+				req.flash('error','Cannot find category');
+				return res.redirect('/');
+			}
+			Product.find({ category: new RegExp(category.slug,'i')},function(err,products) {
+
+				productChunks = [];
+				chunkSize = 4;
+				for (var i = (4-chunkSize); i < products.length; i += chunkSize) {
+					productChunks.push(products.slice(i,i+chunkSize))
+				};
+
+				res.render('shop/category', {
+					layout:layout,
+					categories: categories,
+					category: category,
+					products: products,
+					productChunks: productChunks,
+					user: req.user, 
+					errorMsg: errorMsg,
+					noErrorMsg:!errorMsg,
+					successMsg: successMsg,
+					noMessage:!successMsg,
+					isLoggedIn:req.isAuthenticated()
+				});
+			});
+		});
+	});
+
 });
 
 router.post('/add-to-cart', function(req,res,next) {
@@ -187,47 +247,6 @@ router.post('/checkout', function (req, res, next) {
 	res.render('shop/checkout', {total: cart.totalPrice, successMsg: successMsg, noMessage: !successMsg, errorMsg, noErrorMsg:!errorMsg});
 });
 
-
-router.get('/paypal-test', function(req, res, next) {
-	var messages = req.flash('error');
-	res.render('shop/paypal-test', {error: req.flash('error')[0]});
-});
-
-router.post('/paypal-test', function(req, res, next) {
-	payment = req.body.payment;
-	var messages = req.flash('error');
-	var error = '';
-	paypal.payment.create(payment, function (error, payment) {
-		if (error) {
-			console.log(error);
-			res.render('shop/paypal-test', { 'error': error });
-		} else {
-			req.session.paymentId = payment.id;
-			console.log('Create Payment' + payment);
-			newPayment = Payment(payment);
-			newPayment.save(function(err,newpayment) {
-				if (err) {
-					res.render('shop/shopping-cart',{error: 'cannot save payment'});
-				}
-				console.log('Payment ' + newpayment._id + ' successfully created.');
-			});
-			var redirectUrl;
-	 		if(payment.payer.payment_method === 'paypal') {
-	 			for(var i=0; i < payment.links.length; i++) {
-	 				var link = payment.links[i];
-	 				if (link.method === 'REDIRECT') {
-	 					redirectUrl = link.href;
-	 				}
-	 			}
-	 		}
-			res.redirect(redirectUrl);
-		}
-	});
-	console.log(payment);
-	// res.render('shop/paypal-test',{result: error, payment: payment});
-
-})
-
 router.post('/create', function (req, res, next) {
 	var method = req.body.method;
 	var amount = parseFloat(req.body.amount);
@@ -303,7 +322,6 @@ router.post('/create', function (req, res, next) {
 // We'll store the payment in a document and then redirect the user
 // When the user authorizes, paypal will callback our /execute route and we'll complete the transaction
 //
-	console.log(create_payment);
 	paypal.payment.create(create_payment, function (err, payment) {
 		if (err) {
 			errorMsg = req.flash('error',"Error sending payment to paypal.");
@@ -457,36 +475,38 @@ router.post('/search', function(req, res, next) {
 	var q = req.body.q;
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	// Product.find({$text: { $search: q}}, function(err,docs) {
 
-
-	Product.find(
-        { $text : { $search : q } }, 
-        { score : { $meta: "textScore" } }
-    )
-    .sort({ score : { $meta : 'textScore' } })
-    .exec(function(err, results) {
-		// count of all matching objects 
-		if (err) {
-			req.flash('error',"An error has occurred.");
-			return res.redirect('/');
-		}
-		if (!results) {			
-			req.flash('error',"No products found.");
-			return res.redirect('/');
-		}
-		
-		req.session.shopUrl = "/";
-      	res.render('shop/books', {
-       	 	layout:'books.hbs',
-       	 	products: results,
-       	 	user: req.user, 
-       	 	errorMsg: errorMsg,
-       	 	noErrorMsg:!errorMsg,
-       	 	successMsg: successMsg,
-       	 	noMessage:!successMsg,
-       	 	isLoggedIn:req.isAuthenticated()
-       	 });    });
+	Category.find({},function(err,categories) {
+		Product.find(
+	        { $text : { $search : q } }, 
+	        { score : { $meta: "textScore" } }
+	    )
+	    .sort({ score : { $meta : 'textScore' } })
+	    .exec(function(err, results) {
+			// count of all matching objects 
+			if (err) {
+				req.flash('error',"An error has occurred - " + err.message);
+				return res.redirect('/');
+			}
+			if (!results) {			
+				req.flash('error',"No products found.");
+				return res.redirect('/');
+			}
+			
+			req.session.shopUrl = "/";
+	      	res.render('shop/books', {
+	       	 	layout:'books.hbs',
+	       	 	products: results,
+	       	 	categories: categories,
+	       	 	user: req.user, 
+	       	 	errorMsg: errorMsg,
+	       	 	noErrorMsg:!errorMsg,
+	       	 	successMsg: successMsg,
+	       	 	noMessage:!successMsg,
+	       	 	isLoggedIn:req.isAuthenticated()
+	       	});    
+	    });
+	});
 
 
 });
