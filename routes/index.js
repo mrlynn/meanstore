@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	Category.find({},function(err,categories) {
-		Product.find({},function(err,docs) {
+		Product.find({category: 'Round-up'},function(err,docs) {
 			productChunks = [];
 			chunkSize = 4;
 			for (var i = (4-chunkSize); i < docs.length; i += chunkSize) {
@@ -82,7 +82,15 @@ router.get('/category/:slug', function(req, res, next) {
 				req.flash('error','Cannot find category');
 				return res.redirect('/');
 			}
-			Product.find({ category: new RegExp(category.slug,'i')},function(err,products) {
+			Product.find({ 
+				$or: [
+				{
+					'category': new RegExp(category.slug,'i')
+				}, 
+				{
+					'category': new RegExp(category.name,'i')
+				}
+				]},function(err,products) {
 
 				productChunks = [];
 				chunkSize = 4;
