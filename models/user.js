@@ -31,11 +31,11 @@ var userSchema = new Schema({
 	},
 	city: {
 		type: String,
-		required: false
+		required: true
 	},
 	state: {
 		type: String,
-		required: false
+		required: true
 	},
 	zipcode: {
 		type: String,
@@ -60,7 +60,7 @@ var userSchema = new Schema({
 		paymentId: {
 			type: String
 		},
-		state: {
+		status: {
 			type: String
 		},
         items: [{

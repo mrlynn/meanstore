@@ -1,32 +1,42 @@
 var User = require('../models/user');
 var Ticket = require('../models/ticket');
+var taxcalc = require('../local_modules/tax-calculator');
 module.exports = function Cart(oldCart) {
 	// every call comes with the existing / old cart
 	this.items = oldCart.items || {};
 	this.totalQty = oldCart.totalQty || 0;
 	this.totalPrice = Number(oldCart.totalPrice) || 0;
 	// add item to cart
-	this.add = function(item, id, price, size, name, email,type) {
+	this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
 		var storedItem = this.items[id];
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, type: type};
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, type: type, taxAmount: 0};
 		}
 		storedItem.qty++;
 		storedItem.price = price;
-		storedItem.type = type;
-		if (type=='TICKET') {
-			storedItem.ticket_name = name;
-			storedItem.ticket_email = email;
-		} else {
-			if (type=='APPAREL') {
-				storedItem.size = size;
+		taxcalc.calculateTax(id,userId,function(err,response) {
+			if (err) {
+				storedItem.taxAmount=0;
+			} else {
+				storedItem.taxAmount = response.taxAmount;
 			}
-		}
-		storedItem.itemTotal = Number(price * storedItem.qty);
-		this.totalQty++;
-		this.totalPrice += Number(price);
+			storedItem.type = type;
+			if (type=='TICKET') {
+				storedItem.ticket_name = name;
+				storedItem.ticket_email = email;
+			} else {
+				if (type=='APPAREL') {
+					storedItem.size = size;
+				}
+			}
+			storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
+			storedItem.itemTotal = ((parseFloat(price) * storedItem.qty) + parseFloat(storedItem.taxAmount));
+			this.totalQty++;
+			this.totalPrice += Number(storedItem.priceWithTax);
+		});
 	};
+
 	this.empty = function() {
 		this.items = {};
 		this.totalQty = 0;
@@ -37,23 +47,32 @@ module.exports = function Cart(oldCart) {
 		var storedItem = this.items[id];
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0};
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, taxAmount: 0};
 		}
 		storedItem.qty--;
 		storedItem.price = price;
-		storedItem.itemTotal = Number(price * storedItem.qty);
-		storedItem.size = size;
-		this.totalQty--;
-		this.totalPrice += Number(price);
-		if (this.items[id].qty <= 0) {
-			delete this.items[id];
-		}
-		if (this.totalQty <= 0) {
-			this.totalQty = 0;
-			this.items = {}
-			this.totalPrice = 0;
-			storedItem = {item: {}, qty: 0, price: 0, size: 0};
-		}
+		taxcalc.calculateTax(id,userId,function(err,response) {
+			if (err) {
+				storedItem.taxAmount=0;
+			} else {
+				storedItem.taxAmount = response.taxAmount;
+			}
+			storedItem.itemTotal = Number(price * storedItem.qty);
+			storedItem.size = size;
+			this.totalQty--;
+			this.totalPrice += Number(price);
+			if (this.items[id].qty <= 0) {
+				delete this.items[id];
+			}
+			storedItem.itemTotal = Number(price * storedItem.qty);
+			if (this.totalQty <= 0) {
+				this.totalQty = 0;
+				this.items = {}
+				this.totalPrice = 0;
+				storedItem = {item: {}, qty: 0, price: 0, size: 0};
+			}
+		});
+
 	};
 	// create an array of the items in the cart
 	this.generateArray = function() {
@@ -64,6 +83,12 @@ module.exports = function Cart(oldCart) {
 		return arr;
 	};
 	this.ticketSale = function(products,user) {
+
+		var dateObj = new Date();
+		var month = dateObj.getUTCMonth() + 1; //months from 1-12
+		var day = dateObj.getUTCDate();
+		var year = dateObj.getUTCFullYear();
+
 		if (!products) {
 			console.log('no products');
 			return

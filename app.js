@@ -20,10 +20,10 @@ var bookRoutes = require('./routes/books');
 var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
 var fileUpload = require('express-fileupload');
-var dataapi = require('./routes/api');
+var api = require('./routes/api');
+var taxCalc = require('./local_modules/tax-calculator');
 
 var fs = require('fs');
-
 
 require('./config/pp-config');
 
@@ -97,6 +97,7 @@ app.use(function(req,res,next) {
 })
 app.use(fileUpload());
 
+app.use('/api', api);
 app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
