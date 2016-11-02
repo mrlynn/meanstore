@@ -438,77 +438,77 @@ router.get('/execute', function(req, res, next) {
         } else {
             // Update payment record with new state - should be approved.
             Payment.find({
+                id: paymentId
+            }, function(err, paymentDocument) {
+                if (err) {
+                    res.render('error', {
+                        'error': error
+                    });
+                }
+                Payment.update({
                     id: paymentId
-                }, function(err, paymentDocument) {
+                }, {
+                    state: payment.state
+                }, function(err, numAffected) {
                     if (err) {
                         res.render('error', {
-                            'error': error
+                            'error': err
                         });
+                        exit();
                     }
-                    Payment.update({
-                        id: paymentId
+                    console.log("Payment Record Updated with Payment State " + payment.state);
+                    Order.findOneAndUpdate({
+                        paymentId: payment.id
                     }, {
-                        state: payment.state
-                    }, function(err, numAffected) {
+                        status: payment.state
+                    }, {
+                        new: true
+                    }, function(err, newOrder) {
                         if (err) {
-                            res.render('error', {
-                                'error': err
-                            });
-                            exit();
+                            req.flash('error', 'Unable to save order.');
+                            return res.redirect('/');
                         }
-                        console.log("Payment Record Updated with Payment State " + payment.state);
-                        Order.findOneAndUpdate({
-                            paymentId: payment.id
+                        User.findOneAndUpdate({
+                            _id: req.user._id
                         }, {
-                            status: payment.state
+                            $push: {
+                                "orders": newOrder
+                            }
                         }, {
-                            new: true
-                        }, function(err, newOrder) {
+                            new: true,
+                            safe: true,
+                            upsert: true
+                        }, function(err, newUser) {
                             if (err) {
-                                req.flash('error', 'Unable to save order.');
+                                req.flash('error', 'Unable to update user record');
                                 return res.redirect('/');
                             }
-                            User.findOneAndUpdate({
-                                _id: req.user._id
-                            }, {
-                                $push: {
-                                    "orders": newOrder
-                                }
-                            }, {
-                                new: true,
-                                safe: true,
-                                upsert: true
-                            }, function(err, newUser) {
-                                if (err) {
-                                    req.flash('error', 'Unable to update user record');
-                                    return res.redirect('/');
-                                }
-                                var mailOptions = {
-                                    to: newUser.email,
-                                    from: 'techadmin@sepennaa.org',
-                                    subject: 'SEPIA Roundup Purchase',
-                                    text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
-                                        'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
-                                };
-                                transporter.sendMail(mailOptions, function(err) {});
+                            var mailOptions = {
+                                to: newUser.email,
+                                from: 'techadmin@sepennaa.org',
+                                subject: 'SEPIA Roundup Purchase',
+                                text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
+                                    'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+                            };
+                            transporter.sendMail(mailOptions, function(err) {});
 
-                                console.log('User recorded updated');
-                            });
+                            console.log('User recorded updated');
                         });
                     });
-                    var cart = new Cart(req.session.cart);
-                    products = cart.generateArray();
-                    req.flash('success', "Successfully processed payment!");
-                    var transporter = nodemailer.createTransport(smtpConfig.connectString);
-                    tickets = cart.ticketSale(products, req.user._id);
-                    req.cart = null;
-                    var cart = new Cart({});
-                    req.session.cart = cart;
+                });
+                var cart = new Cart(req.session.cart);
+                products = cart.generateArray();
+                req.flash('success', "Successfully processed payment!");
+                var transporter = nodemailer.createTransport(smtpConfig.connectString);
+                tickets = cart.ticketSale(products, req.user._id);
+                req.cart = null;
+                var cart = new Cart({});
+                req.session.cart = cart;
 
-                    res.redirect('/');
-                })
-            }    // res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
-        }
+                res.redirect('/');
+            });
+        }; // res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
+     
     });
 });
 
