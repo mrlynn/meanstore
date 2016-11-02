@@ -30,7 +30,7 @@ var schema = new Schema({
 	productType: {
 		type: String,
 		enum: ['TICKET','APPAREL','SIMPLE','VARPRICE','BOOK','PAMPHLET','AUDIO','DIGITAL','LITERATURE','ELECTRONICS'],
-		required: true
+		required: false
 	},
 	attributes: [{
 		name: {
@@ -74,31 +74,95 @@ var schema = new Schema({
 			type: String
 		}
 	}],
+	shippable: {
+		type: Boolean
+	},
+	taxable: {
+		type: Boolean
+	},
 	author: {
 		type: String
 	},
 	shippingWeight: {
 		type: String
-	}
+	},
+	code: {
+		type: String
+	},
+	salesYTD: [{
+		year: {
+			Type: Number
+		},
+		salesAmount: {
+			Type: Number
+		},
+		salesCount: {
+			Type: Number
+		}
+	}],
+	salesYearMonth: [{
+		yearMonth: {
+			Type: String
+		},
+		salesAmount: {
+			Type: Number
+		},
+		salesCount: {
+			Type: Number
+		}
+	}]
+});
+// Shippable Getter
+schema.path('shippable').get(function(txt) {
+  if (txt) {
+  	return 'Yes';
+  } else {
+  	return 'No';
+  }
 });
 
+// Setter
+schema.path('shippable').set(function(txt) {
+  if (txt=='Yes') {
+  	return true;
+  } else {
+  	return false;
+  }
+});
+// Taxable Getter
+schema.path('taxable').get(function(txt) {
+  if (txt) {
+  	return 'Yes';
+  } else {
+  	return 'No';
+  }
+});
+
+// Setter
+schema.path('taxable').set(function(txt) {
+  if (txt=='Yes') {
+  	return true;
+  } else {
+  	return false;
+  }
+});
 // Getter
 schema.path('price').get(function(num) {
   return (num / 100).toFixed(2);
 });
 
 // Setter
-// schema.path('price').set(function(num) {
-//   return num * 100;
-// });
+schema.path('price').set(function(num) {
+  return num * 100;
+});
 
-// schema.virtual('isVariable')
-// 	.get(function() {
-// 		if (this.productType=='VARPRICE') {
-// 			return true;
-// 		}
-// 	return false;
-// });
+schema.virtual('isVariable')
+	.get(function() {
+		if (this.productType=='VARPRICE') {
+			return true;
+		}
+	return false;
+});
 
 schema.virtual('isTicket')
 	.get(function() {

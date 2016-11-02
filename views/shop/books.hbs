@@ -33,7 +33,7 @@
                         <tr class="odd gradeX">
                             <form action="add-to-cart" method="POST">
                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                <td><h3>{{this.name}}</h3>{{this.title}}</td>
+                                <td><h3>{{this.name}}</h3>{{this.title}} ({{this.code}})</td>
                                 <td><h4>{{this.category}}</h4></td>
                                 <td class="text-right"><h4>${{this.price}}</h4></td>
                                 <td class="center">

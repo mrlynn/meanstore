@@ -24,6 +24,7 @@
                         <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                             <thead>
                                 <tr>
+                                    <th><h3>Code</h3></th>
                                     <th><h3>Product</h3></th>
                                     <th><h3>Category</h3></th>
                                     <th><h3>Price</h3></th>
@@ -35,6 +36,7 @@
                                 <tr class="odd gradeX">
                                     <form action="add-to-cart" method="POST">
                                     <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
+                                    <td><h3>{{this.code}}</h3></td>
                                     <td><h3>{{this.name}}</h3>{{this.title}}</td>
                                     <td><h4>{{this.category}}</h4></td>
                                     <td class="text-right"><h4>${{this.price}}</h4></td>
