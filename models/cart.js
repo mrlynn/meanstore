@@ -1,12 +1,40 @@
 var User = require('../models/user');
 var Ticket = require('../models/ticket');
-var taxcalc = require('../local_modules/tax-calculator');
+
 module.exports = function Cart(oldCart) {
 	// every call comes with the existing / old cart
 	this.items = oldCart.items || {};
 	this.totalQty = oldCart.totalQty || 0;
+	this.totalTax = oldCart.totalTax || 0;
 	this.totalPrice = Number(oldCart.totalPrice) || 0;
+	this.totalPriceWithTax = Number(oldCart.totalPriceWithTax) || 0;
 	// add item to cart
+	this.oldadd = function(item, id, price, taxAmount, size, name, email, type, taxable, shipable, userId) {
+		var storedItem = this.items[id];
+		if (!storedItem) {
+			// create a new entry	
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, type: type, taxAmount: 0};
+		}
+		storedItem.qty++;
+		storedItem.price = parseFloat(price);
+		storedItem.taxAmount = parseFloat(taxAmount);
+		console.log('Tax Amount: ' + storedItem.taxAmount);
+		storedItem.type = type;
+		if (type=='TICKET') {
+			storedItem.ticket_name = name;
+			storedItem.ticket_email = email;
+		} else {
+			if (type=='APPAREL') {
+				storedItem.size = size;
+			}
+		}
+		storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
+		this.totalQty++;
+		this.totalTax += parseFloat(storedItem.taxAmount);
+		this.totalPrice += parseFloat(price);
+		this.totalPriceWithTax += Number(parseFloat(price) + parseFloat(storedItem.taxAmount));
+		console.log("TotalPRiceWithTax: " + this.totalPriceWithTax);
+	};
 	this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
 		var storedItem = this.items[id];
 		if (!storedItem) {
@@ -31,9 +59,11 @@ module.exports = function Cart(oldCart) {
 				}
 			}
 			storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
-			storedItem.itemTotal = ((parseFloat(price) * storedItem.qty) + parseFloat(storedItem.taxAmount));
+			storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
+			storedItem.totalWithTax = ((parseFloat(price) * storedItem.qty)) + parseFloat(storedItem.taxAmount);
+			this.totalTax += storedItem.taxAmount;
 			this.totalQty++;
-			this.totalPrice += Number(storedItem.priceWithTax);
+			this.totalPrice += Number(stored.itemTotal);
 		});
 	};
 
@@ -78,6 +108,7 @@ module.exports = function Cart(oldCart) {
 	this.generateArray = function() {
 		var arr = [];
 		for (var id in this.items) {
+			console.log(this.items[id]);
 			arr.push(this.items[id]);
 		}
 		return arr;

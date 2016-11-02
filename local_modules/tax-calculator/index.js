@@ -17,7 +17,6 @@ module.exports = {
 						});
 					}
 					if (!user) {
-						console.log("userId: " + userId);
 						callback({
 							"error": "not in our city"
 						})
@@ -31,9 +30,9 @@ module.exports = {
 						taxRate = 0;
 					}
 					var price = Number(product.price).toFixed(2);
-					console.log('Price: ' + price);
-					taxAmount = Math.round((price * taxRate) * 100) / 100;
+					taxAmount = Math.round((((price * taxRate) * 100) / 100)+0);
 					priceWithTax = (parseFloat(price) + parseFloat(taxAmount));
+
 					callback(null,{
 						productId: productId,
 						taxable: product.taxable,

@@ -13,6 +13,10 @@ var validator = require('express-validator');
 var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
+var taxcalc = require('../local_modules/tax-calculator');
+var taxConfig = require('../config/tax-config.js');
+
+
 var fs = require('fs');
 
 "use strict";
@@ -98,7 +102,6 @@ router.get('/category/:slug', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
                     productChunks.push(products.slice(i, i + chunkSize))
                 };
-
                 res.render('shop/category', {
                     layout: layout,
                     categories: categories,
@@ -127,7 +130,6 @@ router.post('/add-to-cart', function(req, res, next) {
     var type = req.body.type || null;
     var productId = req.body.productId || null;
     var shopUrl = req.session.shopUrl || '/';
-    console.log("product id: " + productId);
 
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
@@ -140,7 +142,6 @@ router.post('/add-to-cart', function(req, res, next) {
             noMessage: true
         };
         req.flash('error', 'Invalid email address.  Please re-enter.');
-        console.log(returnObject);
         return res.redirect(shopUrl);
     }
 
@@ -160,46 +161,57 @@ router.post('/add-to-cart', function(req, res, next) {
 
             return res.redirect('/');
         }
-        cart.add(product, product.id, price, size, ticket_name, ticket_email, type);
-        req.session.cart = cart; // store cart in session
-        req.flash('success', 'Item successfully added to cart.');
-        res.redirect(shopUrl);
+		taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
+			if (err) {
+				taxAmount=0;
+			} else {
+				taxAmount = response.taxAmount;
+				console.log('tax amount: ' + taxAmount);
+			}
+		    cart.oldadd(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
+	        console.log('---------');
+	        console.log(cart);
+	        console.log('---------');
+	        req.session.cart = cart; // store cart in session
+	        req.flash('success', 'Item successfully added to cart.');
+	        res.redirect(shopUrl);
+	    });
     });
 });
 
-router.get('/product/:id/', function(req, res, next) {
-    var productId = req.params.id;
-    // if we have a cart, pass it - otherwise, pass an empty object
-    Product.findById(productId, function(err, product) {
-        if (err) {
-            // replace with err handling
-            return res.redirect('/');
-        }
-        res.render('shop/product', {
-            layout: 'fullpage.hbs',
-            product: null,
-            errorMsg: "Product not found.",
-            noErrorMsg: 0
-        })
-
-    });
-});
 
 router.get('/add-to-cart/:id/', function(req, res, next) {
     var shopUrl = req.session.shopUrl || "/";
+    var ticket_name = req.body.ticket_name || "";
+    var ticket_email = req.body.ticket_email || "";
+    var size = req.session.size || "";
     var productId = req.params.id;
-    console.log(req.url);
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
 
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
-            return res.redirect('/');
+            req.flash('error',err.message);
+            res.redirect('/');
         }
-        cart.add(product, product.id, product.price);
-        req.session.cart = cart; // store cart in session
-        res.redirect(shopUrl);
+		taxcalc.calculateTax(productId,req.user._id,function(err,taxInfo) {
+			if (err) {
+				taxAmount=0;
+			} else {
+				taxAmount = taxInfo.taxAmount;
+				console.log('tax amount: ' + taxAmount);
+			}
+		    cart.oldadd(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
+	    	req.session.cart = cart; // store cart in session
+	        console.log('---------');
+	        console.log(cart);
+	        console.log('---------');        
+	        req.flash('success','Item Successfully added to cart.');
+	    	res.redirect('/');
+	    });
+
+	        	       
     });
 });
 
@@ -242,10 +254,17 @@ router.get('/shopping-cart', function(req, res, next) {
         });
     }
     var cart = new Cart(req.session.cart);
+    var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
+    var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
+    var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
+    console.log("LocalUser: " + JSON.stringify(req.user.state) + ' ' + JSON.stringify(taxConfig));
     res.render('shop/shopping-cart', {
         products: cart.generateArray(),
-        totalPrice: cart.totalPrice,
+        totalTax: totalTax,
+        totalPrice: totalPrice,
+        totalPriceWithTax: cart.totalPriceWithTax,
         user: req.user,
+        localUser: (req.user.state == taxConfig.ourStateCode),
         errorMsg: errorMsg,
         noErrorMsg: !errorMsg,
         successMsg: successMsg,
@@ -589,7 +608,25 @@ router.post('/search', function(req, res, next) {
             });
     });
 
+});
 
+
+router.get('/product/:id/', function(req, res, next) {
+    var productId = req.params.id;
+    // if we have a cart, pass it - otherwise, pass an empty object
+    Product.findById(productId, function(err, product) {
+        if (err) {
+            // replace with err handling
+            return res.redirect('/');
+        }
+        res.render('shop/product', {
+            layout: 'fullpage.hbs',
+            product: null,
+            errorMsg: "Product not found.",
+            noErrorMsg: 0
+        })
+
+    });
 });
 
 router.init = function(c) {

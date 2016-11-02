@@ -1,98 +1,123 @@
-
-{{#if products}}
-<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
+<div class="container">
+    <div class="row">
+<div class="col-md-12">
+		{{#if products}}
+		<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
 			{{errorMsg}}
-</div>
-<div id="charge-success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
+		</div>
+		<div id="charge-success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
 			{{successMsg}}
-</div>
-<ol class="breadcrumb">
-  <li><a href="/">Home</a></li>
-  <li>Shopping Cart</li>
-</ol>
-<div class="row">
-	<div class="col-sm-12 col-md-12">
-		<div class="panel-heading"><h3>Items in Cart</h3></div>
-		<div class="panel-body">
-			<div class="table-responsive">
-{{!-- 				<form action="/create" method="post">	
- --}}				<form action="/checkout" method="get">	
- 					<div class="panel-body">
-						<div class="clearfix"></div>
-						<!-- Text input-->
-												
-						<input type="hidden" name="cmd" value="_cart">
-						<input type="hidden" name="business" value="assistant@sepennaa.org">
-						<input type="hidden" name="currency_code" value="USD">
-						<input type="hidden" name="return" value="http://roundup.aasepia.org/complete">
-						<input type="hidden" name="cancel_return" value="http://aasepia.org/cancel">
-						<input type="hidden" name="cn" value="2017 SEPIA ROUNDUP">
-						<input type="hidden" name="no_shipping" value="1">
-						<input type="hidden" name="rm" value="2"> <!-- the buyer's browser is redirected to the return url using POST -->
-						<!-- Text input-->
-					</div>
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<td><strong>ITEM</strong></td>
-								<td><strong>QTY</STRONG></td>
-								<td><strong>PRICE</strong></td>
-								<td><strong>TOTAL</strong></td>
-								<td>&nbsp;</td>
-							</tr>
-						</thead>
-						<tbody>
-							<input type="hidden" name="upload" value="1">
-							{{# each products }}
-							<input type="hidden" name="item_name_{{inc @index }}" value="{{this.item.title}}">
-							<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
-							<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
-							<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
+		</div>
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li>Shopping Cart</li>
+		</ol>
+		<div class="row">
+			<div class="col-sm-12 col-md-12">
+				<div class="panel-heading"><h3>Items in Cart</h3></div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						{{!-- 				<form action="/create" method="post">
+							--}}				<form action="/checkout" method="get">
+								<div class="panel-body">
+									<div class="clearfix"></div>
+									<!-- Text input-->
+									
+									<input type="hidden" name="cmd" value="_cart">
+									<input type="hidden" name="business" value="assistant@sepennaa.org">
+									<input type="hidden" name="currency_code" value="USD">
+									<input type="hidden" name="return" value="http://roundup.aasepia.org/complete">
+									<input type="hidden" name="cancel_return" value="http://aasepia.org/cancel">
+									<input type="hidden" name="cn" value="2017 SEPIA ROUNDUP">
+									<input type="hidden" name="no_shipping" value="1">
+									<input type="hidden" name="rm" value="2"> <!-- the buyer's browser is redirected to the return url using POST -->
+									<!-- Text input-->
+								</div>
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<td><strong>ITEM</strong></td>
+											<td><strong>QTY</STRONG></td>
+											<td class='text-right'><strong>PRICE</strong></td>
+											<td class='text-right'><strong>TOTAL</strong></td>
+											<td>&nbsp;</td>
+										</tr>
+									</thead>
+									<tbody>
+										<input type="hidden" name="upload" value="1">
+										{{# each products }}
+										<input type="hidden" name="item_name_{{inc @index }}" value="{{this.item.title}}">
+										<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
+										<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
+										<input type="hidden" name="amount_{{inc @index }}" value="{{this.taxAmount}}">
+										<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
+										<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
+										<tr>
+											<td>{{this.item.title}}</td>
+											<td>{{this.qty}}</td>
+											<td class='text-right' text-align="right">${{this.price}}</td>
+											<td class='text-right' text-align="right">${{this.itemTotal}}</td>
+											<td>
+												<div class="btn-group pull-right">
+													<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
+													<ul class="dropdown-menu">
+														<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
+														<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
+														<li><a href="/empty-cart">Remove All</a></li>
+													</ul>
+												</div>
+											</td>
+										</tr>
+										{{/each}}
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>Subtotal: </td>
+										<td class='text-right' text-align="right">${{this.totalPrice}}</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>Tax: </td>
+										<td class='text-right' text-align="right">${{this.totalTax}}</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>Total: </td>
+										<td class='text-right' text-align="right">${{this.totalPriceWithTax}}</td>
+										<td>&nbsp;</td>
+									</tr>
 
-							<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
-							<tr>
-								<td>{{this.item.title}}</td>
-								<td>{{this.qty}}</td>
-								<td text-align="right">${{this.price}}</td>
-								<td text-align="right">${{this.itemTotal}}</td>
-								<td>
-									<div class="btn-group pull-right">
-										<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
-										<ul class="dropdown-menu">
-											<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
-											<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
-											<li><a href="/empty-cart">Remove All</a></li>
-										</ul>
-									</div>
-								</td>
-							</tr>
-							{{/each}}
-						</tr>
-						<tr>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>Total: </td>
-							<td text-align="right">${{totalPrice}}</td>
-							<td>&nbsp;</td>
-						</tr>
-					</tbody>
-				</table>
-				<div class="text-right">
-				<input type='submit' value='Provide Contact Details and Check Out >' class='btn btn-primary text-right'>
+								</tbody>
+							</table>
+							<div class="text-right">
+								<input type='submit' value='Provide Contact Details and Check Out >' class='btn btn-primary text-right'>
+							</div>
+							<input type="hidden" name="amount" value="{{totalPrice}}">
+							<input type="hidden" name="amount" value="{{totalPriceWithTax}}">
+							<input type="hidden" name="method" value="paypal">
+						</form>
+					</div>
+					</div> <!--panel body-->
+					<div class="row">
+						<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+						</div>
+					</div>
 				</div>
-				<input type="hidden" name="amount" value="{{totalPrice}}">
-				<input type="hidden" name="method" value="paypal">
-			</form>
+			</div>
+			{{else}}
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+					<h2>No items in Cart</h2>
+				</div>
+			</div>
+			{{/if}}
+			{{#if localUser }}
+			<h4>Pennsylvania and Philadelphia taxes apply for local residents.</h4>
+			{{/if}}
+			</div> <!--col-md-12-->
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-		</div>
-	</div>
-	{{else}}
-	<div class="row">
-		<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-			<h2>No items in Cart</h2>
-		</div>
-	</div>
-	{{/if}}
