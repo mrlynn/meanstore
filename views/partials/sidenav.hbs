@@ -1,10 +1,8 @@
 {{#if categories}}
-<div class="col-md-2">
 	<p class="lead">Categories</p>
 	<div class="list-group">
 		{{#each categories}}
 		<a href="/category/{{this.slug}}" class="list-group-item">{{this.name}}</a>
 		{{/each}}
 	</div>
-</div>
 {{/if}}

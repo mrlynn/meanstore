@@ -16,26 +16,14 @@ var smtpConfig = require('../config/smtp-config.js');
 var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
 var Config = require('../config/config.js');
-
 var title = Config.title;
 
-var fs = require('fs');
 
-"use strict";
-
-var paypal = require('paypal-rest-sdk');
-require('../config/pp-config.js');
-var config = {};
-
-/* PayPal Info Page */
-router.get('/whypaypal', function(req, res, next) {
-    res.render('shop/whypaypal');
-});
-
-/* GET home page. */
+/* GET search home page. */
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
+    console.log("asdf");
     Category.find({}, function(err, categories) {
         Product.find({
             category: 'Round-up'
@@ -45,9 +33,8 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            req.session.shopUrl = "/";
-            res.render('shop/shop', {
-                layout: 'layout.hbs',
+            res.render('shop/facet', {
+                layout: 'facet.hbs',
                 title: title,
                 keywords: Config.keywords,
                 products: productChunks,

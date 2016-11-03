@@ -179,9 +179,12 @@ html{
     width: 35px;
 }
 
+.list-group-item {
+    min-width: 150px;
+}
 .list-group-input-pad select{
     margin-top: -7px;
-    width: 15px;
+    min-width: 60px;
 }
 
 .top-pad-10{
@@ -237,7 +240,7 @@ html{
 
 .dropdown-menu>li>a{
     padding-top: 5px !important;
-    color:#18bc9c;
+    color:#f09411;
 }
 
 .pad-bottom{

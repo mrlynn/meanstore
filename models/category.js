@@ -4,7 +4,9 @@ var Schema = mongoose.Schema;
 var schema = new Schema({
 	name: {
 		type: String,
-		required: true
+		required: true,
+		unique: true,
+		dropDups: true
 	},
 	slug: {
 		type: String,

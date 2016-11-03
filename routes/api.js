@@ -89,11 +89,12 @@ router.get('/tax/:id/:user', function(req, res, next) {
 });
 
 router.get('/search', function(req, res, next) {
+	var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + dbname;
 
-	MongoClient.connect('mongodb://localhost:27017/animals', function (err, db) {
+	MongoClient.connect(connectionstring, function (err, db) {
 	  if (err) throw err
 
-	  db.collection('mammals').find().toArray(function (err, result) {
+	  db.collection('products').find().toArray(function (err, result) {
 	    if (err) throw err
 
 	    console.log(result)

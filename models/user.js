@@ -50,6 +50,9 @@ var userSchema = new Schema({
 		required: false,
 		enum: ['visitor','administrator']
 	},
+	acceptedTOS: {
+		type: Date
+	},
 	created: {
 		type: Date, default: Date.now()
 	},

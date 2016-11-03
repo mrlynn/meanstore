@@ -17,6 +17,7 @@ var fs = require('fs');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var bookRoutes = require('./routes/books');
+var facetRoutes = require('./routes/facet');
 var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
 var fileUpload = require('express-fileupload');
@@ -37,7 +38,7 @@ require('./config/pp-config');
 // }
 
 var app = express();
-var connectstring = Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
+var connectstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
 mongoose.connect(connectstring);
 mongoose.Promise = global.Promise;
 require('./config/passport');
@@ -93,11 +94,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Create global logged in variable login to indicate whether the user is logged in or not.
 app.use(function(req,res,next) {
   res.locals.login = req.isAuthenticated();
-  res.locals.session = req.session; // make sure that session is available in all templates, etc.
+  res.locals.session = req.session; 
+  res.locals.copyright = Config.copyright;
+  console.log("CopyRight: " + res.locals.copyright);// make sure that session is available in all templates, etc.
   next();
 })
+
 app.use(fileUpload());
 
+app.use('/facet', facetRoutes);
 app.use('/api', api);
 app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
