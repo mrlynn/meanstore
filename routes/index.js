@@ -15,9 +15,9 @@ var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
-// Make categories available to all pages.
+var Config = require('../config/config.js');
 
-
+var title = Config.title;
 
 var fs = require('fs');
 
@@ -48,6 +48,8 @@ router.get('/', function(req, res, next) {
             req.session.shopUrl = "/";
             res.render('shop/shop', {
                 layout: 'layout.hbs',
+                title: title,
+                keywords: Config.keywords,
                 products: productChunks,
                 user: req.user,
                 categories: categories,

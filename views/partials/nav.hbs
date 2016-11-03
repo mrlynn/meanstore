@@ -13,23 +13,22 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                {{#if categories }}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;Categories
                     </a>
                     <ul class="dropdown-menu">
-                        {{#if categories }}
                             <li><a href="/">All</a></li>
                             {{#each categories}}
                                 <li><a href="/category/{{this.slug}}">{{this.name}}</a></li>
                             {{/each}}
-                        {{ else }}
-                        <li><a href="/">All</a></li>
-                        <li><a href="/category/books">Books</a></li>
-                        {{/if}}
+
                     </ul>
                 </li>
+                {{/if}}
                 <li>
+
                     <a href="shopping-cart">
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
                         {{#if session.cart.totalQty }}

@@ -22,6 +22,7 @@ var breadcrumbs = require('express-breadcrumbs');
 var fileUpload = require('express-fileupload');
 var api = require('./routes/api');
 var taxCalc = require('./local_modules/tax-calculator');
+var Config = require('./config/config');
 
 var fs = require('fs');
 
@@ -36,8 +37,8 @@ require('./config/pp-config');
 // }
 
 var app = express();
-
-mongoose.connect('localhost:27017/roundup');
+var connectstring = Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
+mongoose.connect(connectstring);
 mongoose.Promise = global.Promise;
 require('./config/passport');
 

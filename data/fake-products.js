@@ -1,8 +1,11 @@
 var Product = require('../models/product');
 var Category = require('../models/category');
+var Config = require('../config/config');
 var mongoose = require('mongoose');
 var faker = require('faker');
-mongoose.connect('localhost:27017/roundup')
+
+mongoose.connect(Config.dbhost + ':' Config.dbport + '/' + Config.dbname);
+
 products = [];
 categories = ['Business','Sports','Cats','City','Abstract','Animals','Food','Nightlife','Technics'];
 var done = 0;
@@ -41,6 +44,16 @@ for (var i=0; i < 100; i++) {
 		}],
 		imagePath: imageFunction
 	});
+	category = new Category({
+		name: category,
+		description: null,
+		slug: category.toLowerCase()
+	})
+	category.save(function(err) {
+		if (err) {
+			console.log('error',err.message);
+		}
+	})
 	product.save(function(err) {
 		if (err) {
 			console.log('error: ',err.message);

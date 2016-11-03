@@ -1,3 +1,4 @@
+var Config = require('../../config/config');
 var taxConfig = require('../../config/tax-config');
 var Product = require('../../models/product');
 var Order = require('../../models/order');

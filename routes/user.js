@@ -246,6 +246,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', function(req, res, next) {
+    req.session.oldUrl = req.get('referer');
     var messages = req.flash('error');
     res.render('user/signin', {
         layout: 'fullpage.hbs',
@@ -259,7 +260,9 @@ router.post('/signin', passport.authenticate('local.signin', {
     failureRedirect: '/user/signin',
     failureFlash: true
 }), function(req, res, next) {
-    if (req.session.oldUrl) {
+    console.log("Referer: " + req.get('Referer'));
+
+    if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
         res.redirect(oldUrl);

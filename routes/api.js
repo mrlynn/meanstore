@@ -8,8 +8,16 @@ var User = require('../models/user');
 var Payment = require('../models/payment');
 var Ticket = require('../models/ticket');
 var mongoose = require('mongoose');
+var MongoClient = require('mongodb').MongoClient
 var taxConfig = require('../config/tax-config.js');
 var taxCalc = require('../local_modules/tax-calculator');
+
+Category.find({}, function(err,categories) {
+	if (err) {
+		req.session.error('error','Error retrieiving categories');
+		res.redirect('/');
+	}
+});
 
 /* GET products. */
 router.get('/products', function(req, res, next) {
@@ -24,6 +32,10 @@ router.get('/users', function(req, res, next) {
 		res.json(users);
 	})
 });
+
+router.get('/facets/', function(req, res, next) {
+
+})
 router.get('/taxcalc/:id/:user', function(req, res, next) {
 	productId = req.params.id;
 	userId = req.params.user;
