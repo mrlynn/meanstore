@@ -15,6 +15,8 @@ var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
+// Make categories available to all pages.
+
 
 
 var fs = require('fs');
@@ -77,7 +79,6 @@ router.get('/category/:slug', function(req, res, next) {
         shop = 'shop';
     }
     Category.find({}, function(err, categories) {
-
         Category.findOne({
             slug: new RegExp(category_slug, 'i')
         }, function(err, category) {
@@ -247,6 +248,7 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 router.get('/shopping-cart', function(req, res, next) {
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
+
     if (!req.session.cart) {
         return res.render('shop/shopping-cart', {
             products: null,
@@ -257,9 +259,15 @@ router.get('/shopping-cart', function(req, res, next) {
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
-    console.log("LocalUser: " + JSON.stringify(req.user.state) + ' ' + JSON.stringify(taxConfig));
+    Category.find({}, function(err,categories) {
+		if (err) {
+			req.session.error('error','Error retrieiving categories');
+			res.redirect('/');
+		}
+	});
     res.render('shop/shopping-cart', {
         products: cart.generateArray(),
+        categories: categories,
         totalTax: totalTax,
         totalPrice: totalPrice,
         totalPriceWithTax: cart.totalPriceWithTax,
