@@ -16,11 +16,12 @@
         <script src="/javascripts/jquery-2.1.4.min.js"></script>
     </head>
     <body>            <!--layouts: layout.hbs-->
-
         {{> nav}}
         <div id="container">
             <div id="row">
-                {{{body}}}
+                <div class="col-md-12">
+                    {{{body}}}
+                </div>
             </div>
             </div> <!--/container-->
             {{> footer}}

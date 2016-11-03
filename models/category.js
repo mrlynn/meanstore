@@ -15,7 +15,8 @@ var schema = new Schema({
 	},
 	ancestors: [{
 		id: {type: Schema.Types.ObjectId, ref: 'Category', required: false},
-	}]
+	}],
+	attributes: [ String ]
 });
 
 module.exports = mongoose.model('Category',schema);

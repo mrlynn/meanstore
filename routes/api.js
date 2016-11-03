@@ -10,6 +10,7 @@ var Ticket = require('../models/ticket');
 var mongoose = require('mongoose');
 var MongoClient = require('mongodb').MongoClient
 var taxConfig = require('../config/tax-config.js');
+var Config = require('../config/config.js');
 var taxCalc = require('../local_modules/tax-calculator');
 
 Category.find({}, function(err,categories) {
@@ -86,6 +87,23 @@ router.get('/tax/:id/:user', function(req, res, next) {
 		}
 	})
 });
+
+router.get('/search', function(req, res, next) {
+
+	MongoClient.connect('mongodb://localhost:27017/animals', function (err, db) {
+	  if (err) throw err
+
+	  db.collection('mammals').find().toArray(function (err, result) {
+	    if (err) throw err
+
+	    console.log(result)
+	  })
+	})
+
+
+
+})
+
 
 module.exports = router;
 

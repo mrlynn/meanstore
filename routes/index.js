@@ -63,6 +63,25 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/facet', function(req, res, next) {
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    Category.find({}, function(err, categories) {
+		res.render('shop/facet', {
+			layout: 'facet.hbs',
+			categories: categories,
+			products: null,
+			productChunks: null,
+			user: req.user,
+			errorMsg: errorMsg,
+			noErrorMsg: !errorMsg,
+			successMsg: successMsg,
+			noMessage: !successMsg,
+			isLoggedIn: req.isAuthenticated()
+		});
+	});
+});
+
 /* GET home page. */
 router.get('/category/:slug', function(req, res, next) {
     var category_slug = req.params.slug;
