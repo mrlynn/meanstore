@@ -73,7 +73,7 @@ var schema = new Schema({
 			type: String
 		}
 	}],
-	shippable: {
+	shipable: {
 		type: Boolean
 	},
 	taxable: {
@@ -111,8 +111,8 @@ var schema = new Schema({
 		}
 	}]
 });
-// Shippable Getter
-schema.path('shippable').get(function(txt) {
+// shipable Getter
+schema.path('shipable').get(function(txt) {
   if (txt) {
   	return 'Yes';
   } else {
@@ -121,7 +121,7 @@ schema.path('shippable').get(function(txt) {
 });
 
 // Setter
-schema.path('shippable').set(function(txt) {
+schema.path('shipable').set(function(txt) {
   if (txt=='Yes') {
   	return true;
   } else {

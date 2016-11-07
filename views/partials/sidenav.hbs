@@ -1,8 +1,14 @@
 {{#if categories}}
+
+<div class="row">
 	<p class="lead">Categories</p>
-	<div class="list-group">
-		{{#each categories}}
-		<a href="/category/{{this.slug}}" class="list-group-item">{{this.name}}</a>
-		{{/each}}
-	</div>
+	<ul>
+	{{#each categories}}
+
+		<li><a href='/facet/category/{{this.slug}}?q={{q}}'>{{this.name}}</a></li>
+
+	{{/each}}
+
+	</ul>
+</div>
 {{/if}}

@@ -27,17 +27,11 @@ router.get('/', function(req, res, next) {
     Category.find({}, function(err, categories) {
         Product.find({
             category: 'Round-up'
-        }, function(err, docs) {
-            productChunks = [];
-            chunkSize = 4;
-            for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
-                productChunks.push(docs.slice(i, i + chunkSize))
-            }
+        }, function(err, products) {
             res.render('shop/facet', {
                 layout: 'facet.hbs',
-                title: title,
                 keywords: Config.keywords,
-                products: productChunks,
+                products: products,
                 user: req.user,
                 categories: categories,
                 errorMsg: errorMsg,
@@ -49,6 +43,54 @@ router.get('/', function(req, res, next) {
         });
     });
 });
+
+router.post('/search',function(req, res, next) {
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    var q = req.body.q;
+    Product.find(
+        { $text : { $search : q } },
+        { score : { $meta: "textScore" } }
+    )
+    .sort({ score : { $meta : 'textScore' } })
+    .exec(function(err, products) {
+        productChunks = [];
+        chunkSize = 4;
+        for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+            productChunks.push(products.slice(i, i + chunkSize))
+        }
+        if (err) {
+            req.flash('error', err.message);
+            res.redirect('/');
+        }
+        Product.aggregate([
+            {
+                $match: { $text : {$search : q }}
+            },
+            {
+                $sortByCount: "$category"
+
+            }
+        ],function(err,results) {
+            if (err) {
+                console.log("error: ", err.message);
+            }
+
+            res.render('shop/facet', {
+                layout: 'facet.hbs',
+                results: results,
+                q: q,
+                errorMsg: errorMsg,
+                // products: productChunks,
+                products: results,
+                successMsg: successMsg,
+                noErrorMsg: !errorMsg,
+                noMessage: !successMsg
+            })
+        });
+    });
+
+})
 
 /* GET home page. */
 router.get('/category/:slug', function(req, res, next) {
@@ -94,7 +136,7 @@ router.get('/category/:slug', function(req, res, next) {
                 };
                 res.render('shop/category', {
                     layout: layout,
-                    categories: categories,
+                    allcats: res.locals.allcats,
                     category: category,
                     products: products,
                     productChunks: productChunks,

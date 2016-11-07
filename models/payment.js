@@ -24,6 +24,14 @@ var paymentSchema = new Schema({
         },
         "currency": {
           type: String
+        },
+        "details": {
+          "subtotal": String,
+          "tax": String,
+          "shipping": String,
+          "handling_fee": String,
+          "shipping_discount": String,
+          "insurance": String
         }
       },
       "description": {

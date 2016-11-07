@@ -13,6 +13,8 @@ var fileUpload = require('express-fileupload');
 var fs = require('fs');
 var csv = require('ya-csv');
 var uuid = require('uuid');
+var Config = require('../config/config');
+
 
 var csrfProtection = csrf();
 
@@ -200,7 +202,37 @@ router.post('/product/:id', function(req, res, next) {
     })
 });
 
+router.get('/setup', isAdmin, function(req, res, next) {
+	errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
+	res.render('admin/setup',{
+		config: Config
+	})
+})
+
 module.exports = router;
+function isAdmin(req, res, next) {
+	console.log(req.user);
+	if (req.user.role =='admin') {
+		return next();
+	}
+	req.flash('error','Not authorized');
+	res.redirect('/');
+}
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
+
+function notLoggedIn(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
 
 var totalSales = function() {
     Order.aggregate({

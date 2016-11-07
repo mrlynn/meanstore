@@ -14,6 +14,7 @@ var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var fs = require('fs');
+var cors = require('cors');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var bookRoutes = require('./routes/books');
@@ -24,6 +25,8 @@ var fileUpload = require('express-fileupload');
 var api = require('./routes/api');
 var taxCalc = require('./local_modules/tax-calculator');
 var Config = require('./config/config');
+var Category = require('./models/category');
+
 
 var fs = require('fs');
 
@@ -63,6 +66,7 @@ var hbs = expressHbs.create({
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(logger('dev'));
@@ -71,18 +75,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
 app.use(breadcrumbs.init());
- 
-// Set Breadcrumbs home information 
+
+// Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 
 app.use(session({
-  secret:'mysecret',
-  resave: false, 
-  saveUninitialized: false,
-  // Re-use our existing mongoose connection to mongodb.
-  store: new MongoStore({mongooseConnection: mongoose.connection}),
-  // 3 hours - connect mongo will hover up old sessions
-  cookie: { maxAge: 180 * 60 * 1000 }
+    secret:'mysecret',
+    resave: false,
+    saveUninitialized: false,
+    // Re-use our existing mongoose connection to mongodb.
+    store: new MongoStore({mongooseConnection: mongoose.connection}),
+    // 3 hours - connect mongo will hover up old sessions
+    cookie: { maxAge: 180 * 60 * 1000 }
 }));
 
 app.use(flash());
@@ -93,12 +97,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Create global logged in variable login to indicate whether the user is logged in or not.
 app.use(function(req,res,next) {
-  res.locals.login = req.isAuthenticated();
-  res.locals.session = req.session; 
-  res.locals.copyright = Config.copyright;
-  console.log("CopyRight: " + res.locals.copyright);// make sure that session is available in all templates, etc.
-  next();
-})
+    if (typeof res.locals.allcats != 'undefined') {
+        Category.find({}, function(err, allcats) {
+            if (err) {
+              res.send('500','Error retrieving categories.');
+            }
+            if (!allcats) {
+                res.send('500','Error retrieving categories.');
+
+            }
+        });
+        res.locals.allcats = allcats;
+    }
+    res.locals.login = req.isAuthenticated();
+    if (res.locals.login) {
+      res.locals.admin = (req.user.role == 'admin');
+    }
+    res.locals.session = req.session; 
+    res.locals.copyright = Config.copyright;
+    res.locals.title = Config.title;
+
+    next();
+});
+
 
 app.use(fileUpload());
 
@@ -112,27 +133,27 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+          message: err.message,
+          error: err
+        });
     });
-  });
 }
 
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 module.exports = app;

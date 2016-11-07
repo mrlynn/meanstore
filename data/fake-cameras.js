@@ -61,6 +61,7 @@ for (var i=0; i < 100; i++) {
 		}],
 		imagePath: imageFunction
 	});
+	
 	category = new Category({
 		name: category,
 		description: null,

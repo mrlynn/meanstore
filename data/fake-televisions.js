@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 var faker = require('faker');
 var connectstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
 mongoose.connect(connectstring);
-Product.remove({},function(err,results) {});
-Category.remove({},function(err,results) {});
+// Product.remove({},function(err,results) {});
+// Category.remove({},function(err,results) {});
 products = [];
 categories = ['Business','Sports','Cats','City','Technics'];
 brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Viascan'];
@@ -16,6 +16,7 @@ for (var i=0; i < 100; i++) {
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	var materialBrand = faker.commerce.productMaterial();
+	
 	typeNum = Math.floor((Math.random() * categories.length-1) + 1); 
 	brandNum = Math.floor((Math.random() * brands.length-1) + 1); 
 	resNum = Math.floor((Math.random() * resolutions.length-1) + 1); 
@@ -51,28 +52,6 @@ for (var i=0; i < 100; i++) {
 			value: faker.random.number(0,6)
 		}],
 		imagePath: imageFunction
-	});
-	console.log('Creating category: ' + productcategory);
-
-	Category.findOne({name: productcategory}, function(err,results) {
-		if (err) {
-			console.log("ERROR: " + err.message);
-		}
-		if (!results) {
-			console.log('Creating category: ' + productcategory);
-			console.log('Results: ' + results);
-			category = new Category({
-				name: productcategory,
-				description: null,
-				slug: productcategory.toLowerCase()
-			});
-			category.save(function(err,num) {
-				if (err) {
-					console.log('error',err.message);
-				}
-				console.log("Result of save " + num);
-			})
-		}
 	});
 	product.save(function(err) {
 		if (err) {

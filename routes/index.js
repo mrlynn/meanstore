@@ -36,23 +36,27 @@ router.get('/whypaypal', function(req, res, next) {
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    Category.find({}, function(err, categories) {
-        Product.find({
-            category: 'Round-up'
-        }, function(err, docs) {
+    Category.find({}, function(err, allcats) {
+    	if (Config.frontPageCategory) {
+    		categCondition = {
+    			category: Config.frontPageCategory
+    		};
+    	} else {
+    		categCondition = {};
+    	}
+        Product.find(categCondition, function(err, docs) {
             productChunks = [];
             chunkSize = 4;
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            req.session.shopUrl = "/";
             res.render('shop/shop', {
                 layout: 'layout.hbs',
                 title: title,
                 keywords: Config.keywords,
                 products: productChunks,
                 user: req.user,
-                categories: categories,
+        		allcats: allcats,
                 errorMsg: errorMsg,
                 noErrorMsg: !errorMsg,
                 successMsg: successMsg,
@@ -99,7 +103,6 @@ router.get('/category/:slug', function(req, res, next) {
                     'category': new RegExp(category.name, 'i')
                 }]
             }, function(err, products) {
-
                 productChunks = [];
                 chunkSize = 4;
                 for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
@@ -107,7 +110,7 @@ router.get('/category/:slug', function(req, res, next) {
                 };
                 res.render('shop/category', {
                     layout: layout,
-                    categories: categories,
+        			allcats: categories,
                     category: category,
                     products: products,
                     productChunks: productChunks,
@@ -121,22 +124,24 @@ router.get('/category/:slug', function(req, res, next) {
             });
         });
     });
-
 });
 
-router.post('/add-to-cart', function(req, res, next) {
+router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var ticket_name = req.body.ticket_name || null;
     var ticket_email = req.body.ticket_email || null;
     var errorMsg = req.flash('error')[0];
     var price = req.body.price || null;
     var type = req.body.type || null;
-    var productId = req.body.productId || null;
-    var shopUrl = req.session.shopUrl || '/';
 
+    /* new product to be added to cart */
+
+    var productId = req.body.productId || null;
+    /* tickets need to have name and email recorded */
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
     }
+
     var errors = req.validationErrors();
     if (errors) {
         returnObject = {
@@ -145,7 +150,7 @@ router.post('/add-to-cart', function(req, res, next) {
             noMessage: true
         };
         req.flash('error', 'Invalid email address.  Please re-enter.');
-        return res.redirect(shopUrl);
+        return res.redirect('/');
     }
 
     // var errors = req.validationErrors();
@@ -161,30 +166,31 @@ router.post('/add-to-cart', function(req, res, next) {
         if (err) {
             // replace with err handling
             var errorMsg = req.flash('error', 'unable to find product');
-
             return res.redirect('/');
         }
-		taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
-			if (err) {
-				taxAmount=0;
-			} else {
-				taxAmount = response.taxAmount;
-				console.log('tax amount: ' + taxAmount);
-			}
-		    cart.oldadd(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
+		// taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
+		// 	if (err) {
+		// 		taxAmount=0;
+		// 	} else {
+		// 		taxAmount = response.taxAmount;
+		// 		console.log('tax amount: ' + taxAmount);
+		// 	}
+			// cart.cartTaxTotal(req.user._id);
+			// cart.cartShippingTotal()
+		    cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
 	        console.log('---------');
 	        console.log(cart);
 	        console.log('---------');
+	        cart.totalTax = 0;
+	        cart.totalShipping = 0;
 	        req.session.cart = cart; // store cart in session
 	        req.flash('success', 'Item successfully added to cart.');
-	        res.redirect(shopUrl);
-	    });
+	        res.redirect('/');
+	    // });
     });
 });
 
-
 router.get('/add-to-cart/:id/', function(req, res, next) {
-    var shopUrl = req.session.shopUrl || "/";
     var ticket_name = req.body.ticket_name || "";
     var ticket_email = req.body.ticket_email || "";
     var size = req.session.size || "";
@@ -205,16 +211,14 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
 				taxAmount = taxInfo.taxAmount;
 				console.log('tax amount: ' + taxAmount);
 			}
-		    cart.oldadd(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
+		    cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
 	    	req.session.cart = cart; // store cart in session
 	        console.log('---------');
 	        console.log(cart);
-	        console.log('---------');        
+	        console.log('---------');
 	        req.flash('success','Item Successfully added to cart.');
 	    	res.redirect('/');
 	    });
-
-	        	       
     });
 });
 
@@ -260,19 +264,30 @@ router.get('/shopping-cart', function(req, res, next) {
     var cart = new Cart(req.session.cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
+    var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
-    Category.find({}, function(err,categories) {
+    var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
+    console.log('grand total ' + grandTotal);
+    
+    Category.find({}, function(err,allcats) {
 		if (err) {
-			req.session.error('error','Error retrieiving categories');
+			req.flash.error('error','Error retrieiving categories');
 			res.redirect('/');
 		}
+		if (!allcats) {
+			req.flash.error('error','Error retrieving categories.');
+			res.redirect('/');
+
+		}
+		req.session.allcats = allcats
 	});
     res.render('shop/shopping-cart', {
         products: cart.generateArray(),
-        categories: categories,
+        allcats: req.session.allcats,
         totalTax: totalTax,
         totalPrice: totalPrice,
-        totalPriceWithTax: cart.totalPriceWithTax,
+        totalShipping: totalShipping,
+        grandTotal: cart.grandTotal,
         user: req.user,
         localUser: (req.user.state == taxConfig.ourStateCode),
         errorMsg: errorMsg,
@@ -322,13 +337,14 @@ router.post('/checkout', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
+	// reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
     var amount = parseFloat(req.body.amount);
-
+    var subtotal = parseFloat(req.body.subTotal);
+    var taxAmount = parseFloat(req.body.taxAmount);
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
     }
-
     var cart = new Cart(req.session.cart);
     products = cart.generateArray();
     var create_payment = {
@@ -339,7 +355,14 @@ router.post('/create', function(req, res, next) {
         "transactions": [{
             "amount": {
                 "currency": "USD",
-                "total": String(amount.toFixed(2))
+                "total": String(amount.toFixed(2)),
+                "details":{
+                	"subtotal":"3.00",
+                	"tax":String(taxAmount.toFixed(2)),
+                	"shipping":String(taxAmount.toFixed(2)),
+                	"handling_fee":"0.00",
+                	"shipping_discount":"0.00"
+                }
             },
             "description": "Test Transaction",
             "item_list": {
@@ -366,6 +389,7 @@ router.post('/create', function(req, res, next) {
             // }
         create_payment.transactions[0].item_list.items.push(item)
     }
+
 
     if (method === 'paypal') {
         create_payment.payer.payment_method = 'paypal';
@@ -527,6 +551,7 @@ router.get('/execute', function(req, res, next) {
                 });
                 var cart = new Cart(req.session.cart);
                 products = cart.generateArray();
+
                 req.flash('success', "Successfully processed payment!");
                 var transporter = nodemailer.createTransport(smtpConfig.connectString);
                 tickets = cart.ticketSale(products, req.user._id);
@@ -537,7 +562,6 @@ router.get('/execute', function(req, res, next) {
                 res.redirect('/');
             });
         }; // res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
-     
     });
 });
 
@@ -603,12 +627,12 @@ router.post('/search', function(req, res, next) {
                     return res.redirect('/');
                 }
 
-                req.session.shopUrl = "/";
                 res.render('shop/books', {
                     layout: 'books.hbs',
                     products: results,
-                    categories: categories,
+        			allcats: res.locals.allcats,
                     user: req.user,
+                    q:q,
                     errorMsg: errorMsg,
                     noErrorMsg: !errorMsg,
                     successMsg: successMsg,

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>{{title}}</title>
-         <meta name="keywords" content="{{keywords}}">
+        <meta name="keywords" content="{{keywords}}">
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- Optional theme -->
@@ -16,20 +16,20 @@
         <script src="/javascripts/jquery-2.1.4.min.js"></script>
     </head>
     <body>            <!--layouts: layout.hbs-->
-        {{> nav}}
-        <div id="container">
-            <div id="row">
-                <div class="col-md-12">
-                    {{{body}}}
-                </div>
+    {{> nav}}
+    <div id="container">
+        <div id="row">
+            <div class="col-md-12">
+                {{{body}}}
             </div>
-            </div> <!--/container-->
-            {{> footer}}
-            <!-- Latest compiled and minified JavaScript -->
-            <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-            <input id="input_notify_message" value="" type="hidden">
-            <input id="input_notify_message_type" value="" type="hidden">
-            <div id="notify_message"></div>
-        </body>
-    </html>
+        </div>
+        </div> <!--/container-->
+        {{> footer}}
+        <!-- Latest compiled and minified JavaScript -->
+        <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <input id="input_notify_message" value="" type="hidden">
+        <input id="input_notify_message_type" value="" type="hidden">
+        <div id="notify_message"></div>
+    </body>
+</html>

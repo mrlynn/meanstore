@@ -19,11 +19,86 @@ Category.find({}, function(err,categories) {
 		res.redirect('/');
 	}
 });
+/* get all categories */
+router.get('/categories', function(req, res, next) {
+	Category.find({},function(err,categories) {
+		res.json(categories);
+	})
+});
+
+/* Get a single category */
+router.get('/categories/:id', function(req, res, next) {
+	Category.findById(req.params.id,function(err,category) {
+		res.json(category);
+	})
+});
+
+/* New Category */
+router.post('/categories', function(req, res, next) {
+	category = new Category({
+		name: req.params.name,
+		slug: slug(req.params.name),
+		description: req.params.description
+	});
+	categrory.save(function(err,category) {
+		if (err) {
+			res.send(500,'Problem saving category.');
+		}
+		res.send(category);
+	})
+})
+
+/* delete a single category */
+router.delete('/categories/:id', function(req, res, next) {
+	Category.remove({_id: req.params.id},function(err,category) {
+		res.json(category);
+	})
+});
 
 /* GET products. */
 router.get('/products', function(req, res, next) {
 	Product.find({},function(err,products) {
 		res.json(products);
+	})
+});
+
+/* GET product. */
+router.get('/products/:id', function(req, res, next) {
+	Product.findById(req.params.id,function(err,product) {
+		res.json(product);
+	})
+});
+
+/* Create a product */
+router.post('/api/products', function (req, res){
+  var product;
+  console.log("POST: ");
+  console.log(req.body);
+  product = new Product({
+    code: req.body.code,
+    description: req.body.description,
+    shipable: req.body.shipable,
+    taxable: req.body.taxable,
+    title: req.body.title,
+    price: req.body.price,
+    productType: req.body.productType,
+    name: req.body.name,
+    category: req.body.category
+  });
+  product.save(function (err) {
+    if (!err) {
+      return console.log("created");
+    } else {
+      return console.log(err);
+    }
+  });
+  return res.send(product);
+});
+
+/* DELETE product. */
+router.delete('/products/:id', function(req, res, next) {
+	Product.remove({_id: req.params.id},function(err,product) {
+		res.json(product);
 	})
 });
 
@@ -34,9 +109,41 @@ router.get('/users', function(req, res, next) {
 	})
 });
 
-router.get('/facets/', function(req, res, next) {
+/* GET user */
+router.get('/users/:id', function(req, res, next) {
+	User.findById({},function(err,user) {
+		res.json(user);
+	})
+});
 
-})
+router.get('/users/:id', function(req, res, next) {
+	User.findById({},function(err,user) {
+		res.json(user);
+	})
+});
+
+/* UPDATE user */
+router.put('/users/:id', function(req, res, next) {
+	User.findById({},function(err,user) {
+		res.json(user);
+	})
+});
+
+/* DELETE user */
+router.delete('/users/:id', function(req, res, next) {
+	User.remove({_id: req.params.id},function(err,user) {
+		res.json(user);
+	})
+});
+
+/* get product facets */
+router.get('/facets/:id', function(req, res, next) {
+	Product.findById(req.params.id, function(req, res, next) {
+		res.json
+	})
+});
+
+/* calculate tax for a product purchase by a user */
 router.get('/taxcalc/:id/:user', function(req, res, next) {
 	productId = req.params.id;
 	userId = req.params.user;
@@ -98,14 +205,47 @@ router.get('/search', function(req, res, next) {
 	    if (err) throw err
 
 	    console.log(result)
-	  })
+	  });
+	});
+});
+
+/* get all categories */
+router.get('/orders', function(req, res, next) {
+	Category.find({},function(err,orders) {
+		res.json(orders);
 	})
+});
 
+/* Get a single category */
+router.get('/order/:id', function(req, res, next) {
+	Category.findById(req.params.id,function(err,category) {
+		res.json(order);
+	})
+});
 
-
+/* New Category */
+router.post('/order', function(req, res, next) {
+	order = new Order({
+		user: req.params.userId,
+		cart: req.params.cart,
+		address: req.params.address,
+		city: req.params.city,
+		state: req.params.state,
+		zipcode: req.params.zipcode,
+		telephone: req.params.phone,
+		owner: {
+			ticket_name: req.params.ticket_name,
+			ticket_email: req.params.ticket_email
+		},
+		status: req.params.status
+	});
+	order.save(function(err,order) {
+		if (err) {
+			res.send(500,'Problem saving order.');
+		}
+		res.send(category);
+	})
 })
-
-
 module.exports = router;
 
 

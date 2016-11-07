@@ -1,0 +1,58 @@
+<div class="container">
+            <form class="form-horizontal" role="form">
+                <h2>MEANStore Configuration</h2>
+                <div class="form-group">
+                    <label for="storeName" class="col-sm-3 control-label">Store Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="storeName" value="{{config.title}}" placeholder="Your Store" class="form-control" autofocus>
+                        <span class="help-block">Store Name</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dbhost" class="col-sm-3 control-label">Database Host</label>
+                    <div class="col-sm-3">
+                        <input type="text" value="{{config.dbhost}}" id="dbhost" placeholder="dbhost" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dbport" class="col-sm-3 control-label">Database Port</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="dbport" placeholder="27017" value="{{config.dbport}}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="copyright" class="col-sm-3 control-label">Copyright Text</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="copyright" value="{{config.copyright}}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addr1" class="col-sm-3 control-label">Address</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="addr1" value="{{config.business.addr1}}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city" class="col-sm-3 control-label">City</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="city" value="{{config.business.city}}" class="form-control">
+                    </div>
+                    <label for="state" class="col-sm-3 control-label">State</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="state" value="{{config.business.state}}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zipcode" class="col-sm-3 control-label">Zip Code</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="zipcode" value="{{config.business.zipcode}}" class="form-control">
+                        <span class="help-block">5 Digit Postal Code</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    </div>
+                </div>
+            </form> <!-- /form -->
+        </div> <!-- ./container -->
