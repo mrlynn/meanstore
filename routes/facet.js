@@ -16,6 +16,7 @@ var smtpConfig = require('../config/smtp-config.js');
 var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
 var Config = require('../config/config.js');
+var fs = require('fs');
 var title = Config.title;
 
 

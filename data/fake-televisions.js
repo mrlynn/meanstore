@@ -13,7 +13,6 @@ mongoose.Promise = global.Promise;
 // Product.remove({},function(err,results) {});
 // Category.remove({},function(err,results) {});
 products = [];
-categories = ['Business','Sports','Cats','City','Technics'];
 brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Throwback'];
 resolutions = ['1080p','1080l','720p','1440p','4k','8k'];
 var done = 0;
@@ -22,7 +21,6 @@ for (var i=0; i < 100; i++) {
 	var color = faker.commerce.color();
 	var materialBrand = faker.commerce.productMaterial();
 
-	typeNum = Math.floor((Math.random() * categories.length-1) + 1);
 	brandNum = Math.floor((Math.random() * brands.length-1) + 1);
 	resNum = Math.floor((Math.random() * resolutions.length-1) + 1);
 	resolution = resolutions[resNum];
@@ -30,7 +28,6 @@ for (var i=0; i < 100; i++) {
 	console.log(resolution);
 	brand = brands[brandNum];
 	imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
-	var productcategory = categories[typeNum];
 	name = brand + ' ' + faker.commerce.productName();
 	name = name.toUpperCase();
 	price = faker.commerce.price(),

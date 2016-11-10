@@ -5,6 +5,6 @@ var config = {
 	title: 'MEANStore',
 	keywords: "your,keywords,here,meanstore,ecommerce,shoppingcart",
 	copyright: "Michael Lynn",
-	frontPageCategory: 'Television'
+	frontPageCategory: 'Apparel'
 };
 module.exports = config;
