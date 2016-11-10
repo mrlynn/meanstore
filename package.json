@@ -26,6 +26,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.14.1",
     "express-validator": "^2.21.0",
+    "fs": "0.0.1-security",
     "hbs": "~4.0.0",
     "moment": "^2.15.2",
     "mongoose": "^4.6.6",
