@@ -2,6 +2,8 @@ var Product = require('../models/product');
 var Category = require('../models/category');
 var Config = require('../config/config');
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 var faker = require('faker');
 
 mongoose.connect(Config.dbhost + ':' Config.dbport + '/' + Config.dbname);

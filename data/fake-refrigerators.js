@@ -1,17 +1,12 @@
 var Product = require('../models/product');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
-var faker = require('faker');
-var dotenv = require('dotenv');
-const chalk = require('chalk');
 mongoose.Promise = global.Promise;
 
-dotenv.load({ path: '.env.example' });
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
-mongoose.connection.on('error', () => {
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  process.exit();
-});
+var faker = require('faker');
+var Config = require('../config/config');
+var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
+mongoose.connect(connectionstring);
 // Product.remove({},function(err,results) {});
 // Category.remove({},function(err,results) {});
 products = [];

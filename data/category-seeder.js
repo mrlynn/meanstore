@@ -1,11 +1,14 @@
 var Product = require('../models/Product');
 var Category = require('../models/Category');
+var mongoose = require('mongoose');
+var Config = require('../config/config');
+var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
+mongoose.connect(connectionstring);
 
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 var slug = require('slug');
-mongoose.connect('localhost:27017/roundup')
 
 Category.remove({});
 
