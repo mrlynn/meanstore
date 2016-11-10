@@ -4,7 +4,7 @@ var config = {
 	dbport: 27017,
 	title: 'MEANStore',
 	keywords: "your,keywords,here,meanstore,ecommerce,shoppingcart",
-	copyright: "Your Company",
-	frontPageCategory: 'Round-up'
+	copyright: "Michael Lynn",
+	frontPageCategory: 'Televisions'
 };
 module.exports = config;

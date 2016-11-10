@@ -16,7 +16,7 @@ for (var i=0; i < 100; i++) {
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	var materialBrand = faker.commerce.productMaterial();
-	
+
 	typeNum = Math.floor((Math.random() * categories.length-1) + 1); 
 	brandNum = Math.floor((Math.random() * brands.length-1) + 1); 
 	resNum = Math.floor((Math.random() * resolutions.length-1) + 1); 

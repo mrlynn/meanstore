@@ -2,7 +2,9 @@ var Product = require('../models/product');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
 var faker = require('faker');
-mongoose.connect('localhost:27017/mongostore')
+var Config = require('../config/config');
+var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
+mongoose.connect(connectionstring);
 products = [];
 categories = ['Business','Sports','Cats','City','Abstract','Animals','Food','Nightlife','Technics'];
 brands = ['Nikon','Sony','Canon','GoPro','Samsung','Pentax','Panasonic','Kodak','Hasselblad','FujiFilm'];
