@@ -62,16 +62,7 @@ for (var i=0; i < 100; i++) {
 		imagePath: imageFunction
 	});
 	
-	category = new Category({
-		name: category,
-		description: null,
-		slug: category.toLowerCase()
-	})
-	category.save(function(err) {
-		if (err) {
-			console.log('error',err.message);
-		}
-	})
+	
 	product.save(function(err) {
 		if (err) {
 			console.log('error: ',err.message);

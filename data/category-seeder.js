@@ -1,9 +1,13 @@
-var Product = require('../models/product');
-var Category = require('../models/category');
+var Product = require('../models/Product');
+var Category = require('../models/Category');
+
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 var slug = require('slug');
 mongoose.connect('localhost:27017/roundup')
 
+Category.remove({});
 
 Product.find().distinct('category', function(err,categories) {
 	if (err) {
