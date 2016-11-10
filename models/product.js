@@ -8,7 +8,7 @@ var schema = new Schema({
 		required: false
 	},
 	imagePath: {
-		type: String, 
+		type: String,
 		required: false
 	},
 	name: {
@@ -27,16 +27,16 @@ var schema = new Schema({
         type: Number,
         required: true
 	},
-	productType: {
+	Product_Group: {
 		type: String,
 		required: false
 	},
-	attributes: [{
-		name: {
+	Attributes: [{
+		Name: {
 			type: String,
 			required: false
 		},
-		value: {
+		Value: {
 			type: String,
 			required: false
 		}
@@ -157,7 +157,7 @@ schema.path('price').set(function(num) {
 
 schema.virtual('isVariable')
 	.get(function() {
-		if (this.productType=='VARPRICE') {
+		if (this.Product_Group=='VARPRICE') {
 			return true;
 		}
 	return false;
@@ -165,7 +165,7 @@ schema.virtual('isVariable')
 
 schema.virtual('isTicket')
 	.get(function() {
-		if (this.productType=='TICKET') {
+		if (this.Product_Group=='TICKET') {
 			return true;
 		}
 	return false;
@@ -173,7 +173,7 @@ schema.virtual('isTicket')
 
 schema.virtual('isApparel')
 	.get(function() {
-		if (this.productType=='APPAREL') {
+		if (this.Product_Group=='APPAREL') {
 			return true;
 		}
 	return false;

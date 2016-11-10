@@ -19,12 +19,12 @@ module.exports = {
 					if (err) {
 						callback({
 							"error": err.message
-						});
+						},null);
 					}
 					if (undefined == user) {
 						callback({
 							"error": "not in our city"
-						})
+						},null)
 					}
 
 					if (user.state == taxConfig.ourStateCode || user.state == taxConfig.ourStateName) {

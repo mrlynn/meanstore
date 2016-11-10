@@ -17,6 +17,8 @@ module.exports = function Cart(oldCart) {
 
 	/* TODO: Figure out how to change the value of this in the cart.add method from within the necessary method calls calculateShipping and calculateTax
 	/* add item to cart */
+	/* TODO: How do I make a call to calculateTax from my cart.js module without losing "this" */
+
 	this.cartShippingTotal = function() {
 		// console.log("Cart Total: " + JSON.stringify(this.items));
 		taxCalc.calculateShippingAll(this.items,function(err,results) {

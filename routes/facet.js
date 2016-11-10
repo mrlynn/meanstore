@@ -23,7 +23,6 @@ var title = Config.title;
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    console.log("asdf");
     Category.find({}, function(err, categories) {
         Product.find({
             category: 'Round-up'
@@ -82,7 +81,8 @@ router.post('/search',function(req, res, next) {
                 q: q,
                 errorMsg: errorMsg,
                 // products: productChunks,
-                products: results,
+                products: products,
+                categories: results,
                 successMsg: successMsg,
                 noErrorMsg: !errorMsg,
                 noMessage: !successMsg
