@@ -30,7 +30,9 @@ module.exports = function Cart(oldCart) {
 		this.totalShipping = results.taxShipping;
 		// this.totalShipping = results.shippingAmount;
 	};
-
+	this.makeRecommendation = function(cart, userId) {
+		// look up common pairings for each product in
+	}
 	this.cartTaxTotal = function(userId) {
 		// console.log("Cart Total: " + JSON.stringify(this.items));
 		taxCalc.calculateTaxAll(this.items,userId,function(err,results) {

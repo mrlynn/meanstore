@@ -31,6 +31,14 @@
                             <h3 class="product-title product-title-home top-pad-10">
                             {{this.code}} - {{this.title}}
                             </h3>
+                            {{#if this.Attributes}}
+                            <h3>Features</h3>
+                                <ul>
+                            {{#each this.Attributes}}
+                                <li>{{this.Name}}: {{this.Value}}</li>
+                            {{/each}}
+                            </ul>
+                            {{/if}}
                         </a>
                         <h4 class="product-description">
                         {{this.description}}
