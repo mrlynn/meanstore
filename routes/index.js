@@ -31,7 +31,9 @@ var config = {};
 router.get('/whypaypal', function(req, res, next) {
     res.render('shop/whypaypal');
 });
-
+router.get('/overview', function(req, res, next) {
+	res.render('overview',{layout: 'overview.hbs'});
+})
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
@@ -391,7 +393,6 @@ router.post('/create', function(req, res, next) {
             // }
         create_payment.transactions[0].item_list.items.push(item)
     }
-
 
     if (method === 'paypal') {
         create_payment.payer.payment_method = 'paypal';

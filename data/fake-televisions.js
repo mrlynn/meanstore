@@ -28,7 +28,7 @@ for (var i=0; i < 100; i++) {
 	console.log(resolution);
 	brand = brands[brandNum];
 	imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
-	name = brand + ' ' + faker.commerce.productName();
+	name = brand;
 	name = name.toUpperCase();
 	price = faker.commerce.price(),
 

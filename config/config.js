@@ -1,10 +1,10 @@
 var config = {
 	dbhost: "localhost",
-	dbname: "roundup",
+	dbname: "hackathon",
 	dbport: 27017,
 	title: 'MEANStore',
 	keywords: "your,keywords,here,meanstore,ecommerce,shoppingcart",
-	copyright: "Michael Lynn",
-	frontPageCategory: 'Apparel'
+	copyright: "MongoDB",
+	frontPageCategory: 'Camera'
 };
 module.exports = config;
