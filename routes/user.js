@@ -212,7 +212,6 @@ router.post('/reset/:token', function(req, res) {
   		if (err) {
   			req.flash('error','Unknown Error during reset.')
   			res.redirect('user/reset');
-		   
 		}
     });
 });
@@ -255,6 +254,7 @@ router.get('/signin', function(req, res, next) {
         hasErrors: messages.length > 0
     });
 });
+
 
 router.post('/signin', passport.authenticate('local.signin', {
     failureRedirect: '/user/signin',

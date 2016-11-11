@@ -1,0 +1,22 @@
+<div class="recommendations">
+<div class="panel-heading"><h3>Recommended For You</h3></div>
+{{#each recommendations}}
+<div class="panel-body">
+    <div class="vertical-center thumbnail-image-container">
+        <img class="img-responsive small-thumbnail" src="{{ this.imagePath }}" alt="...">
+    </div>
+    <h3 class="product-title product-title-home top-pad-10">
+    {{this.code}} - {{this.title}}
+    </h3>
+    <h4 class="product-description">
+    {{this.description}}
+    </h4>
+    <h3 class="product-price text-center">
+    ${{this.price}}
+    </h3>
+    <p class="text-center">
+        <a href="/add-to-cart/{{this._id}}" class="btn btn-primary add-to-cart" data-id="{{this._id}}" role="button">Add to cart</a>
+    </p>
+</div>
+{{/each}}
+</div>

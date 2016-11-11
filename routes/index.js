@@ -15,6 +15,7 @@ var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
+var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
 
 var title = Config.title;
@@ -52,7 +53,7 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            res.render('shop/facet', {
+            res.render('shop/shop', {
                 layout: 'facet.hbs',
                 title: title,
                 keywords: Config.keywords,
@@ -272,33 +273,55 @@ router.get('/shopping-cart', function(req, res, next) {
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
     console.log('grand total ' + grandTotal);
-    
-    Category.find({}, function(err,allcats) {
-		if (err) {
-			req.flash.error('error','Error retrieiving categories');
-			res.redirect('/');
-		}
-		if (!allcats) {
-			req.flash.error('error','Error retrieving categories.');
-			res.redirect('/');
 
-		}
-		req.session.allcats = allcats
-	});
-    res.render('shop/shopping-cart', {
-        products: cart.generateArray(),
-        allcats: req.session.allcats,
-        totalTax: totalTax,
-        totalPrice: totalPrice,
-        totalShipping: totalShipping,
-        grandTotal: cart.grandTotal,
-        user: req.user,
-        localUser: (req.user.state == taxConfig.ourStateCode),
-        errorMsg: errorMsg,
-        noErrorMsg: !errorMsg,
-        successMsg: successMsg,
-        noMessage: !successMsg
-    });
+    recommendations.GetRecommendations(cart,function(err,recommendations) {
+        if (err) {
+            errorMsg = req.flash('error :',err.message);
+        }
+        if (!recommendations) {
+            recommendations = [{
+                code: 'cam1000',
+                title: 'Gorgeous Fresh Hat Camera',
+                description: 'Error ea velit et explicabo.',
+                price: 973,
+                imagePath: '/img/lumix-camera.jpg'
+            },{
+                code: 'cam1001',
+                title: 'Tasty Metal Chicken Camera',
+                description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
+                price: 360,
+                imagePath: '/img/sony-camera.jpg'
+            }]
+        }
+        res.render('shop/shopping-cart', {
+            products: cart.generateArray(),
+            allcats: req.session.allcats,
+            totalTax: totalTax,
+            totalPrice: totalPrice,
+            totalShipping: totalShipping,
+            grandTotal: cart.grandTotal,
+            recommendations: recommendations,
+            user: req.user,
+            localUser: (req.user.state == taxConfig.ourStateCode),
+            errorMsg: errorMsg,
+            noErrorMsg: !errorMsg,
+            successMsg: successMsg,
+            noMessage: !successMsg
+        });
+    })
+ //    Category.find({}, function(err,allcats) {
+	// 	if (err) {
+	// 		req.flash.error('error','Error retrieiving categories');
+	// 		res.redirect('/');
+	// 	}
+	// 	if (!allcats) {
+	// 		req.flash.error('error','Error retrieving categories.');
+	// 		res.redirect('/');
+
+	// 	}
+	// 	req.session.allcats = allcats
+	// });
+    
 })
 
 router.get('/checkout', isLoggedIn, function(req, res, next) {

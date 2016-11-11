@@ -24,11 +24,10 @@
                         <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;Categories
                     </a>
                     <ul class="dropdown-menu">
-                            <li><a href="/">All</a></li>
-                            {{#each allcats}}
-                                <li><a href="/category/{{this.slug}}">{{this.name}}</a></li>
-                            {{/each}}
-
+                        <li><a href="/">All</a></li>
+                        {{#each allcats}}
+                            <li><a href="/category/{{this.slug}}">{{this.name}}</a></li>
+                        {{/each}}
                     </ul>
                 </li>
                 {{/if}}
