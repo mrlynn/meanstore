@@ -52,8 +52,8 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            res.render('shop/shop', {
-                layout: 'layout.hbs',
+            res.render('shop/facet', {
+                layout: 'facet.hbs',
                 title: title,
                 keywords: Config.keywords,
                 products: productChunks,
