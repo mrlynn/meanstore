@@ -1,4 +1,4 @@
-var Product = require('../models/Product');
+var Product = require('../models/product');
 var mongoose = require('mongoose');
 var faker = require('faker');
 var Config = require('../config/config');

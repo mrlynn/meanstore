@@ -1,5 +1,5 @@
-var Product = require('../models/Product');
-var Category = require('../models/Category');
+var Product = require('../models/product');
+var Category = require('../models/category');
 var mongoose = require('mongoose');
 
 var faker = require('faker');

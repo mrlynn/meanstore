@@ -108,11 +108,11 @@ router.get('/category/:slug', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
                     productChunks.push(products.slice(i, i + chunkSize))
                 };
-                res.render('shop/category', {
+                res.render('shop/shop', {
                     layout: layout,
         			allcats: categories,
                     category: category,
-                    products: products,
+                    products: productChunks,
                     productChunks: productChunks,
                     user: req.user,
                     errorMsg: errorMsg,
@@ -240,6 +240,7 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
             // replace with err handling
             return res.redirect('/');
         }
+
         if (!product) {
             //res.render('shop/shopping-cart',{products: null, errorMsg: "Product not found.",noErrorMsg:0})
             req.flash('error', 'Cannot locate product');
@@ -254,6 +255,7 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 router.get('/shopping-cart', function(req, res, next) {
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
+
 
     if (!req.session.cart) {
         return res.render('shop/shopping-cart', {
@@ -357,9 +359,9 @@ router.post('/create', function(req, res, next) {
                 "currency": "USD",
                 "total": String(amount.toFixed(2)),
                 "details":{
-                	"subtotal":"3.00",
-                	"tax":String(taxAmount.toFixed(2)),
-                	"shipping":String(taxAmount.toFixed(2)),
+                	// "subtotal":String(amount.toFixed(2)),
+                	// "tax":String(taxAmount.toFixed(2)),
+                	// "shipping":String(taxAmount.toFixed(2)),
                 	"handling_fee":"0.00",
                 	"shipping_discount":"0.00"
                 }
@@ -421,8 +423,9 @@ router.post('/create', function(req, res, next) {
     //
     paypal.payment.create(create_payment, function(err, payment) {
         if (err) {
-            errorMsg = req.flash('error', "Error sending payment to paypal.");
+            errorMsg = req.flash('error', err.message);
             console.log('Payment not sent to paypal.' + err.message);
+            console.log('create_payment: ' + JSON.stringify(create_payment));
             res.redirect('/')
         } else {
             req.session.paymentId = payment.id;
@@ -626,10 +629,14 @@ router.post('/search', function(req, res, next) {
                     req.flash('error', "No products found.");
                     return res.redirect('/');
                 }
-
-                res.render('shop/books', {
-                    layout: 'books.hbs',
-                    products: results,
+				productChunks = [];
+	            chunkSize = 4;
+	            for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
+	                productChunks.push(results.slice(i, i + chunkSize))
+	            }
+                res.render('shop/shop', {
+                    layout: 'layout.hbs',
+                    products: productChunks,
         			allcats: res.locals.allcats,
                     user: req.user,
                     q:q,
