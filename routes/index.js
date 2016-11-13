@@ -568,7 +568,11 @@ router.get('/execute', function(req, res, next) {
                                 text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
                                     'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
                             };
-                            transporter.sendMail(mailOptions, function(err) {});
+                            transporter.sendMail(mailOptions, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
                         });
                     });
                 });

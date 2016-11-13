@@ -5,13 +5,13 @@ var bcrypt = require('bcrypt-nodejs');
 var userSchema = new Schema({
 	resetPasswordToken: String,
   	resetPasswordExpires: Date,
-	email: { 
+	email: {
 		type: String,
-		required: true
+		required: false
 	},
 	password: {
 		type: String,
-		required: true
+		required: false
 	},
 	first_name: {
 		type: String,
@@ -31,11 +31,11 @@ var userSchema = new Schema({
 	},
 	city: {
 		type: String,
-		required: true
+		required: false
 	},
 	state: {
 		type: String,
-		required: true
+		required: false
 	},
 	zipcode: {
 		type: String,
@@ -57,6 +57,7 @@ var userSchema = new Schema({
 		type: Date, default: Date.now()
 	},
 	likes: [String],
+	purchased: [String],
 	orders:[{
 		order: {
 			type: String,

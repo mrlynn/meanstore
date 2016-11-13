@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var random = require('mongoose-simple-random');
 
 var Schema = mongoose.Schema;
 
@@ -182,5 +183,6 @@ schema.virtual('isApparel')
 schema.methods.setPrice = function(price) {
 	this.price = price;
 };
+schema.plugin(random);
 module.exports = mongoose.model('Product',schema);
 
