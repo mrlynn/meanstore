@@ -48,7 +48,8 @@ for (var i=0; i < 100; i++) {
 			Name: 'Price',
 			Value: price
 		}],
-		imagePath: imagePath
+		imagePath: imagePath,
+		likes: [ "123321", "232122","1232123","d03k1231","1231kdf1"]
 	});
 
 	product.save(function(err) {

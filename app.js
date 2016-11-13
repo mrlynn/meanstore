@@ -7,6 +7,9 @@ var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
 var session = require('express-session');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+const errorHandler = require('errorhandler');
 var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
@@ -26,6 +29,8 @@ var api = require('./routes/api');
 var taxCalc = require('./local_modules/tax-calculator');
 var Config = require('./config/config');
 var Category = require('./models/category');
+var url = require("url");
+var path = require("path");
 
 
 var fs = require('fs');
@@ -39,11 +44,15 @@ require('./config/pp-config');
 //   console.error("File config.json not found or is invalid: " + e.message);
 //   process.exit(1);
 // }
-
 var app = express();
-var connectstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
-mongoose.connect(connectstring);
+dotenv.load({ path: '.env.hackathon' });
+
 mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connection.on('error', () => {
+  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  process.exit();
+});
 require('./config/passport');
 
 // view engine setup
@@ -75,6 +84,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
 app.use(breadcrumbs.init());
+app.use(errorHandler());
 
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
@@ -96,6 +106,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Create global logged in variable login to indicate whether the user is logged in or not.
+
 app.use(function(req,res,next) {
     if (typeof res.locals.allcats != 'undefined') {
         Category.find({}, function(err, allcats) {
@@ -113,10 +124,13 @@ app.use(function(req,res,next) {
     if (res.locals.login) {
       res.locals.admin = (req.user.role == 'admin');
     }
-    res.locals.session = req.session; 
-    res.locals.copyright = Config.copyright;
-    res.locals.title = Config.title;
-
+    res.locals.session = req.session;
+    res.locals.copyright = process.env.copyright;
+    res.locals.title = process.env.title;
+    res.locals.pageNotes = process.env.pageNotes;
+    var parsed = url.parse(req.url);
+    var pageName = path.basename(parsed.pathname);
+    res.locals.pageName = pageName.toLowerCase();
     next();
 });
 

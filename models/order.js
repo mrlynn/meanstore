@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var Purchase = require('../models/purchase');
+var Cart = require('../models/cart');
+
 var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
@@ -28,6 +31,66 @@ var orderSchema = new Schema({
 	}
 });
 
+orderSchema.post('save', function(doc) {
+  /* generate recommendations collection */
+  /* Loop through all cart products:
+     1. Find a purchase record for the product.
+     2. If found, search the also purchased products array.
+     2a. if not found add it.
+     3.
+     */
+    var ids = [];
+    for (var item in doc.cart.items) {
+    	ids.push(doc.cart.items[item].item.code);
+    }
+    for (var item in doc.cart.items) {
+        if (typeof doc.cart.items[item] == "object" && doc.cart.items[item]) {
+        	var prod = doc.cart.items[item].item.code;
+			var index = ids.indexOf(prod);
+			otherids = ids;
+			if(index != -1)
+			    otherids.splice( index, 1 );
+			console.log("Now Code: " + prod);
+			console.log("Other Ids: " + otherids.toString());
+	    	Purchase.findOne({'code': prod}, function(err,purchaserecord) {
+	    		if (err) {
+	    			console.log('error :' + err.message);
+	    		}
+	    		if (purchaserecord) {
+	    			 /*found a purchase record for the product - search for the products
+	    			   in the also purchased (Cart) and add them if they don't exist     */
+	    			console.log("Found a Purchase Records for product code: " + prod);
+	    		} else {
+	    			 // product purchase record not found - create one with the product and
+	    			 //   a list of all the other products purchased.
+					console.log("Did NOT find a Purchase Records for product code: " + prod);
+					purchase = new Purchase({
+						code: prod,
+						alsoPurchased: otherids
+					});
+					purchase.save(function(err) {
+						if (err) {
+							console.log('error: ' + err.message);
+						}
+						console.log("Purchase record created for " + prod);
+					})
+	    		}
+		    })
+		}
+	}
+});
 
+this.createPurchase = function(product,othersArray,cb) {
+  purchase = new Purchase({
+  	code: product,
+  	alsoPurchased: othersArray
+  });
+  purchase.save(function(err) {
+  	if (err) {
+  		console.log('error: ' + err.message);
+  	}
+  })
+  return cb();
+};
 
 module.exports = mongoose.model('Order', orderSchema);

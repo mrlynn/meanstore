@@ -56,6 +56,7 @@ var userSchema = new Schema({
 	created: {
 		type: Date, default: Date.now()
 	},
+	likes: [String],
 	orders:[{
 		order: {
 			type: String,
