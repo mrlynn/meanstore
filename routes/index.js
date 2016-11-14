@@ -10,6 +10,7 @@ var Payment = require('../models/payment');
 var Ticket = require('../models/ticket');
 var passport = require('passport');
 var mongoose = require('mongoose');
+var ObjectId = require('mongoose').Types.ObjectId;
 var validator = require('express-validator');
 var util = require('util');
 var nodemailer = require('nodemailer');
@@ -266,7 +267,7 @@ router.get('/shopping-cart', function(req, res, next) {
     var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
-
+    var products = cart.generateArray();
     recommendations.GetRecommendations(cart,function(err,recommendations) {
         if (err) {
             errorMsg = req.flash('error :',err.message);
@@ -490,8 +491,9 @@ router.post('/create', function(req, res, next) {
 });
 
 router.get('/like/:id', isLoggedIn, function(req, res, next) {
+    var theId = new ObjectId(req.params.id);
     Product.findOneAndUpdate(
-        {_id: req.params._id},
+        {_id: theId},
         {$addToSet: {"likes": req.user._id}},
         {safe: true, upsert: false}
     ,function(err,product) {
@@ -546,6 +548,7 @@ router.get('/execute', function(req, res, next) {
                             req.flash('error', 'Unable to save order.');
                             return res.redirect('/');
                         }
+                        /* Update Users Bought Array */
                         User.findOneAndUpdate({
                             _id: req.user._id
                         }, {

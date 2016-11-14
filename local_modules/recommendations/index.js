@@ -6,14 +6,15 @@ var Order = require('../../models/order');
 var User = require('../../models/user');
 var Cart = require('../../models/cart');
 
-// module.exports = {
-exports.GetRecommendations = function(products) {
-	User.find({
-		purchased: {
-			$in: $products
-		}
-	});
-	return ['cam1001','cam1002'];
-};
+module.exports = {
+	GetRecommendations: function(products, callback) {
+		result = null;
+		// User.find({
+		// 	purchased: {
+		// 		$in: $products
+		// 	}
+		// })
+		callback(null,result);
+	}
 
-
+}
