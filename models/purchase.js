@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-	code: String,
+	product: {type: Schema.Types.ObjectId, ref: 'Product'},
 	alsoPurchased:[String],
 	created: {
 		type: Date,

@@ -1,4 +1,5 @@
 var Product = require('../models/product');
+var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
 
@@ -30,48 +31,58 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
 	name = brand;
 	name = name.toUpperCase();
-	price = faker.commerce.price(),
-
-	product = new Product({
-		code: code,
-		name: name,
-		title: faker.commerce.productAdjective() + ' ' + color + ' ' + name + ' ' + 'Television',
-		description: faker.lorem.sentence(),
-		taxable: 'Yes',
-		shipable: 'Yes',
-		price: price,
-		'Product_Group': 'Television',
-		category: 'Television',
-		Attributes: [{
-			Name: 'color',
-			Value: color
-		},{
-			Name: 'brand',
-			Value: brand
-		},{
-			Name: "Screen Size",
-			Value: Math.floor((Math.random() * 75-1) + 1)
-		},{
-			Name: 'Resolution',
-			Value: resolution
-		},{
-			Name: 'Number of Ports',
-			Value: Math.floor((Math.random() * 5-1) + 1)
-		},{
-			Name: 'Price',
-			Value: price
-		}],
-		imagePath: imagePath
-	});
-	product.save(function(err) {
+	price = faker.commerce.price();
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
-			console.log('error: ',err.message);
+			console.log(err);
+		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
+		product = new Product({
+			code: code,
+			name: name,
+			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name + ' ' + 'Television',
+			description: faker.lorem.sentence(),
+			taxable: 'Yes',
+			shipable: 'Yes',
+			price: price,
+			usersBought: items,
+			'Product_Group': 'Television',
+			category: 'Television',
+			Attributes: [{
+				Name: 'color',
+				Value: color
+			},{
+				Name: 'brand',
+				Value: brand
+			},{
+				Name: "Screen Size",
+				Value: Math.floor((Math.random() * 75-1) + 1)
+			},{
+				Name: 'Resolution',
+				Value: resolution
+			},{
+				Name: 'Number of Ports',
+				Value: Math.floor((Math.random() * 5-1) + 1)
+			},{
+				Name: 'Price',
+				Value: price
+			}],
+			imagePath: imagePath
+		});
+		product.save(function(err) {
+			if (err) {
+				console.log('error: ',err.message);
+			}
+		});
+		done++;
+		if (done==100) {
+			exit();
 		}
 	});
-	done++;
-	if (done==100) {
-		exit();
-	}
 }
 
 function exit() {

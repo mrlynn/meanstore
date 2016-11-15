@@ -1,4 +1,5 @@
 var Product = require('../models/product');
+var User = require('../models/user');
 var mongoose = require('mongoose');
 var faker = require('faker');
 var Config = require('../config/config');
@@ -13,6 +14,7 @@ imageresolutions = ['42 Megapixels','29 Megapixels','20 Megapixels','18 Megapixe
 opticalzoom = ['18mm','20mm','23mm','24mm'];
 memorycardtype = ['SD','Micro SD','Memory Stick','Internal Memory'];
 var done=0;
+
 for (var i=0; i < 100; i++) {
 	var code = 1000 + i;
 	var color = faker.commerce.color();
@@ -32,51 +34,67 @@ for (var i=0; i < 100; i++) {
 	var category = 'Camera';
 	name = faker.commerce.productName() + ' Camera';
 	price = faker.commerce.price();
-	product = new Product({
-		code: 'cam' + code,
-		name: name,
-		title: brand + ' ' + faker.commerce.productAdjective() + ' ' + color + ' ' + name,
-		description: faker.lorem.sentence(),
-		taxable: 'Yes',
-		shipable: 'Yes',
-		price: price,
-		'Product_Group': 'Camera',
-		category: 'Camera',
-		Attributes: [{
-			Name: 'color',
-			Value: color
-		},{
-			Name: 'brand',
-			Value: brand
-		},{
-			Name: "Memory Card Type",
-			Value: memCard
-		},{
-			Name: 'Image Resolution',
-			Value: resolution
-		},{
-			Name: 'Video Resolution',
-			Value: vresolution
-		},{
-			Name: 'Optical Zoom',
-			Value: oz
-		},{
-			Name: 'Price',
-			Value: price
-		}],
-		imagePath: imagePath,
-		likes: [ "12d321", "23f122","123g123","d03kg231","123gkdf1","23easdfsd"]
-	});
 
-	product.save(function(err) {
+
+	/* let's get 5 random users to add to the products's purchased array */
+	/* This array will be referenced by the recommendation engine        */
+
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
-			console.log('error: ',err.message);
+			console.log(err);
 		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
+		product = new Product({
+			code: 'cam' + code,
+			name: name,
+			title: brand + ' ' + faker.commerce.productAdjective() + ' ' + color + ' ' + name,
+			description: faker.lorem.sentence(),
+			taxable: 'Yes',
+			shipable: 'Yes',
+			price: price,
+			'Product_Group': 'Camera',
+			category: 'Camera',
+			usersBought: items,
+			Attributes: [{
+				Name: 'color',
+				Value: color
+			},{
+				Name: 'brand',
+				Value: brand
+			},{
+				Name: "Memory Card Type",
+				Value: memCard
+			},{
+				Name: 'Image Resolution',
+				Value: resolution
+			},{
+				Name: 'Video Resolution',
+				Value: vresolution
+			},{
+				Name: 'Optical Zoom',
+				Value: oz
+			},{
+				Name: 'Price',
+				Value: price
+			}],
+			imagePath: imagePath,
+			likes: [ "12d321", "23f122","123g123","d03kg231","123gkdf1","23easdfsd"]
+		});
+
+		product.save(function(err) {
+			if (err) {
+				console.log('error: ',err.message);
+			}
+			done++;
+			if (done==100) {
+			exit();
+			}
+		});
 	});
-	done++;
-	if (done==100) {
-		exit();
-	}
 }
 
 function exit() {

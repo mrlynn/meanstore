@@ -90,6 +90,7 @@ var schema = new Schema({
 	code: {
 		type: String
 	},
+	usersBought: [String],
 	salesYTD: [{
 		year: {
 			Type: Number

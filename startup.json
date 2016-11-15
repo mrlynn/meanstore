@@ -1,0 +1,23 @@
+{
+  "name"             : "hackathon",
+  "cwd"              : "/Users/mlynn/Documents/SEPIA/cartling/meanstore/meanstore",
+  "script"           : "./bin/www",
+  "log_date_format"  : "YYYY-MM-DD HH:mm Z",
+  "exec_mode"	     : "cluster",
+  "error_file"       : "./log/hackathon/hackathon.stderr.log",
+  "out_file"         : "./log/hackathon/hackathon-app.stdout.log",
+  "pid_file"         : "./pids/hackathon-app.pid",
+  "instances"        : 1, //or 0 => 'max'
+  "min_uptime"       : "200s", // 200 seconds, defaults to 1000
+  "max_restarts"     : 10, // defaults to 15
+  "cron_restart"     : "1 0 * * *",
+  "watch"            : true,
+  "ignore_watch"      : ["[\\/\\\\]\\./", "node_modules", ".git*"],
+  "merge_logs"       : true,
+  "exec_interpreter" : "node",
+  "autorestart"      : true, // enable/disable automatic restart when an app crashes or exits
+  "env": {
+    "NODE_ENV": "production",
+    "AWESOME_SERVICE_API_TOKEN": "xxx"
+  }
+}

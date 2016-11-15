@@ -1,4 +1,4 @@
-    <!--shop/shop.hbs-->
+    <!--shop/shop.hbs     ------>
 
 <div class="container">
     <div class="row">
@@ -27,24 +27,26 @@
                     <div class="product_wrapper">
                         <div class="panel-body">
                             <div class="vertical-center thumbnail-image-container">
+                                <a href='/product/{{this._id}}'>
                                 <img class="img-responsive" src="{{ this.imagePath }}" alt="...">
+                                </a>
                             </div>
                             <div class="text-left">
                             <h3 class="product-title product-title-home top-pad-10">
-                            {{this.code}} - {{this.title}}
+                                <a href='/product/{{this._id}}'>{{this.code}} - {{this.title}}</a>
                             </h3>
                             </div>
                                 <div class="text-right">
                                     {{#if ../../isLoggedIn}}
                                         <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
-                                    <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
+                                        <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
                                     {{else}}
                                         <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}
                                     {{/if}}
                                     <script>
-                                    $(document).ready(function(){
-                                        $('[data-toggle="tooltip"]').tooltip();   
-                                    });
+                                        $(document).ready(function(){
+                                            $('[data-toggle="tooltip"]').tooltip();
+                                        });
                                     </script>
                                 </div>
                             {{#if this.Attributes}}

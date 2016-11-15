@@ -1,4 +1,5 @@
 var Product = require('../models/product');
+var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -28,46 +29,60 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-refrigerator.jpg'
 	name = faker.commerce.productName() + ' Refrigerator';
 	price = faker.commerce.price();
-	product = new Product({
-		code: 'ref' + code,
-		name: name,
-		title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
-		description: faker.lorem.sentence(),
-		taxable: 'Yes',
-		shipable: 'Yes',
-		price: price,
-		'Product_Group': 'Refrigerator',
-		category: 'Refrigerator',
-		attributes: [{
-			Name: 'color',
-			Value: color
-		},{
-			Name: 'Additional Feature',
-			Value: option
-		},
-		{
-			Name: 'Doors',
-			Value: Math.floor((Math.random() * 2-1) + 1)
-		},
-		{
-			Name: 'Price',
-			Value: price
-		},
-		{
-			Name: 'Width',
-			Value: Math.floor((Math.random() * 36-1) + 1)
-		}],
-		imagePath: imagePath
-	});
-	product.save(function(err) {
+	
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
-			console.log('error: ',err.message);
+			console.log(err);
 		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
+
+		product = new Product({
+			code: 'ref' + code,
+			name: name,
+			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
+			description: faker.lorem.sentence(),
+			taxable: 'Yes',
+			shipable: 'Yes',
+			price: price,
+			'Product_Group': 'Refrigerator',
+			category: 'Refrigerator',
+			usersBought: items,
+			attributes: [{
+				Name: 'color',
+				Value: color
+			},{
+				Name: 'Additional Feature',
+				Value: option
+			},
+			{
+				Name: 'Doors',
+				Value: Math.floor((Math.random() * 2-1) + 1)
+			},
+			{
+				Name: 'Price',
+				Value: price
+			},
+			{
+				Name: 'Width',
+				Value: Math.floor((Math.random() * 36-1) + 1)
+			}],
+			imagePath: imagePath
+		});
+		product.save(function(err) {
+			if (err) {
+				console.log('error: ',err.message);
+			}
+			done++;
+			if (done==100) {
+			exit();
+			}
+		});
 	});
-	done++;
-	if (done==100) {
-		exit();
-	}
+	
 }
 
 function exit() {

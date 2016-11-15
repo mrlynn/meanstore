@@ -1,17 +1,14 @@
 <div class="product-layout col-md-8 col-md-offset-2">
     <div class="col-md-6">
-        {{#each product.images}}
         <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">
-            <img src="{{this.images.imagePath}}" class="thumbnail-image img-responsive">
+            <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
         </div>
-        {{/each}}
     </div>
     <div class="col-md-9">
         <div class="thumbnail">
-            <img class="img-responsive" src="{{product.image-large}}" alt="">
             <div class="caption-full">
                 <h4 class="pull-right">${{product.price}}</h4>
-                <h4><a href="#">Product Name</a>
+                <h4><a href="#">{{product.name}}</a>
                 </h4>
                 <p>{{product.title}}</p>
                 <p>{{product.description}}</p>
@@ -26,4 +23,58 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="product_id" value="YJRev3KhUzOFV5AI">
+<input type="hidden" id="product_id" value="{{product._id}}">
+<div class="recommendations">
+    <div class="col-md-3">
+        <div class="panel-heading">
+        <h3>Also Viewed</h3>
+        </div>
+        <div class="panel-body">
+        {{#each recommendations.viewed}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this.id}}'><img src="{{this.image}}">
+                {{this.title}}</a>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+        <h3>Trending </h3>
+        </div>
+        <div class="panel-body">
+        {{#each recommendations.trending}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this.id}}'><img src="{{this.image}}">
+                {{this.title}}</a>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+        <h3>Most Popular Viewed</h3>
+        </div>
+            <div class="panel-body">
+            {{#each recommendations.popular}}
+                <div class='small-thumbnail'>
+                    <a href='/product/{{this.id}}'><img src="{{this.image}}">
+                {{this.title}}</a>
+                </div>
+            {{/each}}
+            </div>
+        </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+        <h3>Similar Products</h3>
+        </div>
+        <div class="panel-body">
+        {{#each recommendations.similar}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this.id}}'><img src="{{this.image}}">
+                {{this.title}}</a>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+</div>

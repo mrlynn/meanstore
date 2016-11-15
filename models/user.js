@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
+var random = require('mongoose-simple-random');
 
 var userSchema = new Schema({
 	resetPasswordToken: String,
@@ -110,6 +111,8 @@ userSchema.pre('save', function(next) {
     });
   });
 });
+
+userSchema.plugin(random);
 
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {

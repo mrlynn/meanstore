@@ -1,4 +1,5 @@
 var Product = require('../models/product');
+var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
 var faker = require('faker');
@@ -29,42 +30,55 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-printer.jpg'
 	name = faker.commerce.productName() + ' Printer';
 	price = faker.commerce.price();
-	product = new Product({
-		code: 'pri' + code,
-		name: name,
-		title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
-		description: faker.lorem.sentence(),
-		taxable: 'Yes',
-		shipable: 'Yes',
-		price: price,
-		'Product_Group': 'Printer',
-		category: 'Printer',
-		attributes: [{
-			Name: 'color',
-			Value: color
-		},{
-			Name: 'brand',
-			Value: brand
-		},
-		{
-			Name: 'Price',
-			Value: price
-		},
-		{
-			Name: 'Connectivity',
-			Value: connectivity
-		}],
-		imagePath: imagePath
-	});
-	product.save(function(err) {
+
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
-			console.log('error: ',err.message);
+			console.log(err);
+		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
+
+		product = new Product({
+			code: 'pri' + code,
+			name: name,
+			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
+			description: faker.lorem.sentence(),
+			taxable: 'Yes',
+			shipable: 'Yes',
+			price: price,
+			'Product_Group': 'Printer',
+			category: 'Printer',
+			usersBought: items,
+			attributes: [{
+				Name: 'color',
+				Value: color
+			},{
+				Name: 'brand',
+				Value: brand
+			},
+			{
+				Name: 'Price',
+				Value: price
+			},
+			{
+				Name: 'Connectivity',
+				Value: connectivity
+			}],
+			imagePath: imagePath
+		});
+		product.save(function(err) {
+			if (err) {
+				console.log('error: ',err.message);
+			}
+		});
+		done++;
+		if (done==100) {
+			exit();
 		}
 	});
-	done++;
-	if (done==100) {
-		exit();
-	}
 }
 
 function exit() {

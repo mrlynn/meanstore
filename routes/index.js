@@ -315,7 +315,7 @@ router.get('/shopping-cart', function(req, res, next) {
 	// 	}
 	// 	req.session.allcats = allcats
 	// });
-    
+
 })
 
 router.get('/checkout', isLoggedIn, function(req, res, next) {
@@ -631,7 +631,8 @@ router.post('/search', function(req, res, next) {
     var errorMsg = req.flash('error')[0];
 
     Category.find({}, function(err, categories) {
-        Product.find({
+        Product.find(
+            {
                 $text: {
                     $search: q
                 }
@@ -646,7 +647,7 @@ router.post('/search', function(req, res, next) {
                 }
             })
             .exec(function(err, results) {
-                // count of all matching objects 
+                // count of all matching objects
                 if (err) {
                     req.flash('error', "An error has occurred - " + err.message);
                     return res.redirect('/');
@@ -677,7 +678,6 @@ router.post('/search', function(req, res, next) {
 
 });
 
-
 router.get('/product/:id/', function(req, res, next) {
     var productId = req.params.id;
     // if we have a cart, pass it - otherwise, pass an empty object
@@ -686,13 +686,15 @@ router.get('/product/:id/', function(req, res, next) {
             // replace with err handling
             return res.redirect('/');
         }
-        res.render('shop/product', {
-            layout: 'fullpage.hbs',
-            product: null,
-            errorMsg: "Product not found.",
-            noErrorMsg: 0
-        })
-
+        recommendations.GetRecommendations(product,function(err,recommendations) {
+             res.render('shop/product', {
+                layout: 'fullpage.hbs',
+                recommendations: recommendations,
+                product: product,
+                errorMsg: "Product not found.",
+                noErrorMsg: 0
+            });
+        });
     });
 });
 
