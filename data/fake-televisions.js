@@ -18,6 +18,16 @@ brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Throw
 resolutions = ['1080p','1080l','720p','1440p','4k','8k'];
 var done = 0;
 for (var i=0; i < 100; i++) {
+
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
+		if (err) {
+			console.log(err);
+		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	var materialBrand = faker.commerce.productMaterial();
@@ -32,15 +42,8 @@ for (var i=0; i < 100; i++) {
 	name = brand;
 	name = name.toUpperCase();
 	price = faker.commerce.price();
-	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
-	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
-		if (err) {
-			console.log(err);
-		}
-		var items = []
-		for(user in usersArray) {
-			items.push(usersArray[user]._id);
-		};
+
+	
 		product = new Product({
 			code: code,
 			name: name,
@@ -73,15 +76,20 @@ for (var i=0; i < 100; i++) {
 			}],
 			imagePath: imagePath
 		});
-		product.save(function(err) {
+		product.save(function(err,productId) {
 			if (err) {
 				console.log('error: ',err.message);
 			}
+			for(user in usersArray) {
+				items.push(usersArray[user]._id);
+				User.update({_id: usersArray[user]._id},{$push: {"purchased": productId._id }})
+			};
+			done++;
+			if (done==100) {
+				exit();
+			}
 		});
-		done++;
-		if (done==100) {
-			exit();
-		}
+		
 	});
 }
 

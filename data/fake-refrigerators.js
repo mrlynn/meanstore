@@ -72,17 +72,22 @@ for (var i=0; i < 100; i++) {
 			}],
 			imagePath: imagePath
 		});
-		product.save(function(err) {
+		product.save(function(err,productId) {
 			if (err) {
 				console.log('error: ',err.message);
 			}
 			done++;
+			/* go back and update users with this new product */
+			for(user in usersArray) {
+				items.push(usersArray[user]._id);
+				User.update({_id: usersArray[user]._id},{$push: {"purchased": productId._id }})
+			};
 			if (done==100) {
-			exit();
+				exit();
 			}
 		});
 	});
-	
+
 }
 
 function exit() {

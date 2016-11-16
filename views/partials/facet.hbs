@@ -1,9 +1,9 @@
 <div class="row">
 	<p class="lead">Search Tools</p>
 	<ul>
-	{{#each results}}
+		{{#each results}}
 		<li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} ({{this.count}})</a></li>
-	{{/each}}
+		{{/each}}
 	</ul>
 </div>
 {{#each categoryAttributes}}
@@ -13,5 +13,4 @@
 	{{/each}}
 </div>
 {{/each}}
-	{{> sidenav}}
-
+{{> sidenav}}

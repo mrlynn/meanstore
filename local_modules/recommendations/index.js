@@ -23,8 +23,9 @@ var Cart = require('../../models/cart');
 
 module.exports = {
 	GetRecommendations: function(products, callback) {
+
 		recommendations = [];
-		var numProducts = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+		var numProducts = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
 		Product.aggregate([{ $sample: { size: numProducts }}], function(err,prodArray) {
 			if (err) {
 				console.log(err);
@@ -40,7 +41,7 @@ module.exports = {
 				}
 				similar.push(doc);
 			}
-			var numTrending = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+			var numTrending = Math.floor(Math.random() * (6 - 2 + 1)) + 2;
 			Product.aggregate([{ $sample: { size: numTrending }}], function(err,prodArray) {
 				if (err) {
 					console.log(err);
@@ -56,7 +57,7 @@ module.exports = {
 					}
 					trending.push(doc);
 				};
-				var numViewed = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+				var numViewed = Math.floor(Math.random() * (8 - 2 + 1)) + 2;
 				Product.aggregate([{ $sample: { size: numViewed }}], function(err,prodArray) {
 					if (err) {
 						console.log(err);

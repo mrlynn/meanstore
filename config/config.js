@@ -5,6 +5,6 @@ var config = {
 	title: 'MEANStore',
 	keywords: "your,keywords,here,meanstore,ecommerce,shoppingcart",
 	copyright: "MongoDB",
-	frontPageCategory: 'Camera'
+	frontPageCategory: 'Apparel'
 };
 module.exports = config;

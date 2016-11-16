@@ -31,6 +31,7 @@ var orderSchema = new Schema({
 	}
 });
 
+/* This method called when an order is saved */
 orderSchema.post('save', function(doc) {
   /* generate recommendations collection */
   /* Loop through all cart products:
@@ -64,16 +65,18 @@ orderSchema.post('save', function(doc) {
 	    			 // product purchase record not found - create one with the product and
 	    			 //   a list of all the other products purchased.
 					console.log("Did NOT find a Purchase Records for product code: " + prod);
-					purchase = new Purchase({
-						code: prod,
-						alsoPurchased: otherids
-					});
-					purchase.save(function(err) {
-						if (err) {
-							console.log('error: ' + err.message);
-						}
-						console.log("Purchase record created for " + prod);
-					})
+					if (otherids.count() > 0) {
+						purchase = new Purchase({
+							code: prod,
+							alsoPurchased: otherids
+						});
+						purchase.save(function(err) {
+							if (err) {
+								console.log('error: ' + err.message);
+							}
+							console.log("Purchase record created for " + prod);
+						})
+					}
 	    		}
 		    })
 		}

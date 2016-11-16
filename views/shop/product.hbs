@@ -1,80 +1,178 @@
+<!-- shop/product.hbs -->
 <div class="product-layout col-md-8 col-md-offset-2">
-    <div class="col-md-6">
-        <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">
-            <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
+    <div class="col-md-3">
+        <div class="thumbnail">
+            <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">
+                <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
+            </div>
         </div>
     </div>
     <div class="col-md-9">
-        <div class="thumbnail">
+        <div class="product-area">
             <div class="caption-full">
                 <h4 class="pull-right">${{product.price}}</h4>
-                <h4><a href="#">{{product.name}}</a>
-                </h4>
+                <h4><a href="#">{{product.name}}</a></h4>
                 <p>{{product.title}}</p>
-                <p>{{product.description}}</p>
+            </div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#description"
+                        aria-controls="description"
+                        role="tab"
+                        data-toggle="tab"
+                    >Description</a>
+                </li>
+                <li role="presentation">
+                    <a href="#features"
+                        aria-controls="features"
+                        role="tab"
+                        data-toggle="tab"
+                    >Features</a>
+                </li>
+                <li role="presentation">
+                    <a href="#reviews"
+                        aria-controls="reviews"
+                        role="tab"
+                        data-toggle="tab"
+                    >Reviews</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="description">
+                    <div class="product-tab-area">
+                        <div class='description'>
+                            {{product.description}}
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane top-10" id="features">
+                    <div class="product-tab-area">
+
+                        <div class="features">
+                            {{#each product.Attributes}}
+                            <li>{{this.Name}}: {{this.Value}}</li>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="reviews">
+
+
+
+
+
+                    <div class="blog-comment">
+                        <h3 class="text-success">Comments</h3>
+                        <hr/>
+                        <ul class="comments">
+                            <li class="clearfix">
+                                <img src="http://bootdey.com/img/Content/user_1.jpg" class="avatar" alt="">
+                                <div class="post-comments">
+                                    <p class="meta">Dec 18, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Etiam a sapien odio, sit amet
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <img src="http://bootdey.com/img/Content/user_2.jpg" class="avatar" alt="">
+                                <div class="post-comments">
+                                    <p class="meta">Dec 19, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Etiam a sapien odio, sit amet
+                                    </p>
+                                </div>
+                                
+                                <ul class="comments">
+                                    <li class="clearfix">
+                                        <img src="http://bootdey.com/img/Content/user_3.jpg" class="avatar" alt="">
+                                        <div class="post-comments">
+                                            <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                Etiam a sapien odio, sit amet
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
+
+
+
+                </div>
             </div>
         </div>
         <p>
             <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-primary btn-block product-add-to-cart" type="button">Add to cart</button>
+                <p class="text-right">
+                    <a href="/add-to-cart/{{this._id}}" class="btn btn-primary add-to-cart" data-id="{{this._id}}" role="button">Add to cart</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="productrecommendations">
+        <div class="col-md-3">
+            <div class="panel-heading">
+                <h3>Also Viewed</h3>
+            </div>
+            <div class="panel-body">
+                {{#each recommendations.viewed}}
+                <div class='small-thumbnail'>
+                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
+                    {{this.title}}</a>
                 </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel-heading">
+                <h3>Trending </h3>
+            </div>
+            <div class="panel-body">
+                {{#each recommendations.trending}}
+                <div class='small-thumbnail'>
+                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
+                    {{this.title}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel-heading">
+                <h3>Most Popular Viewed</h3>
+            </div>
+            <div class="panel-body">
+                {{#each recommendations.popular}}
+                <div class='small-thumbnail'>
+                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
+                    {{this.title}}</a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel-heading">
+                <h3>Similar Products</h3>
+            </div>
+            <div class="panel-body">
+                {{#each recommendations.similar}}
+                <div class='small-thumbnail'>
+                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
+                    {{this.title}}</a>
+                </div>
+                {{/each}}
             </div>
         </div>
     </div>
 </div>
 <input type="hidden" id="product_id" value="{{product._id}}">
-<div class="recommendations">
-    <div class="col-md-3">
-        <div class="panel-heading">
-        <h3>Also Viewed</h3>
-        </div>
-        <div class="panel-body">
-        {{#each recommendations.viewed}}
-            <div class='small-thumbnail'>
-                <a href='/product/{{this.id}}'><img src="{{this.image}}">
-                {{this.title}}</a>
-            </div>
-        {{/each}}
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="panel-heading">
-        <h3>Trending </h3>
-        </div>
-        <div class="panel-body">
-        {{#each recommendations.trending}}
-            <div class='small-thumbnail'>
-                <a href='/product/{{this.id}}'><img src="{{this.image}}">
-                {{this.title}}</a>
-            </div>
-        {{/each}}
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="panel-heading">
-        <h3>Most Popular Viewed</h3>
-        </div>
-            <div class="panel-body">
-            {{#each recommendations.popular}}
-                <div class='small-thumbnail'>
-                    <a href='/product/{{this.id}}'><img src="{{this.image}}">
-                {{this.title}}</a>
-                </div>
-            {{/each}}
-            </div>
-        </div>
-    <div class="col-md-3">
-        <div class="panel-heading">
-        <h3>Similar Products</h3>
-        </div>
-        <div class="panel-body">
-        {{#each recommendations.similar}}
-            <div class='small-thumbnail'>
-                <a href='/product/{{this.id}}'><img src="{{this.image}}">
-                {{this.title}}</a>
-            </div>
-        {{/each}}
-        </div>
-    </div>
-</div>
+

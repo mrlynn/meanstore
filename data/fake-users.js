@@ -8,11 +8,9 @@ mongoose.connect(connectionstring);
 mongoose.Promise = global.Promise;
 
 products = [];
-
+const maxUsers = 20;
 var done=0;
-
-
-for (var i=0; i < 100; i++) {
+for (var i=0; i < maxUsers; i++) {
 	var filter = {};
 	var fields = { _id: 1 };
 	var options = { skip: 10, limit: 10, count: 5 }
@@ -24,6 +22,7 @@ for (var i=0; i < 100; i++) {
 		var items = []
 		for(item in purchasedArray) {
 			items.push(purchasedArray[item]._id);
+			console.log('tick...');
 		};
 		user = new User({
 			firstName: faker.name.firstName(),
@@ -49,7 +48,8 @@ for (var i=0; i < 100; i++) {
 				console.log('error: ',err.message);
 			}
 			done++;
-			if (done>=100) {
+			console.log("Count: " + done);
+			if (done>=maxUsers) {
 				exit();
 			}
 		});
@@ -58,4 +58,5 @@ for (var i=0; i < 100; i++) {
 
 function exit() {
 	mongoose.disconnect();
+	exit;
 }

@@ -1,10 +1,18 @@
 var Config = require('../../config/config');
 var taxConfig = require('../../config/tax-config');
 var Product = require('../../models/product');
+var User = require('../../models/user');
+var Cart = require('../../models/cart');
 var Order = require('../../models/order');
 var User = require('../../models/user');
 
 module.exports = {
+	calculateTaxReturn: function(cart, userId) {
+		cartItems = cart.items;
+		this.calculateTaxAll(cartItems,userId,function(err,results) {
+			return results.taxAmount;
+		})
+	},
 	calculateTax: function(productId, userId, callback) {
 
 		Product.findById(productId,function(err,product) {

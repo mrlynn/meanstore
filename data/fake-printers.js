@@ -18,6 +18,17 @@ brands = ['HP','Epson','Lexmark','Xerox','Kyocera'];
 connectivities = ['WiFi','Apple Airprint','Bluetooth','USB','Ethernet'];
 var done = 0;
 for (var i=0; i < 100; i++) {
+
+
+	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
+		if (err) {
+			console.log(err);
+		}
+		var items = []
+		for(user in usersArray) {
+			items.push(usersArray[user]._id);
+		};
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	var materialBrand = faker.commerce.productMaterial();
@@ -30,17 +41,6 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-printer.jpg'
 	name = faker.commerce.productName() + ' Printer';
 	price = faker.commerce.price();
-
-	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
-	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
-		if (err) {
-			console.log(err);
-		}
-		var items = []
-		for(user in usersArray) {
-			items.push(usersArray[user]._id);
-		};
-
 		product = new Product({
 			code: 'pri' + code,
 			name: name,
@@ -69,10 +69,14 @@ for (var i=0; i < 100; i++) {
 			}],
 			imagePath: imagePath
 		});
-		product.save(function(err) {
+		product.save(function(err,productId) {
 			if (err) {
 				console.log('error: ',err.message);
 			}
+			for(user in usersArray) {
+				items.push(usersArray[user]._id);
+				User.update({_id: usersArray[user]._id},{$push: {"purchased": productId._id }})
+			};
 		});
 		done++;
 		if (done==100) {

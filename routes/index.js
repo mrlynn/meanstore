@@ -55,6 +55,7 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
+            console.log(productChunks);
             res.render('shop/shop', {
                 layout: 'facet.hbs',
                 title: title,
@@ -173,6 +174,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
+
 		// taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
 		// 	if (err) {
 		// 		taxAmount=0;
@@ -368,6 +370,9 @@ router.post('/create', function(req, res, next) {
     }
     var cart = new Cart(req.session.cart);
     products = cart.generateArray();
+    //11-17-2016
+    tax = taxCalc.calculateTaxReturn(req.session.cart,req.user._id);
+
     var create_payment = {
         "intent": "sale",
         "payer": {
