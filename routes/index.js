@@ -15,7 +15,7 @@ var validator = require('express-validator');
 var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
-var taxcalc = require('../local_modules/tax-calculator');
+var taxCalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
@@ -55,7 +55,6 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            console.log(productChunks);
             res.render('shop/shop', {
                 layout: 'facet.hbs',
                 title: title,
@@ -185,7 +184,8 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 			// cart.cartTaxTotal(req.user._id);
 			// cart.cartShippingTotal()
 		    cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
-	        cart.totalTax = 0;
+	        // cart.totalTax = 0;
+            console.log('total tax: ' + cart.totalTax);
 	        cart.totalShipping = 0;
 	        req.session.cart = cart; // store cart in session
 	        req.flash('success', 'Item successfully added to cart.');
@@ -208,7 +208,7 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
             req.flash('error',err.message);
             res.redirect('/');
         }
-		taxcalc.calculateTax(productId,req.user._id,function(err,taxInfo) {
+		taxCalc.calculateTax(productId,req.user._id,function(err,taxInfo) {
 			if (err) {
 				taxAmount=0;
 			} else {
@@ -217,7 +217,7 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
 		    cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
 	    	req.session.cart = cart; // store cart in session
 
-	        req.flash('success','Item Successfully added to cart.');
+	        req.flash('success','Item Successfully added to cart.' + JSON.stringify(cart));
 	    	res.redirect('/');
 	    });
     });
@@ -265,6 +265,7 @@ router.get('/shopping-cart', function(req, res, next) {
     }
     var cart = new Cart(req.session.cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
+    console.log("Total Tax: " + totalTax)
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
     var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
@@ -352,6 +353,7 @@ router.post('/checkout', function(req, res, next) {
     var errorMsg = req.flash('error')[0];
     res.render('shop/checkout', {
         total: cart.totalPrice,
+        totalTax: cart.totalTax,
         successMsg: successMsg,
         noMessage: !successMsg,
         errorMsg,
@@ -372,7 +374,6 @@ router.post('/create', function(req, res, next) {
     products = cart.generateArray();
     //11-17-2016
     tax = taxCalc.calculateTaxReturn(req.session.cart,req.user._id);
-
     var create_payment = {
         "intent": "sale",
         "payer": {
@@ -463,10 +464,14 @@ router.post('/create', function(req, res, next) {
                 var order = new Order({
                     user: req.user,
                     cart: cart,
-                    address: req.body.addr1,
-                    city: req.body.city,
-                    state: req.body.state,
-                    zipcode: req.body.zipcode,
+                    shipping_address: req.body.shipping_addr1,
+                    shipping_city: req.body.shipping_city,
+                    shipping_state: req.body.shipping_state,
+                    shipping_zipcode: req.body.shipping_zipcode,
+                    billing_address: req.body.shipping_addr1,
+                    billing_city: req.body.shipping_city,
+                    billing_state: req.body.shipping_state,
+                    billing_zipcode: req.body.shipping_zipcode,
                     paymentId: payment.id,
                     status: 'pending'
                 });

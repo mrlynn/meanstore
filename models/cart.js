@@ -77,6 +77,28 @@ module.exports = function Cart(oldCart) {
 		storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
 		this.totalQty++;
 		this.totalPrice += parseFloat(price);
+		self = this;
+		taxCalc.calculateTax(id,userId,function(err,response) {
+			if (err) {
+				storedItem.taxAmount=0;
+			} else {
+				storedItem.taxAmount = response.taxAmount;
+			}
+			storedItem.type = type;
+			if (type=='TICKET') {
+				storedItem.ticket_name = name;
+				storedItem.ticket_email = email;
+			} else {
+				if (type=='APPAREL') {
+					storedItem.size = size;
+				}
+			}
+			storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
+			storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
+			storedItem.totalWithTax = ((parseFloat(price) * storedItem.qty)) + parseFloat(storedItem.taxAmount);
+			self.totalTax += storedItem.taxAmount;
+		});
+
 	};
 	// this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
 	// 	var storedItem = this.items[id];

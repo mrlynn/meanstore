@@ -17,6 +17,7 @@ var taxcalc = require('../local_modules/tax-calculator');
 var taxConfig = require('../config/tax-config.js');
 var Config = require('../config/config.js');
 var fs = require('fs');
+var MongoClient = require('mongodb').MongoClient;
 var title = Config.title;
 
 
@@ -25,8 +26,8 @@ router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     Category.find({}, function(err, categories) {
+
         Product.find({
-            category: 'Round-up'
         }, function(err, products) {
             res.render('shop/facet', {
                 layout: 'facet.hbs',

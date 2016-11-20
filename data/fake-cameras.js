@@ -62,10 +62,6 @@ for (var i = 0; i < 100; i++) {
     price = faker.commerce.price();
 
 
-
-
-
-
         product = new Product({
             code: 'cam' + code,
             name: name,

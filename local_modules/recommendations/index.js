@@ -95,7 +95,7 @@ module.exports = {
 							'viewed': viewed,
 							'popular': popular
 						}
-						console.log(recommendations);
+						//console.log(recommendations);
 						callback(null,recommendations);
 					});
 				});

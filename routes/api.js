@@ -72,8 +72,7 @@ router.get('/products/:id', function(req, res, next) {
 /* Create a product */
 router.post('/api/products', function (req, res){
   var product;
-  console.log("POST: ");
-  console.log(req.body);
+
   product = new Product({
     code: req.body.code,
     description: req.body.description,
@@ -178,7 +177,6 @@ router.get('/tax/:id/:user', function(req, res, next) {
 					taxRate = 0;
 				}
 				var price = Number(product.price).toFixed(2);
-				console.log('Price: ' + price);
 				taxAmount = Math.round((price * taxRate) * 100) / 100;
 				priceWithTax = (parseFloat(price) + parseFloat(taxAmount));
 				res.json({

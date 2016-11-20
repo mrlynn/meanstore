@@ -29,7 +29,6 @@
 											</div>
 										</div>
 									</div>
-									
 									<div class="form-group">
 										<label class="col-md-12 control-label">E-Mail</label>
 										<div class="col-md-12 inputGroupContainer">
@@ -40,7 +39,6 @@
 										</div>
 									</div>
 									<!-- Text input-->
-									
 									<div class="form-group">
 										<label class="col-md-12 control-label">Phone #</label>
 										<div class="col-md-12 inputGroupContainer">
@@ -51,42 +49,82 @@
 										</div>
 									</div>
 									<!-- Text input-->
-									
+									<div class="col-md-6">
+									<h3>Billing Address</h3><p>&nbsp</p>
 									<div class="form-group">
-										<label class="col-md-12 control-label">Address</label>
+										<label class="col-md-6 control-label">Address</label>
 										<div class="col-md-12 inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
+												<input name="billing_addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
 											</div>
 										</div>
 									</div>
 									<!-- Text input-->
 									
 									<div class="form-group">
-										<label class="col-md-12 control-label">City</label>
+										<label class="col-md-6 control-label">City</label>
 										<div class="col-md-12 inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
+												<input name="billing_city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
 											</div>
 										</div>
 									</div>
 									<div class="clearfix"></div>
 									<!-- Text input-->
 									<div class="form-group">
-										<label class="col-md-6 control-label">State</label>
-										<label class="col-md-6 control-label">Zip</label>
-										<div class="col-md-12 inputGroupContainer">
+										<div class="col-md-6 inputGroupContainer">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
+												<label class="col-md-3 control-label">State</label>
+												<input name="billing_state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
+												<label class="col-md-3 control-label">Zip</label>
+												<input name="billing_zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
 											</div>
 										</div>
 									</div>
+									</div>
+
+									<div class="col-md-6">
+										<h3>Shipping Address</h3>
+<label><input type="checkbox" id="same_as_billing" /> Same as billing</label>
+										<div class="form-group">
+										<label class="col-md-6 control-label">Address</label>
+										<div class="col-md-12 inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input name="shipping_addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
+											</div>
+										</div>
+									</div>
+									<!-- Text input-->
 									
+									<div class="form-group">
+										<label class="col-md-6 control-label">City</label>
+										<div class="col-md-12 inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input name="shipping_city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
+											</div>
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<!-- Text input-->
+									<div class="form-group">
+										<div class="col-md-6 inputGroupContainer">
+											<div class="input-group">
+												<label class="col-md-3 control-label">State</label>
+
+												
+												<input name="shipping_state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
+												<label class="col-md-3 control-label">Zip</label>
+
+												
+												<input name="shipping_zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
+											</div>
+										</div>
+									</div>
+									</div>
 									<input type="hidden" name="cmd" value="_cart">
 									<input type="hidden" name="business" value="assistant@sepennaa.org">
 									<input type="hidden" name="currency_code" value="USD">
@@ -165,3 +203,16 @@
 				</div>
 				{{/if}}
 				{{>shipping}}
+
+
+<script>
+  $("#same_as_billing").on("change", function(){
+    if (this.checked) {
+
+      $("[name='shipping_addr1']").val($("[name='billing_addr1']").val());
+      $("[name='shipping_city']").val($("[name='billing_city']").val());
+      $("[name='shipping_state']").val($("[name='billing_state']").val());
+      $("[name='shipping_zip']").val($("[name='billing_zip']").val());
+    }
+  });
+</script>
