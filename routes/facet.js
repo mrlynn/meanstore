@@ -18,6 +18,7 @@ var taxConfig = require('../config/tax-config.js');
 var Config = require('../config/config.js');
 var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
+
 var title = Config.title;
 
 
@@ -45,7 +46,44 @@ router.get('/', function(req, res, next) {
     });
 });
 
+
+router.post('/agg',function(req,res,next) {
+    MongoClient.connect(process.env.MONGODB_URI, function(err, db) {
+        if(err) { return console.dir(err); }
+
+            db.collection('test', function(err, collection) {});
+
+            db.collection('test', {w:1}, function(err, collection) {});
+
+            db.createCollection('test', function(err, collection) {});
+
+            db.createCollection('test', {w:1}, function(err, collection) {});
+
+            facets = {
+                category: [
+
+                ]
+            }
+
+            db.categories.find({},function(err,categories) {
+
+                db.products.aggregate(
+                {  }
+
+                )
+
+            })
+
+            
+
+    });
+})
+
 router.post('/search',function(req, res, next) {
+
+
+
+
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     var q = req.body.q;

@@ -7,10 +7,12 @@ var Order = require('../../models/order');
 var User = require('../../models/user');
 
 module.exports = {
-	calculateTaxReturn: function(cart, userId) {
-		cartItems = cart.items;
-		this.calculateTaxAll(cartItems,userId,function(err,results) {
-			return results.taxAmount;
+	calculateTaxReturn: function(cart, userId,callback) {
+		cartItems = cart.generateArray();
+
+		this.calculateTaxAll(cart,userId,function(err,results) {
+			console.log("Results before shipping " + JSON.stringify(results));
+			callback(err,results);
 		})
 	},
 	calculateTax: function(productId, userId, callback) {
@@ -44,18 +46,30 @@ module.exports = {
 						taxRate = 0;
 					}
 					var price = Number(product.price).toFixed(2);
-					taxAmount = Math.round((((price * taxRate) * 100) / 100)+0);
+					// taxAmount = Math.round((((price * taxRate) * 100) / 100)+0);
+					taxAmount = ((price * taxRate) * 100)/100;
 					priceWithTax = (parseFloat(price) + parseFloat(taxAmount));
-					console.log('taxamount: ' + taxAmount);
-					console.log('priceWithTax: ' + priceWithTax);
-					callback(null,{
+
+					// callback(null,{
+					// 	productId: productId,
+					// 	taxable: product.taxable,
+					// 	price: parseFloat(price),
+					// 	taxRate: taxRate,
+					// 	taxAmount: taxAmount,
+					// 	priceWithTax: priceWithTax
+					// });
+					results = {
 						productId: productId,
 						taxable: product.taxable,
 						price: parseFloat(price),
 						taxRate: taxRate,
 						taxAmount: taxAmount,
 						priceWithTax: priceWithTax
-					});
+					};
+					err = null;
+					callback(err,results);
+
+
 				})
 
 			} else {
@@ -65,25 +79,37 @@ module.exports = {
 			}
 		})
 	},
-	calculateTaxAll: function(items,userId,callback) {
+	calculateTaxAll: function(cart,userId,callback) {
+		console.log("asdfasdfasdadsf");
 		var products = [];
-		for (var id in items) {
-			products.push(items[id]);
-		}
+		products = cart.generateArray();
+		// for (var id in items) {
+		// 	products.push(items[id]);
+		// }
+		var done = 0
+		var cartTaxTotal = 0;
 		for (var i=0; i<products.length;i++) {
 			var cartTaxTotal = 0;
-			this.calculateTax(products[i],userId,function(err,results) {
+			this.calculateTax(products[i].item._id,userId,function(err,results) {
 				if (err) {
 					console.err("error " + err.message);
 					callback(err,null);
 					return;
 				}
 				cartTaxTotal += parseFloat(results.taxAmount);
+				console.log("Cart Tax Total " + cartTaxTotal);
+				done++;
+				console.log("d = " + done);
+				if (done >= products.length) {
+					finishit();
+				}
 			});
 		};
-		var results = {
-			taxAmount: parseFloat(cartTaxTotal)
+		function finishit() {
+			var results = {
+				taxAmount: cartTaxTotal
+			}
+			callback(null,results);
 		}
-		callback(null,results);
 	}
 }

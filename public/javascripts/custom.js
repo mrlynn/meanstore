@@ -5,10 +5,6 @@ $(document).ready(function() {
 		$(this).addClass("table table-hover")
 	});
     
-    $(".product-title").dotdotdot({
-        ellipsis: '...'
-	});
-	
 	// Call to API for a change to the published state of a product
 	$("input[class='published_state']").change(function() {
 		$.ajax({
@@ -24,6 +20,8 @@ $(document).ready(function() {
         });
 	});
     
+
+ 
     $("#order_status_update").click(function() {
         $.ajax({
 			method: "POST",
@@ -37,7 +35,7 @@ $(document).ready(function() {
             show_notification(msg.responseJSON.message,"danger");
         });
     });
-    
+
     $(".product-add-to-cart").click(function() {
         $.ajax({
 			method: "POST",

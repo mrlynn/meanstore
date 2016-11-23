@@ -18,9 +18,9 @@
 							<form action="/create" method="post">
 								<div class="panel-body">
 									<div class="form-group">
-										<label class="col-md-6 control-label">First Name</label>
-										<label class="col-md-6 control-label">Last Name</label>
-										<div class="col-md-12 inputGroupContainer">
+										<label class="control-label">First Name</label>
+										<label class="control-label">Last Name</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 												<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
@@ -30,8 +30,8 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-md-12 control-label">E-Mail</label>
-										<div class="col-md-12 inputGroupContainer">
+										<label class="control-label">E-Mail</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
 												<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
@@ -40,87 +40,51 @@
 									</div>
 									<!-- Text input-->
 									<div class="form-group">
-										<label class="col-md-12 control-label">Phone #</label>
-										<div class="col-md-12 inputGroupContainer">
+										<label class="control-label">Phone #</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
 												<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
 											</div>
 										</div>
 									</div>
-									<!-- Text input-->
-									<div class="col-md-6">
-									<h3>Billing Address</h3><p>&nbsp</p>
 									<div class="form-group">
-										<label class="col-md-6 control-label">Address</label>
-										<div class="col-md-12 inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="billing_addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
-											</div>
-										</div>
-									</div>
-									<!-- Text input-->
-									
-									<div class="form-group">
-										<label class="col-md-6 control-label">City</label>
-										<div class="col-md-12 inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="billing_city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
-											</div>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-									<!-- Text input-->
-									<div class="form-group">
-										<div class="col-md-6 inputGroupContainer">
-											<div class="input-group">
-												<label class="col-md-3 control-label">State</label>
-												<input name="billing_state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
-												<label class="col-md-3 control-label">Zip</label>
-												<input name="billing_zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
-											</div>
-										</div>
-									</div>
-									</div>
-
-									<div class="col-md-6">
+										<span class="col-md-12 help-block" ng-show="shipping_name.$invalid || shipping_city.$invalid"> Shipping details are required.</span>
 										<h3>Shipping Address</h3>
-<label><input type="checkbox" id="same_as_billing" /> Same as billing</label>
+										
 										<div class="form-group">
-										<label class="col-md-6 control-label">Address</label>
-										<div class="col-md-12 inputGroupContainer">
+										<label class="control-label">Address</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="shipping_addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text">
+												<input ng-model="shipping_addr1" name="shipping_addr1" placeholder="Address1" class="form-control" value="" type="text" required>
 											</div>
 										</div>
 									</div>
 									<!-- Text input-->
-									
 									<div class="form-group">
-										<label class="col-md-6 control-label">City</label>
-										<div class="col-md-12 inputGroupContainer">
+										<label class="control-label">City</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input name="shipping_city" placeholder="city" class="form-control" value="{{user.city}}"  type="text">
+												<input ng-model="shipping_city" name="shipping_city" placeholder="city" class="form-control" value=""  type="text" required>
 											</div>
 										</div>
 									</div>
-									<div class="clearfix"></div>
 									<!-- Text input-->
 									<div class="form-group">
-										<div class="col-md-6 inputGroupContainer">
+										<label class="control-label">State</label>
+										<div class="inputGroupContainer">
 											<div class="input-group">
-												<label class="col-md-3 control-label">State</label>
-
-												
-												<input name="shipping_state" placeholder="State" class="form-control"  value="{{user.state}}" type="text">
-												<label class="col-md-3 control-label">Zip</label>
-
-												
-												<input name="shipping_zip" placeholder="Zip Code" class="form-control"  value="{{user.zipcode}}" type="text">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_state" name="shipping_state" placeholder="PA" class="form-control" value="" type="text" required>
+											</div>
+										</div>
+										<label class="control-label">Zip</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_zip" name="shipping_zip" placeholder="xxxxxx" class="form-control" value="" type="text" required>
 											</div>
 										</div>
 									</div>
@@ -156,10 +120,10 @@
 										<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
 										<tr>
 											<td>{{this.item.title}}</td>
-											<td class="text-align-right">{{this.qty}}</td>
-											<td class="text-align-right" text-align="right">${{this.price}}</td>
-											<td>{{this.item.taxable}}</td>
-											<td class="text-align-right" text-align="right">${{this.itemTotal}}</td>
+											<td class="text-right">{{this.qty}}</td>
+											<td class="text-right" text-align="right">${{this.price}}</td>
+											<td class="text-left">{{this.item.taxable}}</td>
+											<td class="text-right" text-align="right">${{this.itemTotal}}</td>
 											<td>
 												<div class="btn-group pull-right">
 													<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
@@ -176,8 +140,33 @@
 									<tr>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
+										<td>&nbsp;</td>
 										<td>Total: </td>
-										<td text-align="right">${{totalPrice}}</td>
+										<td class="text-right" text-align="right">${{subtotal}}</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td colspan=3>{{taxDesc}}</td>
+										<td>Tax: </td>
+										<td class='text-right' text-align="right">
+										${{totalTax}}
+										</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>Shipping: </td>
+										<td class='text-right' text-align="right">${{shippingtotal}}</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>Total: </td>
+										<td class='text-right' text-align="right">${{grandtotal}}</td>
 										<td>&nbsp;</td>
 									</tr>
 								</tbody>
@@ -185,7 +174,7 @@
 							<div class="text-right">
 								<input type='submit' value='Pay with Paypal >' class='btn btn-primary text-right'><br><a href='/whypaypal'>Why PayPal?</a>
 							</div>
-							<input type="hidden" name="amount" value="{{totalPrice}}">
+							<input type="hidden" name="amount" value="{{grandtotal}}">
 							<input type="hidden" name="method" value="paypal">
 						</form>
 					</div>
@@ -208,11 +197,19 @@
 <script>
   $("#same_as_billing").on("change", function(){
     if (this.checked) {
-
+      $("[name='shipping_name']").val($("[name='billing_name']").val());
       $("[name='shipping_addr1']").val($("[name='billing_addr1']").val());
       $("[name='shipping_city']").val($("[name='billing_city']").val());
       $("[name='shipping_state']").val($("[name='billing_state']").val());
       $("[name='shipping_zip']").val($("[name='billing_zip']").val());
+    } else {
+      $("[name='shipping_name']").val($("").val());
+      $("[name='shipping_addr1']").val($("").val());
+      $("[name='shipping_city']").val($("").val());
+      $("[name='shipping_state']").val($("").val());
+      $("[name='shipping_zip']").val($("").val());
     }
+
   });
 </script>
+

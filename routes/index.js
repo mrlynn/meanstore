@@ -16,6 +16,7 @@ var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxCalc = require('../local_modules/tax-calculator');
+var shippingCalc = require('../local_modules/shipping-calculator');
 var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
@@ -173,8 +174,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-
-		// taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
+       		// taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
 		// 	if (err) {
 		// 		taxAmount=0;
 		// 	} else {
@@ -185,10 +185,10 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 			// cart.cartShippingTotal()
 		    cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
 	        // cart.totalTax = 0;
-            console.log('total tax: ' + cart.totalTax);
+            console.log("Cart.totaltax = " + cart.totalTax);
 	        cart.totalShipping = 0;
 	        req.session.cart = cart; // store cart in session
-	        req.flash('success', 'Item successfully added to cart.');
+	        req.flash('success', 'Item successfully added to cart. ');
 	        res.redirect('/');
 	    // });
     });
@@ -265,16 +265,17 @@ router.get('/shopping-cart', function(req, res, next) {
     }
     var cart = new Cart(req.session.cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
-    console.log("Total Tax: " + totalTax)
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
     var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
     var totalPriceWithTax = parseFloat(Number(cart.totalPriceWithTax).toFixed(2));
+    var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
     var products = cart.generateArray();
     recommendations.GetRecommendations(cart,function(err,recommendations) {
         if (err) {
             errorMsg = req.flash('error :',err.message);
         }
+        console.log("REcommendations " + JSON.stringify(recommendations));
         if (!recommendations) {
             recommendations = [{
                 code: 'cam1000',
@@ -321,7 +322,7 @@ router.get('/shopping-cart', function(req, res, next) {
 
 })
 
-router.get('/checkout', isLoggedIn, function(req, res, next) {
+router.post('/update_shipping', isLoggedIn, function(req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
     }
@@ -329,6 +330,28 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     successMsg = req.flash('success')[0];
     var cart = new Cart(req.session.cart);
     var errorMsg = req.flash('error')[0];
+    
+    res.render('shop/checkout', {
+        products: cart.generateArray(),
+        totalPrice: cart.totalPrice.toFixed(2),
+        user: req.user,
+        successMsg: successMsg,
+        noMessage: !successMsg,
+        errorMsg,
+        noErrorMsg: !errorMsg
+    });
+});
+
+router.get('/checkout', isLoggedIn, function(req, res, next) {
+    if (!req.session.cart) {
+        return res.redirect('/shopping-cart');
+    }
+
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    var cart = new Cart(req.session.cart);
+    var errorMsg = req.flash('error')[0];
+
     res.render('shop/checkout', {
         products: cart.generateArray(),
         totalPrice: cart.totalPrice.toFixed(2),
@@ -342,24 +365,72 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
 
 router.post('/checkout', function(req, res, next) {
     var method = req.body.method;
-    var amount = parseFloat(req.body.amount);
+    var shipping_city = req.body.shipping_city;
+    var shipping_state = req.body.shipping_state;
+    var cart = new Cart(req.session.cart);
+    taxDesc="";
+    var subtotal = parseFloat(req.body.amount);
+    var shippingtotal = 0;
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
-    if (!req.session.cart) {
-        return res.redirect('/shopping-cart');
-    }
-    var cart = new Cart(req.session.cart);
     products = cart.generateArray();
-    var errorMsg = req.flash('error')[0];
-    res.render('shop/checkout', {
-        total: cart.totalPrice,
-        totalTax: cart.totalTax,
-        successMsg: successMsg,
-        noMessage: !successMsg,
-        errorMsg,
-        noErrorMsg: !errorMsg
+    shippingCalc.calculateShipping(products,function(err,result) {
+        if (err) {
+            console.log("Unable to calculate shipping " + err);
+            errorMsg = req.flash('error', err.message);
+            return res.redirect('/');
+        }
+        shippingtotal = result.totalShipping;
+        console.log("Shipping Total " + shippingtotal);
+        if (shipping_state == taxConfig.ourStateCode) {
+            taxDesc="PA and Philadelphia Sales Tax Applies";
+            taxCalc.calculateTaxAll(cart,req.user._id,function (err,results) {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                }
+                if (!req.session.cart) {
+                    return res.redirect('/shopping-cart');
+                }
+                var totalTax = results.taxAmount.toFixed(2);
+
+                var grandtotal = (parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal));
+
+                var errorMsg = req.flash('error')[0];
+
+
+                res.render('shop/checkout', {
+                    taxDesc: taxDesc,
+                    products: cart.generateArray(),
+                    subtotal: subtotal,
+                    totalTax: totalTax,
+                    shippingtotal: shippingtotal,
+                    grandtotal: grandtotal,
+                    successMsg: successMsg,
+                    noMessage: !successMsg,
+                    errorMsg: errorMsg,
+                    noErrorMsg: !errorMsg
+                });
+
+            })
+        } else {
+            var totalTax = 0;
+            var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
+            res.render('shop/checkout', {
+                    taxDesc: taxDesc,
+                    products: cart.generateArray(),
+                    subtotal: subtotal,
+                    totalTax: totalTax,
+                    shippingtotal: shippingtotal,
+                    grandtotal: grandtotal,
+                    successMsg: successMsg,
+                    noMessage: !successMsg,
+                    errorMsg: errorMsg,
+                    noErrorMsg: !errorMsg
+                });
+        }
     });
-});
+})  ;
 
 router.post('/create', function(req, res, next) {
 	// reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93

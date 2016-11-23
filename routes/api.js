@@ -63,6 +63,13 @@ router.get('/products', function(req, res, next) {
 });
 
 /* GET product. */
+router.get('/product/:id', function(req, res, next) {
+	Product.findById(req.params.id,function(err,product) {
+		res.json(product);
+	})
+});
+
+/* GET product. */
 router.get('/products/:id', function(req, res, next) {
 	Product.findById(req.params.id,function(err,product) {
 		res.json(product);

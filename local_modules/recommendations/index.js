@@ -5,6 +5,13 @@ var User = require('../../models/user');
 var Order = require('../../models/order');
 var User = require('../../models/user');
 var Cart = require('../../models/cart');
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var url = 'mongodb://localhost:27017/hackathon';
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected correctly to server");
+});
 
 // recommendations = {
 // 	similar: {
@@ -23,7 +30,6 @@ var Cart = require('../../models/cart');
 
 module.exports = {
 	GetRecommendations: function(products, callback) {
-
 		recommendations = [];
 		var numProducts = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
 		Product.aggregate([{ $sample: { size: numProducts }}], function(err,prodArray) {
@@ -49,11 +55,11 @@ module.exports = {
 				var trending = []
 				for(prod in prodArray) {
 					doc = {
-							_id: prodArray[prod]._id,
-							title: prodArray[prod].title,
-							image: prodArray[prod].imagePath,
-							code: prodArray[prod].code,
-							desc: prodArray[prod].description
+						_id: prodArray[prod]._id,
+						title: prodArray[prod].title,
+						image: prodArray[prod].imagePath,
+						code: prodArray[prod].code,
+						desc: prodArray[prod].description
 					}
 					trending.push(doc);
 				};
@@ -65,11 +71,11 @@ module.exports = {
 					var viewed = []
 					for(prod in prodArray) {
 						doc = {
-								_id: prodArray[prod]._id,
-								title: prodArray[prod].title,
-								image: prodArray[prod].imagePath,
-								code: prodArray[prod].code,
-								desc: prodArray[prod].description
+							_id: prodArray[prod]._id,
+							title: prodArray[prod].title,
+							image: prodArray[prod].imagePath,
+							code: prodArray[prod].code,
+							desc: prodArray[prod].description
 						}
 						viewed.push(doc);
 					};

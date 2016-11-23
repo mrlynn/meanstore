@@ -1,8 +1,12 @@
 var User = require('../models/user');
+var Product = require('../models/product');
 var Ticket = require('../models/ticket');
 var taxCalc = require('../local_modules/tax-calculator');
 var async = require('async');
 var shippingCalc = require('../local_modules/shipping-calculator');
+var taxCalc = require('../local_modules/tax-calculator');
+var taxConfig = require('../config/tax-config');
+"use strict"
 
 module.exports = function Cart(oldCart) {
 
@@ -21,7 +25,7 @@ module.exports = function Cart(oldCart) {
 
 	this.cartShippingTotal = function() {
 		// console.log("Cart Total: " + JSON.stringify(this.items));
-		taxCalc.calculateShippingAll(this.items,function(err,results) {
+		shippingCalc.calculateShippingAll(this.items,function(err,results) {
 			if (err) {
 				console.log('error :' + err.message);
 			}
@@ -53,18 +57,9 @@ module.exports = function Cart(oldCart) {
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);
-		storedItem.type = type;
-		if (type=='TICKET') {
-			storedItem.ticket_name = name;
-			storedItem.ticket_email = email;
-		} else {
-			if (type=='APPAREL') {
-				storedItem.size = size;
-			}
-		}
 		storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
 // this.totalShipping = result.totalShipping;
-		// storedItem.taxAmount = result.taxAmount;
+// storedItem.taxAmount = result.taxAmount;
 		storedItem.type = type;
 		if (type=='TICKET') {
 			storedItem.ticket_name = name;
@@ -74,30 +69,113 @@ module.exports = function Cart(oldCart) {
 				storedItem.size = size;
 			}
 		}
-		storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
 		this.totalQty++;
 		this.totalPrice += parseFloat(price);
-		self = this;
-		taxCalc.calculateTax(id,userId,function(err,response) {
-			if (err) {
-				storedItem.taxAmount=0;
-			} else {
-				storedItem.taxAmount = response.taxAmount;
+		storedItem.type = type;
+		if (type=='TICKET') {
+			storedItem.ticket_name = name;
+			storedItem.ticket_email = email;
+		} else {
+			if (type=='APPAREL') {
+				storedItem.size = size;
 			}
-			storedItem.type = type;
-			if (type=='TICKET') {
-				storedItem.ticket_name = name;
-				storedItem.ticket_email = email;
-			} else {
-				if (type=='APPAREL') {
-					storedItem.size = size;
-				}
-			}
-			storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
-			storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
-			storedItem.totalWithTax = ((parseFloat(price) * storedItem.qty)) + parseFloat(storedItem.taxAmount);
-			self.totalTax += storedItem.taxAmount;
-		});
+		};
+		if (taxable=='yes' || taxable==true) {
+			storedItem.taxAmount = ((price * taxRate) * 100)/100;
+		} else {
+			storedItem.taxAmount = 0;
+		}
+		this.totalTax += ((price * .06) * 100)/100;
+		storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
+		storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
+
+// Product.findById(id,function(err,product) {
+// 			if (err) {
+// 				return {
+// 					error: 500,
+// 					message: 'Problem retrieving product.'
+// 				}
+// 			}
+// 			if (product.taxable == 'Yes' || product.taxable == true) {
+// 				User.findById(userId, function(err,user) {
+// 					if (err) {
+// 						callback({
+// 							"error": err.message
+// 						},null);
+// 					}
+// 					if (undefined == user) {
+// 						callback({
+// 							"error": "not in our city"
+// 						},null)
+// 					}
+// 					if (user.state == taxConfig.ourStateCode || user.state == taxConfig.ourStateName) {
+// 						taxRate = taxConfig.ourStateTaxRate;
+// 						if (user.city.toLowerCase() == taxConfig.ourCityName.toLowerCase()) {
+// 							taxRate = taxConfig.ourCityTaxRate;
+// 						}
+// 					} else {
+// 						taxRate = 0;
+// 					}
+// 					console.log("Tax Rate: " + taxRate);
+// 					var price = Number(product.price).toFixed(2);
+// 					//taxAmount = Math.round((((price * taxRate) * 100) / 100)+0);
+// 					taxAmount = ((price * taxRate) * 100) / 100;
+// 					priceWithTax = (parseFloat(price) + parseFloat(taxAmount));
+
+// 					console.log('taxamount: ' + taxAmount);
+// 					console.log('priceWithTax: ' + priceWithTax);
+
+// 					self.totalTax += taxAmount;
+// 					console.log("RESULTS: " + taxAmount);
+// 					storedItem.taxAmount = taxAmount;
+// 					storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
+// 					storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
+
+
+// 					// callback(null,{
+// 					// 	productId: productId,
+// 					// 	taxable: product.taxable,
+// 					// 	price: parseFloat(price),
+// 					// 	taxRate: taxRate,
+// 					// 	taxAmount: taxAmount,
+// 					// 	priceWithTax: priceWithTax
+// 					// });
+// 				})
+
+// 			} else {
+// 				self.totalTax = 0;
+// 			}
+// 			console.log("THIS AT ALMOST: " + JSON.stringify(self));
+// 		})
+
+
+
+
+
+
+		console.log("THIS AT THE END: " + JSON.stringify(this));
+
+		// taxCalc.calculateTax(id,userId,function(err,response) {
+		// 	if (err) {
+		// 		storedItem.taxAmount=0;
+		// 	} else {
+		// 		storedItem.taxAmount = response.taxAmount;
+		// 	}
+		// 	storedItem.type = type;
+		// 	if (type=='TICKET') {
+		// 		storedItem.ticket_name = name;
+		// 		storedItem.ticket_email = email;
+		// 	} else {
+		// 		if (type=='APPAREL') {
+		// 			storedItem.size = size;
+		// 		}
+		// 	}
+		// 	storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
+		// 	storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
+		// 	storedItem.totalWithTax = ((parseFloat(price) * storedItem.qty)) + parseFloat(storedItem.taxAmount);
+		// 	self.totalTax += storedItem.taxAmount;
+		// 	console.log("Total Tax: " + self.totalTax);
+		// });
 
 	};
 	// this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
@@ -138,6 +216,7 @@ module.exports = function Cart(oldCart) {
 		this.items = {};
 		this.totalQty = 0;
 		this.totalPrice = 0;
+		this.totalTax = 0;
 		storedItem = {item: {}, qty: 0, price: 0, size: 0, ticket_name: '', ticket_email: ''};
 	};
 

@@ -1,0 +1,17 @@
+{
+  "name": "ng-admin",
+  "main": [
+    "build/ng-admin.min.css",
+    "build/ng-admin.min.js"
+  ],
+  "ignore": [
+    "examples",
+    "src",
+    ".*",
+    "Gruntfile.js",
+    "*.html",
+    "Makefile",
+    "*.json",
+    "UPGRADE-*"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "ng-admin",
+  "main": [
+    "build/ng-admin.min.css",
+    "build/ng-admin.min.js"
+  ],
+  "ignore": [
+    "examples",
+    "src",
+    ".*",
+    "Gruntfile.js",
+    "*.html",
+    "Makefile",
+    "*.json",
+    "UPGRADE-*"
+  ],
+  "homepage": "https://github.com/marmelab/ng-admin",
+  "version": "0.9.1",
+  "_release": "0.9.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.9.1",
+    "commit": "637e12aea92f72c37e137471a878d9fb99477f4a"
+  },
+  "_source": "https://github.com/marmelab/ng-admin.git",
+  "_target": "^0.9.1",
+  "_originalSource": "ng-admin",
+  "_direct": true
+}

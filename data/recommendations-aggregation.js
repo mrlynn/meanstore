@@ -1,18 +1,13 @@
 // Correctly call the aggregation using a cursor and toArray
-
+var Product = require('../models/product.js');
 var MongoClient = require('mongodb').MongoClient,
   test = require('assert');
 MongoClient.connect('mongodb://localhost:27017/hackathon', function(err, db) {
   // Some docs for insertion
-  var docs = [{
-      title : "this is my title", author : "bob", posted : new Date() ,
-      pageViews : 5, tags : [ "fun" , "good" , "fun" ], other : { foo : 5 },
-      comments : [
-        { author :"joe", text : "this is cool" }, { author :"sam", text : "this is bad" }
-      ]}];
+  Product
 
   // Create a collection
-  var collection = db.collection('aggregation_toArray_example');
+  var collection = db.collection('products');
   // Insert the docs
   collection.insertMany(docs, {w: 1}, function(err, result) {
 
@@ -22,9 +17,9 @@ MongoClient.connect('mongodb://localhost:27017/hackathon', function(err, db) {
           author : 1,
           tags : 1
         }},
-        { $unwind : "$tags" },
+        { $unwind : "$Attributes" },
         { $group : {
-          _id : {tags : "$tags"},
+          _id : {Attributes : "$Attributes"},
           authors : { $addToSet : "$author" }
         }}
       ], { cursor: { batchSize: 1 } });

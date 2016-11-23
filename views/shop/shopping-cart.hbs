@@ -21,7 +21,7 @@
 				<div class="panel-body">
 					<div class="table-responsive">
 						{{!-- 				<form action="/create" method="post">
-							--}}				<form action="/checkout" method="get">
+							--}}				<form action="/checkout" method="post">
 								<div class="panel-body">
 									<div class="clearfix"></div>
 									<!-- Text input-->
@@ -80,25 +80,80 @@
 										<td>&nbsp;</td>
 									</tr>
 									<tr>
-										<td>&nbsp;</td>
-										<td>&nbsp;</td>
-										<td>Tax: </td>
-										<td class='text-right' text-align="right">${{this.totalTax}}</td>
-										<td>&nbsp;</td>
-									</tr>
-									<tr>
-										<td>&nbsp;</td>
-										<td>&nbsp;</td>
-										<td>Shipping: </td>
-										<td class='text-right' text-align="right">${{this.totalShipping}}</td>
-										<td>&nbsp;</td>
-									</tr>
-									<tr>
-										<td>&nbsp;</td>
-										<td>&nbsp;</td>
-										<td>Total: </td>
-										<td class='text-right' text-align="right">${{this.grandTotal}}</td>
-										<td>&nbsp;</td>
+										<td colspan=5>
+											<div class="form-group">
+										<label class="control-label">First Name</label>
+										<label class="control-label">Last Name</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+												<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+												<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label">E-Mail</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+												<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+											</div>
+										</div>
+									</div>
+									<!-- Text input-->
+									<div class="form-group">
+										<label class="control-label">Phone #</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+												<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<h3>Shipping Address</h3>
+										<div class="form-group">
+										<label class="control-label">Address</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_addr1" name="shipping_addr1" placeholder="Address1" class="form-control" value="{{user.addr1}}" type="text" required>
+											</div>
+										</div>
+									</div>
+									<!-- Text input-->
+									<div class="form-group">
+										<label class="control-label">City</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_city" name="shipping_city" placeholder="city" class="form-control" value="{{user.city}}"  type="text" required>
+											</div>
+										</div>
+									</div>
+									<!-- Text input-->
+									<div class="form-group">
+										<label class="control-label">State</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_state" name="shipping_state" placeholder="PA" class="form-control" value="{{user.state}}" type="text" required>
+											</div>
+										</div>
+										<label class="control-label">Zip</label>
+										<div class="inputGroupContainer">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+												<input ng-model="shipping_zip" name="shipping_zip" placeholder="xxxxxx" class="form-control" value="{{user.zipcode}}" type="text" required>
+											</div>
+										</div>
+									</div>
+									</div>
+
+
+										</td>
 									</tr>
 
 								</tbody>
@@ -107,7 +162,6 @@
 								<input type='submit' value='Provide Contact Details and Check Out >' class='btn btn-primary text-right'>
 							</div>
 							<input type="hidden" name="amount" value="{{grandTotal}}">
-							<input type="hidden" name="amount" value="{{totalPriceWithTax}}">
 							<input type="hidden" name="method" value="paypal">
 						</form>
 					</div>
