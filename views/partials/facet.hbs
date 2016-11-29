@@ -1,8 +1,12 @@
 <div class="row">
 	<p class="lead">Search Tools</p>
 	<ul>
-		{{#each results}}
-		<li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} ({{this.count}})</a></li>
+		{{#each allcats}}
+		<li><a href="/category/{{this._id}}?q={{../q}}">{{this.name}} ({{this.count}})</a></li>
+		{{/each}}
+
+		{{#each allcategories}}
+		<li><a href="/category/{{this._id}}?q={{../q}}">{{this.name}} ({{this.count}})</a></li>
 		{{/each}}
 	</ul>
 </div>

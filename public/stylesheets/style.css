@@ -501,3 +501,40 @@ p{
     font-weight: 800;
 }
 
+
+.card{
+    width: 300px;
+    height: 400px;
+    position: realtive;
+    -webkit-perspective: 500px; /* Chrome, Safari, Opera */
+     perspective: 1000px;
+}
+/* place one div on another  and transiiton time*/
+#front, #back {
+    position: absolute;
+    -webkit-transition: 2s; /* Safari */
+        transition: 2s;
+}
+#front{
+    background: #1affb2;
+}
+/* first rotate  one div 180deg so it is facing back and also hide its back side which is facing front*/
+#back{
+    background: #888888;
+    -ms-transform: rotateY(-180deg); /* IE 9 */
+    -webkit-transform: rotateY(-180deg); /* Chrome, Safari, Opera */
+        transform: rotateY(-180deg);
+    -ms-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden; /* Chrome, Safari, Opera */
+    backface-visibility: hidden;
+}
+/* now on the hover just rotate the back div so it should face front */
+#cover:hover #back{
+    -webkit-transform:rotateY(0deg);
+    transform: rotateY(0deg);
+}
+#cover:hover #front{
+    -webkit-transform:rotateY(180deg);
+    transform: rotateY(180deg);
+}
+

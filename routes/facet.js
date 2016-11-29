@@ -32,6 +32,7 @@ router.get('/', function(req, res, next) {
         }, function(err, products) {
             res.render('shop/facet', {
                 layout: 'facet.hbs',
+                allcategories: res.locals.allcategories,
                 keywords: Config.keywords,
                 products: products,
                 user: req.user,

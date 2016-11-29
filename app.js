@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+// var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
@@ -31,8 +31,14 @@ var Config = require('./config/config');
 var Category = require('./models/category');
 var url = require("url");
 var path = require("path");
+var winston = require("winston");
 
-
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 var fs = require('fs');
 
 require('./config/pp-config');
@@ -51,6 +57,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
 mongoose.connection.on('error', () => {
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
   process.exit();
 });
 require('./config/passport');
@@ -78,7 +85,7 @@ app.set('view engine', '.hbs');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
@@ -117,8 +124,29 @@ app.use(function(req,res,next) {
                 res.send('500','Error retrieving categories.');
 
             }
+            for(cat in allcats) {
+                Product.aggregate([
+                {
+                    $match: {
+                        category: {$eq: cat.name}
+                    }
+                },
+                {
+                    $group: {
+                        _id: '$category',
+                        count: { $sum: 1 }
+                    }
+                }
+
+                ], function(err,allcategories) {
+console.log("All Categories " + allcategories);
+                });
+            }
         });
         res.locals.allcats = allcats;
+        res.locals.allcategories = allcategories;
+        console.log("Local Allcats " + res.locals.allcats);
+        logger.log('info','Local All Categories ' + res.locals.allcats);
     }
     res.locals.login = req.isAuthenticated();
     if (res.locals.login) {

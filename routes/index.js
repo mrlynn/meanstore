@@ -42,6 +42,7 @@ router.get('/overview', function(req, res, next) {
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
+    //Category.find({}, function(err, allcats) {
     Category.find({}, function(err, allcats) {
     	if (Config.frontPageCategory) {
     		categCondition = {
@@ -56,9 +57,10 @@ router.get('/', function(req, res, next) {
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
-            res.render('shop/shop', {
+            res.render('shop/facet', {
                 layout: 'facet.hbs',
                 title: title,
+                allcategories: res.locals.allcategories,
                 keywords: Config.keywords,
                 products: productChunks,
                 user: req.user,
@@ -710,52 +712,50 @@ router.post('/search', function(req, res, next) {
     var q = req.body.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-
-    Category.find({}, function(err, categories) {
-        Product.find(
-            {
-                $text: {
-                    $search: q
-                }
-            }, {
-                score: {
-                    $meta: "textScore"
-                }
-            })
-            .sort({
-                score: {
-                    $meta: 'textScore'
-                }
-            })
-            .exec(function(err, results) {
-                // count of all matching objects
-                if (err) {
-                    req.flash('error', "An error has occurred - " + err.message);
-                    return res.redirect('/');
-                }
-                if (!results) {
-                    req.flash('error', "No products found.");
-                    return res.redirect('/');
-                }
-				productChunks = [];
-	            chunkSize = 4;
-	            for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
-	                productChunks.push(results.slice(i, i + chunkSize))
-	            }
-                res.render('shop/shop', {
-                    layout: 'layout.hbs',
-                    products: productChunks,
-        			allcats: res.locals.allcats,
-                    user: req.user,
-                    q:q,
-                    errorMsg: errorMsg,
-                    noErrorMsg: !errorMsg,
-                    successMsg: successMsg,
-                    noMessage: !successMsg,
-                    isLoggedIn: req.isAuthenticated()
-                });
+console.log("allcats: " + res.locals.allcats);
+    Product.find(
+        {
+            $text: {
+                $search: q
+            }
+        }, {
+            score: {
+                $meta: "textScore"
+            }
+        })
+        .sort({
+            score: {
+                $meta: 'textScore'
+            }
+        })
+        .exec(function(err, results) {
+            // count of all matching objects
+            if (err) {
+                req.flash('error', "An error has occurred - " + err.message);
+                return res.redirect('/');
+            }
+            if (!results) {
+                req.flash('error', "No products found.");
+                return res.redirect('/');
+            }
+			productChunks = [];
+            chunkSize = 4;
+            for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
+                productChunks.push(results.slice(i, i + chunkSize))
+            }
+            res.render('shop/shop', {
+                layout: 'layout.hbs',
+                products: productChunks,
+    			allcats: res.locals.allcats,
+                user: req.user,
+                q:q,
+                errorMsg: errorMsg,
+                noErrorMsg: !errorMsg,
+                successMsg: successMsg,
+                noMessage: !successMsg,
+                isLoggedIn: req.isAuthenticated()
             });
-    });
+        });
 
 });
 
@@ -768,7 +768,12 @@ router.get('/product/:id/', function(req, res, next) {
             return res.redirect('/');
         }
         recommendations.GetRecommendations(product,function(err,recommendations) {
-             res.render('shop/product', {
+            if (err) {
+                console.log("error: " + err);
+                req.flash('error', "An error has occurred - " + err.message);
+                return res.redirect('/');
+            }
+            res.render('shop/product', {
                 layout: 'fullpage.hbs',
                 recommendations: recommendations,
                 product: product,

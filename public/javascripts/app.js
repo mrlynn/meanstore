@@ -8,34 +8,34 @@ app.factory("services", ['$http', function($http) {
     obj.getProduct = function(productID){
         return $http.get(serviceBase + 'product?id=' + productID);
     }
- 
+
     obj.insertProduct = function (product) {
     return $http.post(serviceBase + 'insertProduct', product).then(function (results) {
         return results;
     });
   };
- 
+
   obj.updateProduct = function (id,product) {
       return $http.post(serviceBase + 'updateProduct', {id:id, product:product}).then(function (status) {
           return status.data;
       });
   };
- 
+
   obj.deleteProduct = function (id) {
       return $http.delete(serviceBase + 'deleteProduct?id=' + id).then(function (status) {
           return status.data;
       });
   };
- 
-    return obj;   
+
+    return obj;
 }]);
- 
+
 app.controller('listCtrl', function ($scope, services) {
     services.getProducts().then(function(data){
         $scope.products = data.data;
     });
 });
- 
+
 app.controller('editCtrl', function ($scope, $rootScope, $location, $routeParams, services, product) {
     var productID = ($routeParams.productID) ? parseInt($routeParams.productID) : 0;
     $rootScope.title = (productID > 0) ? 'Edit Product' : 'Add Product';
@@ -44,17 +44,17 @@ app.controller('editCtrl', function ($scope, $rootScope, $location, $routeParams
       original._id = productID;
       $scope.product = angular.copy(original);
       $scope.product._id = productID;
- 
+
       $scope.isClean = function() {
         return angular.equals(original, $scope.product);
       }
- 
+
       $scope.deleteProduct = function(product) {
         $location.path('/');
         if(confirm("Are you sure to delete product number: "+$scope.product._id)==true)
         services.deleteProduct(product.productNumber);
       };
- 
+
       $scope.saveProduct = function(product) {
         $location.path('/');
         if (productID <= 0) {
@@ -65,7 +65,7 @@ app.controller('editCtrl', function ($scope, $rootScope, $location, $routeParams
         }
     };
 });
- 
+
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
