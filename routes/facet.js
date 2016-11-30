@@ -81,10 +81,6 @@ router.post('/agg',function(req,res,next) {
 })
 
 router.post('/search',function(req, res, next) {
-
-
-
-
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     var q = req.body.q;

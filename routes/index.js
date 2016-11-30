@@ -42,8 +42,7 @@ router.get('/overview', function(req, res, next) {
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    //Category.find({}, function(err, allcats) {
-    Category.find({}, function(err, allcats) {
+    Product.aggregate([{$sortByCount: "$category"}], function(err, allcats) {
     	if (Config.frontPageCategory) {
     		categCondition = {
     			category: Config.frontPageCategory
@@ -51,6 +50,7 @@ router.get('/', function(req, res, next) {
     	} else {
     		categCondition = {};
     	}
+        console.log("All Cats " + JSON.stringify(allcats));
         Product.find(categCondition, function(err, docs) {
             productChunks = [];
             chunkSize = 4;
@@ -78,6 +78,7 @@ router.get('/', function(req, res, next) {
 /* GET home page. */
 router.get('/category/:slug', function(req, res, next) {
     var category_slug = req.params.slug;
+    var q = req.query.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     var layout = 'views/layouts/' + category_slug + '.hbs';
@@ -92,7 +93,11 @@ router.get('/category/:slug', function(req, res, next) {
     } else {
         shop = 'shop';
     }
-    Category.find({}, function(err, categories) {
+    console.log("Q " + q);
+    Product.aggregate([
+        { $match: { $text: { $search: q }}},
+        { $sortByCount: "$category" }
+    ], function(err, allcats) {        
         Category.findOne({
             slug: new RegExp(category_slug, 'i')
         }, function(err, category) {
@@ -116,13 +121,14 @@ router.get('/category/:slug', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
                     productChunks.push(products.slice(i, i + chunkSize))
                 };
-                res.render('shop/shop', {
-                    layout: layout,
-        			allcats: categories,
+                res.render('shop/facet', {
+                    layout: 'facet.hbs',
+        			allcats: allcats,
                     category: category,
                     products: productChunks,
                     productChunks: productChunks,
                     user: req.user,
+                    q: q,
                     errorMsg: errorMsg,
                     noErrorMsg: !errorMsg,
                     successMsg: successMsg,
@@ -712,51 +718,58 @@ router.post('/search', function(req, res, next) {
     var q = req.body.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-console.log("allcats: " + res.locals.allcats);
-    Product.find(
-        {
-            $text: {
-                $search: q
-            }
-        }, {
-            score: {
-                $meta: "textScore"
-            }
-        })
-        .sort({
-            score: {
-                $meta: 'textScore'
-            }
-        })
-        .exec(function(err, results) {
-            // count of all matching objects
-            if (err) {
-                req.flash('error', "An error has occurred - " + err.message);
-                return res.redirect('/');
-            }
-            if (!results) {
-                req.flash('error', "No products found.");
-                return res.redirect('/');
-            }
-			productChunks = [];
-            chunkSize = 4;
-            for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
-                productChunks.push(results.slice(i, i + chunkSize))
-            }
-            res.render('shop/shop', {
-                layout: 'layout.hbs',
-                products: productChunks,
-    			allcats: res.locals.allcats,
-                user: req.user,
-                q:q,
-                errorMsg: errorMsg,
-                noErrorMsg: !errorMsg,
-                successMsg: successMsg,
-                noMessage: !successMsg,
-                isLoggedIn: req.isAuthenticated()
+    Product.aggregate([
+        { $match: { $text: { $search: q }}},
+        { $sortByCount: "$category" }
+    ], function(err, allcats) {
+        if (err) {
+            req.flash('error', 'An error has occurred - ' + err.message);
+            return res.redirect('/');
+        }
+        Product.find(
+            {
+                $text: {
+                    $search: q
+                }
+            }, {
+                score: {
+                    $meta: "textScore"
+                }
+            })
+            .sort({
+                score: {
+                    $meta: 'textScore'
+                }
+            })
+            .exec(function(err, results) {
+                // count of all matching objects
+                if (err) {
+                    req.flash('error', "An error has occurred - " + err.message);
+                    return res.redirect('/');
+                }
+                if (!results) {
+                    req.flash('error', "No products found.");
+                    return res.redirect('/');
+                }
+    			productChunks = [];
+                chunkSize = 4;
+                for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
+                    productChunks.push(results.slice(i, i + chunkSize))
+                }
+                res.render('shop/facet', {
+                    layout: 'facet.hbs',
+                    products: productChunks,
+        			allcats: allcats,
+                    user: req.user,
+                    q:q,
+                    errorMsg: errorMsg,
+                    noErrorMsg: !errorMsg,
+                    successMsg: successMsg,
+                    noMessage: !successMsg,
+                    isLoggedIn: req.isAuthenticated()
+                });
             });
-        });
-
+    });
 });
 
 router.get('/product/:id/', function(req, res, next) {
