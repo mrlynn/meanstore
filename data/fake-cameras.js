@@ -60,8 +60,6 @@ for (var i = 0; i < 100; i++) {
     var category = 'Camera';
     name = faker.commerce.productName() + ' Camera';
     price = faker.commerce.price();
-
-
         product = new Product({
             code: 'cam' + code,
             name: name,

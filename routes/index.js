@@ -16,10 +16,14 @@ var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxCalc = require('../local_modules/tax-calculator');
+var search = require('../local_modules/search');
 var shippingCalc = require('../local_modules/shipping-calculator');
 var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+dotenv.load({ path: '.env.hackathon' });
 
 var title = Config.title;
 
@@ -27,6 +31,17 @@ var fs = require('fs');
 
 "use strict";
 
+var useFacets = (process.env.facets===true);
+var frontPageCategory = process.env.frontPageCategory;
+var viewDocuments = process.env.viewDocuments;
+
+if (useFacets==true) {
+    shopPage = 'shop/facet';
+    shopLayout = 'facet.hbs';
+} else {
+    shopPage = 'shop/shop';
+    shopLayout = 'layout.hbs';
+}
 var paypal = require('paypal-rest-sdk');
 require('../config/pp-config.js');
 var config = {};
@@ -43,23 +58,24 @@ router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     Product.aggregate([{$sortByCount: "$category"}], function(err, allcats) {
-    	if (Config.frontPageCategory) {
+    	if (frontPageCategory) {
     		categCondition = {
-    			category: Config.frontPageCategory
+    			category: frontPageCategory
     		};
     	} else {
     		categCondition = {};
     	}
-        console.log("All Cats " + JSON.stringify(allcats));
         Product.find(categCondition, function(err, docs) {
             productChunks = [];
+            productJSON = [];
             chunkSize = 4;
             for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
-                productChunks.push(docs.slice(i, i + chunkSize))
+                productChunks.push(docs.slice(i, i + chunkSize));
             }
-            res.render('shop/facet', {
-                layout: 'facet.hbs',
+            res.render(shopPage, {
+                layout: shopLayout,
                 title: title,
+                showRecommendations: eval(res.locals.showRecommendations),
                 allcategories: res.locals.allcategories,
                 keywords: Config.keywords,
                 products: productChunks,
@@ -68,6 +84,7 @@ router.get('/', function(req, res, next) {
                 errorMsg: errorMsg,
                 noErrorMsg: !errorMsg,
                 successMsg: successMsg,
+                viewDocuments: viewDocuments,
                 noMessage: !successMsg,
                 isLoggedIn: req.isAuthenticated()
             });
@@ -93,11 +110,27 @@ router.get('/category/:slug', function(req, res, next) {
     } else {
         shop = 'shop';
     }
-    console.log("Q " + q);
     Product.aggregate([
         { $match: { $text: { $search: q }}},
         { $sortByCount: "$category" }
-    ], function(err, allcats) {        
+    ], function(err, allcats) {
+        Product.aggregate([
+          {
+            $match: {
+                "category": category_slug
+            }
+          },
+         {$unwind: "$Attributes"},
+         {$bucketAuto: {
+                groupBy: "$Attributes.Value",
+                buckets: 6
+                }}
+        ],function(err,aggout) {
+            if (err) {
+                req.flash('error','Problem ' + err.message);
+                return res.redirect('/');
+            }
+
         Category.findOne({
             slug: new RegExp(category_slug, 'i')
         }, function(err, category) {
@@ -121,9 +154,11 @@ router.get('/category/:slug', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
                     productChunks.push(products.slice(i, i + chunkSize))
                 };
+                console.log("View Documents: " + res.locals.viewDocuments);
                 res.render('shop/facet', {
                     layout: 'facet.hbs',
         			allcats: allcats,
+                    viewDocuments: viewDocuments,
                     category: category,
                     products: productChunks,
                     productChunks: productChunks,
@@ -138,6 +173,8 @@ router.get('/category/:slug', function(req, res, next) {
             });
         });
     });
+})
+
 });
 
 router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
@@ -263,8 +300,6 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 router.get('/shopping-cart', function(req, res, next) {
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
-
-
     if (!req.session.cart) {
         return res.render('shop/shopping-cart', {
             products: null,
@@ -272,6 +307,7 @@ router.get('/shopping-cart', function(req, res, next) {
         });
     }
     var cart = new Cart(req.session.cart);
+    var cartJSON = JSON.stringify(cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
     var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
@@ -283,8 +319,7 @@ router.get('/shopping-cart', function(req, res, next) {
         if (err) {
             errorMsg = req.flash('error :',err.message);
         }
-        console.log("REcommendations " + JSON.stringify(recommendations));
-        if (!recommendations) {
+        if (!recommendations && res.locals.showRecommendations) {
             recommendations = [{
                 code: 'cam1000',
                 title: 'Gorgeous Fresh Hat Camera',
@@ -299,11 +334,14 @@ router.get('/shopping-cart', function(req, res, next) {
                 imagePath: '/img/sony-camera.jpg'
             }]
         }
+        console.log("View Documents: " + res.locals.viewDocuments);
         res.render('shop/shopping-cart', {
             products: cart.generateArray(),
             allcats: req.session.allcats,
             totalTax: totalTax,
+            viewDocuments: viewDocuments,
             totalPrice: totalPrice,
+            cartJSON: cartJSON,
             totalShipping: totalShipping,
             grandTotal: cart.grandTotal,
             recommendations: recommendations,
@@ -373,8 +411,10 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
 
 router.post('/checkout', function(req, res, next) {
     var method = req.body.method;
+    var shipping_addr1 = req.body.shipping_addr1;
     var shipping_city = req.body.shipping_city;
     var shipping_state = req.body.shipping_state;
+    var shipping_zip = req.body.shipping_zip;
     var cart = new Cart(req.session.cart);
     taxDesc="";
     var subtotal = parseFloat(req.body.amount);
@@ -389,10 +429,10 @@ router.post('/checkout', function(req, res, next) {
             return res.redirect('/');
         }
         shippingtotal = result.totalShipping;
-        console.log("Shipping Total " + shippingtotal);
         if (shipping_state == taxConfig.ourStateCode) {
             taxDesc="PA and Philadelphia Sales Tax Applies";
-            taxCalc.calculateTaxAll(cart,req.user._id,function (err,results) {
+            products = cart.generateArray();
+            taxCalc.calculateTaxAll(products,req.user._id,function (err,results) {
                 if (err) {
                     console.log(err);
                     res.redirect('/');
@@ -400,14 +440,17 @@ router.post('/checkout', function(req, res, next) {
                 if (!req.session.cart) {
                     return res.redirect('/shopping-cart');
                 }
+                console.log("Results: " + JSON.stringify(results));
                 var totalTax = results.taxAmount.toFixed(2);
-
                 var grandtotal = (parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal));
-
                 var errorMsg = req.flash('error')[0];
 
-
                 res.render('shop/checkout', {
+                    user: req.user,
+                    shipping_addr1: shipping_addr1,
+                    shipping_city: shipping_city,
+                    shipping_state: shipping_state,
+                    shipping_zip: shipping_zip,
                     taxDesc: taxDesc,
                     products: cart.generateArray(),
                     subtotal: subtotal,
@@ -419,23 +462,24 @@ router.post('/checkout', function(req, res, next) {
                     errorMsg: errorMsg,
                     noErrorMsg: !errorMsg
                 });
-
             })
         } else {
+                    console.log("Shipping Total " + shippingtotal);
+
             var totalTax = 0;
             var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
             res.render('shop/checkout', {
-                    taxDesc: taxDesc,
-                    products: cart.generateArray(),
-                    subtotal: subtotal,
-                    totalTax: totalTax,
-                    shippingtotal: shippingtotal,
-                    grandtotal: grandtotal,
-                    successMsg: successMsg,
-                    noMessage: !successMsg,
-                    errorMsg: errorMsg,
-                    noErrorMsg: !errorMsg
-                });
+                taxDesc: taxDesc,
+                products: cart.generateArray(),
+                subtotal: subtotal,
+                totalTax: totalTax,
+                shippingtotal: shippingtotal,
+                grandtotal: grandtotal,
+                successMsg: successMsg,
+                noMessage: !successMsg,
+                errorMsg: errorMsg,
+                noErrorMsg: !errorMsg
+            });
         }
     });
 })  ;
@@ -452,7 +496,7 @@ router.post('/create', function(req, res, next) {
     var cart = new Cart(req.session.cart);
     products = cart.generateArray();
     //11-17-2016
-    tax = taxCalc.calculateTaxReturn(req.session.cart,req.user._id);
+    tax = taxCalc.calculateTaxReturn(products,req.user._id);
     var create_payment = {
         "intent": "sale",
         "payer": {
@@ -718,6 +762,7 @@ router.post('/search', function(req, res, next) {
     var q = req.body.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
+    search.saveSearch(q);
     Product.aggregate([
         { $match: { $text: { $search: q }}},
         { $sortByCount: "$category" }
@@ -747,8 +792,8 @@ router.post('/search', function(req, res, next) {
                     req.flash('error', "An error has occurred - " + err.message);
                     return res.redirect('/');
                 }
-                if (!results) {
-                    req.flash('error', "No products found.");
+                if (!results || !results.length) {
+                    req.flash('error', "No products found for search string.");
                     return res.redirect('/');
                 }
     			productChunks = [];

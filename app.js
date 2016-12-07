@@ -32,6 +32,7 @@ var Category = require('./models/category');
 var url = require("url");
 var path = require("path");
 var winston = require("winston");
+var mongoSanitize = require('express-mongo-sanitize');
 
 var logger = new (winston.Logger)({
     transports: [
@@ -92,7 +93,9 @@ app.use(validator());
 app.use(cookieParser());
 app.use(breadcrumbs.init());
 app.use(errorHandler());
-
+app.use(mongoSanitize({
+  replaceWith: '_'
+}));
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 
@@ -139,11 +142,11 @@ app.use(function(req,res,next) {
                 }
 
                 ], function(err,allcategories) {
-console.log("All Categories " + allcategories);
                 });
             }
         });
         res.locals.allcats = allcats;
+        app.set('allcats',allcats);
         res.locals.allcategories = allcategories;
         console.log("Local Allcats " + res.locals.allcats);
         logger.log('info','Local All Categories ' + res.locals.allcats);
@@ -154,11 +157,14 @@ console.log("All Categories " + allcategories);
     }
     res.locals.session = req.session;
     res.locals.copyright = process.env.copyright;
+    res.locals.showRecommendations = (process.env.showRecommendations===true);
+    res.locals.viewDocuments = (process.env.viewDocuments===true);
     res.locals.title = process.env.title;
     res.locals.pageNotes = process.env.pageNotes;
     var parsed = url.parse(req.url);
     var pageName = path.basename(parsed.pathname);
     res.locals.pageName = pageName.toLowerCase();
+    res.locals.req = req;
     next();
 });
 

@@ -1,0 +1,39 @@
+{{#each facet}}
+<div class=facetedsearch id="{{ this._id }}">
+	<h3 class=facettitle>{{ this.title }}</h3>
+	{{#each this.facetitems}}
+	<div class=facetlist>{{this.Name}}</div>
+	<div class=facetitem id="{{this._id}}">{{this.name}}<span class=facetitemcount>({{this.count}})</span></div>
+	{{/each}}
+	<div class=bottomline></div>
+</div>
+{{/each}}
+
+
+
+db.products.aggregate([
+	{ $match: { "Product_Group": "Camera"}},
+	{ $unwind: "$Attributes"},
+	{ $match: {"Attribute.Name": "Video Resolution"}},
+	{ $bucketAuto: {
+		 groupBy: "$Attribute.Value",     buckets: 4 }
+	}
+])
+
+
+
+
+
+db.products.aggregate([
+  {
+	$match: {
+  	"Product_Group": "Camera"
+	}
+  },
+ {$unwind: "$Attributes"},
+ {$match: {"Attributes.Name": "Video Resolution"}},
+ {$bucketAuto: {
+      	groupBy: "$Attributes.Value",
+      	buckets: 6
+    	}}
+])

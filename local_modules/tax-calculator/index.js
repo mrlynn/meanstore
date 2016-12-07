@@ -7,12 +7,11 @@ var Order = require('../../models/order');
 var User = require('../../models/user');
 
 module.exports = {
-	calculateTaxReturn: function(cart, userId,callback) {
-		cartItems = cart.generateArray();
+	calculateTaxReturn: function(products,userId,callback) {
 
-		this.calculateTaxAll(cart,userId,function(err,results) {
+		this.calculateTaxAll(products,userId,function(err,results) {
 			console.log("Results before shipping " + JSON.stringify(results));
-			callback(err,results);
+			return results.taxAmount;
 		})
 	},
 	calculateTax: function(productId, userId, callback) {
@@ -79,13 +78,7 @@ module.exports = {
 			}
 		})
 	},
-	calculateTaxAll: function(cart,userId,callback) {
-		console.log("asdfasdfasdadsf");
-		var products = [];
-		products = cart.generateArray();
-		// for (var id in items) {
-		// 	products.push(items[id]);
-		// }
+	calculateTaxAll: function(products,userId,callback) {
 		var done = 0
 		var cartTaxTotal = 0;
 		for (var i=0; i<products.length;i++) {

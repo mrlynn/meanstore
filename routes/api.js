@@ -64,6 +64,7 @@ router.get('/products', function(req, res, next) {
 
 /* GET product. */
 router.get('/product/:id', function(req, res, next) {
+	console.log("Get Product " + req.params.id);
 	Product.findById(req.params.id,function(err,product) {
 		res.json(product);
 	})
@@ -104,6 +105,7 @@ router.post('/api/products', function (req, res){
 /* DELETE product. */
 router.delete('/products/:id', function(req, res, next) {
 	Product.remove({_id: req.params.id},function(err,product) {
+		console.log("Deleting Product " + req.params.id);
 		res.json(product);
 	})
 });
