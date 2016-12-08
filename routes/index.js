@@ -30,6 +30,9 @@ var fs = require('fs');
 
 "use strict";
 
+    
+
+
 var useFacets = (process.env.facets===true);
 useFacets=true;
 var frontPageCategory = process.env.frontPageCategory;
@@ -52,7 +55,32 @@ router.get('/whypaypal', function(req, res, next) {
     res.render('shop/whypaypal');
 });
 router.get('/overview', function(req, res, next) {
-	res.render('overview',{layout: 'overview.hbs'});
+    userrecord = { _id: '5829d84b9304197fdc58a918',
+  role: 'visitor',
+  zipcode: '19147',
+  state: 'PA',
+  city: 'Philadelphia',
+  addr1: '123 S. Main St.',
+  last_name: 'Smith',
+  first_name: 'Samantha',
+  password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
+  email: 'blahblahblah@gmail.com',
+  __v: 0,
+  orders: [],
+  purchased: ['5829d84b9304197fdc58a918','6829d84b4309197fdc58a3jk'],
+  likes: ['5829d84b9304197fdc58a918','6829d84b4309197fdc58a3jk'],
+  created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)' };
+    Product.findOne({},function(err,doc) {
+        if (err) {
+             console.log("Problem fetching one random record.");
+        }
+        console.log("doc " + doc);
+        res.render('overview',{
+            layout: 'overview.hbs',
+            user: JSON.stringify(userrecord),
+            product: doc
+        });
+    });
 })
 /* GET home page. */
 router.get('/', function(req, res, next) {

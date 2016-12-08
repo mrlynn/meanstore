@@ -26,9 +26,7 @@
                 <div class="thumbnail">
                     <div class="product_wrapper">
                         <div class="panel-body">
-                            <div class="vertical-center thumbnail-image-container">
-
-{{#if ../../viewDocuments}}
+                        {{#if ../../viewDocuments}}
 <p data-placement="top" data-toggle="tooltip" title="View MongoDB Document ">
     <button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#add">View Document <span class="glyphicon glyphicon-search"></span>
 </button>
@@ -43,7 +41,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <textarea rows='15' class="form-control">{{this}}</textarea>
+                    {{this}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -54,7 +52,9 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-{{/if}}
+                            <div class="vertical-center thumbnail-image-container">
+
+
 
 
 

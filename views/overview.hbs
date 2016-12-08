@@ -1,7 +1,7 @@
 <div class='container'><div class="jumbotron">
     <div class="container-fluid">
         <h2>MongoDB: Building on the Best of Relational with the Innovations of NoSQL</h2>
-        <p><img style='float:left;width:100px;height:100px; margin-right:10px;' src='images/meanmart-100x100.png' style='align:left'>This site was created to showcase MongoDB's capabilities in the Faceted Search, Graph Lookup and BI/Analytics spaces.  These capabilities are demonstrated through the lense of a ficticious online ecommerce company "MEANMart".  To view the online shop, click <a href="/shop" target="_blank">here</a>.
+        <p><img style='float:left;width:100px;height:100px; margin-right:10px;' src='images/meanmart-100x100.png' style='align:left'>This site was created to showcase MongoDB's capabilities in the Faceted Search, Graph Lookup and BI/Analytics spaces.  These capabilities are demonstrated through the lense of a ficticious online ecommerce company "MEANMart".  To view the online shop, click <a href="/" target="_blank">here</a>.
         </p><p>
         This vendor faces the same challenges most retail companies face today, striving to ensure that their products are not only available online but searchable and displayed in a manner that lets customers easily find products by many facets. </p>
         <p><a href="http://meanmart.mlynn.org" target="_blank" class="btn btn-success btn-lg">Get started</a></p>
@@ -12,17 +12,97 @@
         <div class="col-xs-4">
             <h2>Faceted Search</h2>
             <p>Additions to the aggregation framework include faceted navigation for richer search, and new expressions and optimizations to help you unlock real-time insights from data as it arrives.</p>
-            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success btn-lg">Learn More &raquo;</a></p>
         </div>
         <div class="col-xs-4">
             <h2>Graph Lookup</h2>
             <p>Discover patterns &amp; uncover connections. The $graphLookup operator enables native graph processing in MongoDB so you can efficiently traverse trees, graphs, and hierarchical data without relying on a single-purpose graph database.</p>
-            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success btn-lg">Learn More &raquo;</a></p>
         </div>
         <div class="col-xs-4">
             <h2>Analytics</h2>
             <p>The MongoDB Connector for BI has been upgraded to push more work to the database, allowing you to get faster insights from industry leading BI tools such as Tableau or BusinessObjects.</p>
-            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success btn-lg">Learn More &raquo;</a></p>
         </div>
     </div>
-</div></div>
+    <div class="row">
+        <div class="col-xs-4">
+            <h2>Users</h2>
+            <p>This application manages its own user authentication, leveraging MongoDB to store the user records.  </p>
+            
+<button class="btn btn-success btn-lg" data-title="View" data-toggle="modal" data-target="#users-modal">View User Document <span class="glyphicon glyphicon-search"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="users-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{user}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+        </div>
+        <div class="col-xs-4">
+            <h2>Products</h2>
+            <p>Retail and ecommerce use cases present a perfect match for MongoDB's flexible, document-based storage modal.  Pricing competition. Endless online distractions. New selling channels appearing every single day. Your world is a battleground – equip yourself with the right weapon and rise above the competition. Join the industry innovators that are already using MongoDB in transformative ways to increase their revenue streams.</p>
+            
+
+<button class="btn btn-success btn-lg" data-title="View" data-toggle="modal" data-target="#product-modal">View Product Document <span class="glyphicon glyphicon-search"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="product-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{product}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
+        </div>
+        <div class="col-xs-4">
+            <h2>Orders</h2>
+            <p>The MongoDB Connector for BI has been upgraded to push more work to the database, allowing you to get faster insights from industry leading BI tools such as Tableau or BusinessObjects.</p>
+            <p><a href="https://www.mongodb.com/mongodb-3.4" target="_blank" class="btn btn-success btn-lg">Learn More &raquo;</a></p>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+
