@@ -16,7 +16,6 @@ var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxCalc = require('../local_modules/tax-calculator');
-var search = require('../local_modules/search');
 var shippingCalc = require('../local_modules/shipping-calculator');
 var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
@@ -32,9 +31,11 @@ var fs = require('fs');
 "use strict";
 
 var useFacets = (process.env.facets===true);
+useFacets=true;
 var frontPageCategory = process.env.frontPageCategory;
 var viewDocuments = process.env.viewDocuments;
 
+console.log("Facets: " + useFacets);
 if (useFacets==true) {
     shopPage = 'shop/facet';
     shopLayout = 'facet.hbs';
@@ -762,7 +763,6 @@ router.post('/search', function(req, res, next) {
     var q = req.body.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    search.saveSearch(q);
     Product.aggregate([
         { $match: { $text: { $search: q }}},
         { $sortByCount: "$category" }
