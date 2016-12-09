@@ -44,6 +44,15 @@ var fs = require('fs');
 
 require('./config/pp-config');
 
+var categoryrecord = {
+  "_id": "ObjectId('58485813edf44d95fb117223')",
+  "name": "Television",
+  "slug": "Television",
+  "attributes": [ ],
+  "ancestors": [ ],
+  "__v": 0
+};
+
 // try {
 //   var configJSON = fs.readFileSync(__dirname + "/config/pp-config.json");
 //   var config = JSON.parse(configJSON.toString());

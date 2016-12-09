@@ -1,0 +1,21 @@
+<div class="row">
+	<p class="lead">Search Tools</p>
+	<ul>		
+		<li><a href="/">All</a></li>
+		{{#each allcats}}
+		<li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} ({{this.count}})</a></li>
+		{{/each}}
+
+		{{#each allcategories}}
+		<li><a href="/category/{{this._id}}?q={{../q}}">{{this.name}} ({{this.count}})</a></li>
+		{{/each}}
+	</ul>
+</div>
+{{#each categoryAttributes}}
+<div class="row">
+	<h4>{{this.name}}</h4>
+	{{#each this.value}}
+	{{/each}}
+</div>
+{{/each}}
+{{> sidenav}}
