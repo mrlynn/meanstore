@@ -71,17 +71,27 @@ Vagrant.configure(2) do |config|
 
 $script = <<SCRIPT
 echo Preparing for deployment...
+
 date > /etc/vagrant_provisioned_at
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-sudo apt-get update
-sudo apt-get install -y mongodb-org
-sudo service mongod start
 
 echo "Installing Prerequisites..."
 sudo apt-get install -y g++
 sudo apt-get install -y build-essential
-curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+
+echo "deb http://repo.mongodb.com/apt/ubuntu trusty/mongodb-enterprise/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-enterprise.list
+
+sudo apt-get update
+
+sudo apt-get install -y mongodb-enterprise
+echo "Take a breather while MongoDB Starts up..."
+
+sleep 10
+
+sudo service mongod start
+
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 
 echo "Installing git..."
 sudo apt-get install -y git
@@ -92,8 +102,16 @@ sudo apt-get install -y nodejs
 echo "Setting up MEANMart Application..."
 mkdir -p /home/vagrant/meanmart
 cd /home/vagrant/meanmart
+
+echo "Cloning meanstore repository..."
 git clone -b meanmart https://github.com/mrlynn/meanstore.git
 cd /home/vagrant/meanmart/meanstore
+
+mkdir -p log/hackathon
+mkdir -p ./pids
+
+cp config/pp-config.js.example config/pp-config.js
+cp config/smtp-config.js.example config/smtp-config.js
 npm install
 npm install -g pm2
 npm install faker
@@ -101,13 +119,14 @@ node data/fake-refrigerators.js
 node data/fake-televisions.js
 node data/fake-cameras.js
 node data/fake-apparel.js
+node data/category-seeder.js
 pm2 start startup.json
 
 SCRIPT
 
 config.vm.synced_folder ".", "/home/vagrant/meanmart-src"
-
 config.vm.network "private_network", ip: "192.168.66.10"
+
 config.vm.provider "virtualbox" do |vb|
     # Don't boot with headless mode
     # vb.gui = true
