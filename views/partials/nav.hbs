@@ -14,8 +14,13 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
             <li>
+
+
+
+            </li>
+            <li>
                 <a href="/overview">
-                    <i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;About
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About
                 </a>
             </li>
                 {{#if allcats }}
@@ -28,6 +33,12 @@
                         {{#each allcats}}
                             <li><a href="/category/{{this._id}}">{{this._id}}</a></li>
                         {{/each}}
+                        <li>
+                        <button class="btn btn-success btn-sm" data-title="View" data-toggle="modal" data-target="#category-modal">View Category Document <span class="glyphicon glyphicon-search"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+                        </li>
                     </ul>
                 </li>
                 {{/if}}
@@ -71,3 +82,25 @@
     <!-- /.container -->
 </nav>
 <div class="clear-fix"></div>
+
+<div class="modal fade" id="category-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{categoryrecord}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

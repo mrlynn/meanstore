@@ -185,5 +185,8 @@ schema.methods.setPrice = function(price) {
 	this.price = price;
 };
 schema.plugin(random);
+
+schema.index({name: 'text',title:'text',description:'text',category:'text'});
+
 module.exports = mongoose.model('Product',schema);
 

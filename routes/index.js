@@ -16,14 +16,15 @@ var util = require('util');
 var nodemailer = require('nodemailer');
 var smtpConfig = require('../config/smtp-config.js');
 var taxCalc = require('../local_modules/tax-calculator');
-var search = require('../local_modules/search');
 var shippingCalc = require('../local_modules/shipping-calculator');
 var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({ path: '.env.hackathon' });
+dotenv.load({
+    path: '.env.hackathon'
+});
 
 var title = Config.title;
 
@@ -31,11 +32,15 @@ var fs = require('fs');
 
 "use strict";
 
-var useFacets = (process.env.facets===true);
+
+
+
+var useFacets = (process.env.facets === true);
+useFacets = true;
 var frontPageCategory = process.env.frontPageCategory;
 var viewDocuments = process.env.viewDocuments;
 
-if (useFacets==true) {
+if (useFacets == true) {
     shopPage = 'shop/facet';
     shopLayout = 'facet.hbs';
 } else {
@@ -51,20 +56,145 @@ router.get('/whypaypal', function(req, res, next) {
     res.render('shop/whypaypal');
 });
 router.get('/overview', function(req, res, next) {
-	res.render('overview',{layout: 'overview.hbs'});
-})
-/* GET home page. */
+        categoryrecord = {
+            "_id": "ObjectId('58485813edf44d95fb117223')",
+            "name": "Television",
+            "slug": "Television",
+            "attributes": [],
+            "ancestors": [],
+            "__v": 0
+        };
+        orderrecord = {
+            "_id": "ObjectId('5825f1bce3c20070202ee287')",
+            "user": "ObjectId('5825d55ba32a1c41e7ce321c')",
+            "cart": {
+                "items": {
+                    "5825d1870ec3cd4d15d0d9c8": {
+                        "item": {
+                            "_id": "5825d1870ec3cd4d15d0d9c8",
+                            "code": "cam1002",
+                            "name": "Generic Granite Keyboard Camera",
+                            "title": "Lumix Practical plum Generic Granite Keyboard Camera",
+                            "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
+                            "taxable": true,
+                            "shipable": true,
+                            "price": 10200,
+                            "Product_Group": "Camera",
+                            "category": "Camera",
+                            "imagePath": "/img/lumix-camera.jpg",
+                            "__v": 0,
+                            "salesYearMonth": [],
+                            "salesYTD": [],
+                            "categories": [],
+                            "update": "2016-11-11T14:11:18.773Z",
+                            "created": "2016-11-11T14:11:18.773Z",
+                            "options": [],
+                            "Attributes": [{
+                                "Name": "color",
+                                "Value": "plum",
+                                "_id": "5825d1870ec3cd4d15d0d9cf"
+                            }, {
+                                "Name": "brand",
+                                "Value": "Lumix",
+                                "_id": "5825d1870ec3cd4d15d0d9ce"
+                            }, {
+                                "Name": "Memory Card Type",
+                                "Value": "SD",
+                                "_id": "5825d1870ec3cd4d15d0d9cd"
+                            }, {
+                                "Name": "Image Resolution",
+                                "Value": "29 Megapixels",
+                                "_id": "5825d1870ec3cd4d15d0d9cc"
+                            }, {
+                                "Name": "Video Resolution",
+                                "Value": "8k",
+                                "_id": "5825d1870ec3cd4d15d0d9cb"
+                            }, {
+                                "Name": "Optical Zoom",
+                                "Value": "23mm",
+                                "_id": "5825d1870ec3cd4d15d0d9ca"
+                            }, {
+                                "Name": "Price",
+                                "Value": "102.00",
+                                "_id": "5825d1870ec3cd4d15d0d9c9"
+                            }]
+                        },
+                        "qty": 1,
+                        "price": 102,
+                        "size": 0,
+                        "taxAmount": 0,
+                        "taxable": "Yes",
+                        "shipable": "Yes",
+                        "itemTotal": "102.00"
+                    }
+                },
+                "totalQty": 1,
+                "totalTax": 0,
+                "totalShipping": 0,
+                "totalPrice": 102,
+                "grandTotal": 102,
+                "totalPriceWithTax": 0
+            },
+            "address": "123 Main St.",
+            "city": "Anywhere",
+            "state": "PA",
+            "paymentId": "PAY-8E858244005728329LAS7DPA",
+            "status": "approved",
+            "created": "ISODate('2016-11-11T16:28:44.943Z')",
+            "__v": 0
+        };
+        userrecord = {
+            _id: '5829d84b9304197fdc58a918',
+            role: 'visitor',
+            zipcode: '19147',
+            state: 'PA',
+            city: 'Philadelphia',
+            addr1: '123 S. Main St.',
+            last_name: 'Smith',
+            first_name: 'Samantha',
+            password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
+            email: 'blahblahblah@gmail.com',
+            __v: 0,
+            orders: [],
+            purchased: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+            likes: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+            created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)'
+        };
+        Product.findOne({}, function(err, doc) {
+            if (err) {
+                console.log("Problem fetching one random record.");
+            }
+            console.log("doc " + doc);
+            res.render('overview', {
+                layout: 'overview.hbs',
+                user: JSON.stringify(userrecord),
+                product: doc,
+                order: JSON.stringify(orderrecord)
+            });
+        });
+    })
+    /* GET home page. */
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    Product.aggregate([{$sortByCount: "$category"}], function(err, allcats) {
-    	if (frontPageCategory) {
-    		categCondition = {
-    			category: frontPageCategory
-    		};
-    	} else {
-    		categCondition = {};
-    	}
+    var categoryrecord = {
+        "_id": "ObjectId('58485813edf44d95fb117223')",
+        "name": "Television",
+        "slug": "Television",
+        "attributes": [],
+        "ancestors": [],
+        "__v": 0
+    };
+    Product.aggregate([{
+        $sortByCount: "$category"
+    }], function(err, allcats) {
+        if (frontPageCategory) {
+            categCondition = {
+                category: frontPageCategory
+            };
+        } else {
+            categCondition = {};
+        }
         Product.find(categCondition, function(err, docs) {
             productChunks = [];
             productJSON = [];
@@ -75,12 +205,13 @@ router.get('/', function(req, res, next) {
             res.render(shopPage, {
                 layout: shopLayout,
                 title: title,
+                categoryrecord: JSON.stringify(categoryrecord),
                 showRecommendations: eval(res.locals.showRecommendations),
                 allcategories: res.locals.allcategories,
                 keywords: Config.keywords,
                 products: productChunks,
                 user: req.user,
-        		allcats: allcats,
+                allcats: allcats,
                 errorMsg: errorMsg,
                 noErrorMsg: !errorMsg,
                 successMsg: successMsg,
@@ -110,70 +241,76 @@ router.get('/category/:slug', function(req, res, next) {
     } else {
         shop = 'shop';
     }
-    Product.aggregate([
-        { $match: { $text: { $search: q }}},
-        { $sortByCount: "$category" }
-    ], function(err, allcats) {
-        Product.aggregate([
-          {
+    Product.aggregate([{
+        $match: {
+            $text: {
+                $search: q
+            }
+        }
+    }, {
+        $sortByCount: "$category"
+    }], function(err, allcats) {
+        Product.aggregate([{
             $match: {
                 "category": category_slug
             }
-          },
-         {$unwind: "$Attributes"},
-         {$bucketAuto: {
+        }, {
+            $unwind: "$Attributes"
+        }, {
+            $bucketAuto: {
                 groupBy: "$Attributes.Value",
                 buckets: 6
-                }}
-        ],function(err,aggout) {
+            }
+        }], function(err, aggout) {
             if (err) {
-                req.flash('error','Problem ' + err.message);
+                req.flash('error', 'Problem ' + err.message);
                 return res.redirect('/');
             }
-
-        Category.findOne({
-            slug: new RegExp(category_slug, 'i')
-        }, function(err, category) {
-            if (err) {
-                req.flash('error', 'Cannot find category');
-                return res.redirect('/');
-            }
-            if (!category) {
-                req.flash('error', 'Cannot find category');
-                return res.redirect('/');
-            }
-            Product.find({
-                $or: [{
-                    'category': new RegExp(category.slug, 'i')
-                }, {
-                    'category': new RegExp(category.name, 'i')
-                }]
-            }, function(err, products) {
-                productChunks = [];
-                chunkSize = 4;
-                for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
-                    productChunks.push(products.slice(i, i + chunkSize))
-                };
-                console.log("View Documents: " + res.locals.viewDocuments);
-                res.render('shop/facet', {
-                    layout: 'facet.hbs',
-        			allcats: allcats,
-                    viewDocuments: viewDocuments,
-                    category: category,
-                    products: productChunks,
-                    productChunks: productChunks,
-                    user: req.user,
-                    q: q,
-                    errorMsg: errorMsg,
-                    noErrorMsg: !errorMsg,
-                    successMsg: successMsg,
-                    noMessage: !successMsg,
-                    isLoggedIn: req.isAuthenticated()
+console.log("Aggout " + JSON.stringify(aggout));
+            Category.findOne({
+                slug: new RegExp(category_slug, 'i')
+            }, function(err, category) {
+                if (err) {
+                    req.flash('error', 'Cannot find category');
+                    return res.redirect('/');
+                }
+                if (!category) {
+                    req.flash('error', 'Cannot find category');
+                    return res.redirect('/');
+                }
+                Product.find({
+                    $or: [{
+                        'category': new RegExp(category.slug, 'i')
+                    }, {
+                        'category': new RegExp(category.name, 'i')
+                    }]
+                }, function(err, products) {
+                    productChunks = [];
+                    chunkSize = 4;
+                    for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+                        productChunks.push(products.slice(i, i + chunkSize))
+                    };
+                    console.log("View Documents: " + res.locals.viewDocuments);
+                    res.render('shop/facet', {
+                        layout: 'facet.hbs',
+                        allcats: allcats,
+                        viewDocuments: viewDocuments,
+                        category: category,
+                        products: productChunks,
+                        productChunks: productChunks,
+                        user: req.user,
+                        q: q,
+                        errorMsg: errorMsg,
+                        noErrorMsg: !errorMsg,
+                        successMsg: successMsg,
+                        noMessage: !successMsg,
+                        aggout: aggout,
+                        isLoggedIn: req.isAuthenticated()
+                    });
                 });
             });
         });
-    });
-})
+    })
 
 });
 
@@ -206,8 +343,8 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 
     // var errors = req.validationErrors();
     // if (errors) {
-    // 	errorMsg=req.flash('error','There have been validation errors: ' + util.inspect(errors), 400);
-    // 	return res.redirect('/');
+    //  errorMsg=req.flash('error','There have been validation errors: ' + util.inspect(errors), 400);
+    //  return res.redirect('/');
     // }
 
     var size = req.body.size || null;
@@ -219,23 +356,23 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-       		// taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
-		// 	if (err) {
-		// 		taxAmount=0;
-		// 	} else {
-		// 		taxAmount = response.taxAmount;
-		// 		console.log('tax amount: ' + taxAmount);
-		// 	}
-			// cart.cartTaxTotal(req.user._id);
-			// cart.cartShippingTotal()
-		    cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
-	        // cart.totalTax = 0;
-            console.log("Cart.totaltax = " + cart.totalTax);
-	        cart.totalShipping = 0;
-	        req.session.cart = cart; // store cart in session
-	        req.flash('success', 'Item successfully added to cart. ');
-	        res.redirect('/');
-	    // });
+        // taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
+        //  if (err) {
+        //      taxAmount=0;
+        //  } else {
+        //      taxAmount = response.taxAmount;
+        //      console.log('tax amount: ' + taxAmount);
+        //  }
+        // cart.cartTaxTotal(req.user._id);
+        // cart.cartShippingTotal()
+        cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
+        // cart.totalTax = 0;
+        console.log("Cart.totaltax = " + cart.totalTax);
+        cart.totalShipping = 0;
+        req.session.cart = cart; // store cart in session
+        req.flash('success', 'Item successfully added to cart. ');
+        res.redirect('/');
+        // });
     });
 });
 
@@ -250,21 +387,21 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
-            req.flash('error',err.message);
+            req.flash('error', err.message);
             res.redirect('/');
         }
-		taxCalc.calculateTax(productId,req.user._id,function(err,taxInfo) {
-			if (err) {
-				taxAmount=0;
-			} else {
-				taxAmount = taxInfo.taxAmount;
-			}
-		    cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type,product.taxable,product.shipable,req.user._id);
-	    	req.session.cart = cart; // store cart in session
+        taxCalc.calculateTax(productId, req.user._id, function(err, taxInfo) {
+            if (err) {
+                taxAmount = 0;
+            } else {
+                taxAmount = taxInfo.taxAmount;
+            }
+            cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
+            req.session.cart = cart; // store cart in session
 
-	        req.flash('success','Item Successfully added to cart.' + JSON.stringify(cart));
-	    	res.redirect('/');
-	    });
+            req.flash('success', 'Item Successfully added to cart.' + JSON.stringify(cart));
+            res.redirect('/');
+        });
     });
 });
 
@@ -315,56 +452,56 @@ router.get('/shopping-cart', function(req, res, next) {
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
     var products = cart.generateArray();
-    recommendations.GetRecommendations(cart,function(err,recommendations) {
-        if (err) {
-            errorMsg = req.flash('error :',err.message);
-        }
-        if (!recommendations && res.locals.showRecommendations) {
-            recommendations = [{
-                code: 'cam1000',
-                title: 'Gorgeous Fresh Hat Camera',
-                description: 'Error ea velit et explicabo.',
-                price: 973,
-                imagePath: '/img/lumix-camera.jpg'
-            },{
-                code: 'cam1001',
-                title: 'Tasty Metal Chicken Camera',
-                description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
-                price: 360,
-                imagePath: '/img/sony-camera.jpg'
-            }]
-        }
-        console.log("View Documents: " + res.locals.viewDocuments);
-        res.render('shop/shopping-cart', {
-            products: cart.generateArray(),
-            allcats: req.session.allcats,
-            totalTax: totalTax,
-            viewDocuments: viewDocuments,
-            totalPrice: totalPrice,
-            cartJSON: cartJSON,
-            totalShipping: totalShipping,
-            grandTotal: cart.grandTotal,
-            recommendations: recommendations,
-            user: req.user,
-            localUser: (req.user.state == taxConfig.ourStateCode),
-            errorMsg: errorMsg,
-            noErrorMsg: !errorMsg,
-            successMsg: successMsg,
-            noMessage: !successMsg
-        });
-    })
- //    Category.find({}, function(err,allcats) {
-	// 	if (err) {
-	// 		req.flash.error('error','Error retrieiving categories');
-	// 		res.redirect('/');
-	// 	}
-	// 	if (!allcats) {
-	// 		req.flash.error('error','Error retrieving categories.');
-	// 		res.redirect('/');
+    recommendations.GetRecommendations(cart, function(err, recommendations) {
+            if (err) {
+                errorMsg = req.flash('error :', err.message);
+            }
+            if (!recommendations && res.locals.showRecommendations) {
+                recommendations = [{
+                    code: 'cam1000',
+                    title: 'Gorgeous Fresh Hat Camera',
+                    description: 'Error ea velit et explicabo.',
+                    price: 973,
+                    imagePath: '/img/lumix-camera.jpg'
+                }, {
+                    code: 'cam1001',
+                    title: 'Tasty Metal Chicken Camera',
+                    description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
+                    price: 360,
+                    imagePath: '/img/sony-camera.jpg'
+                }]
+            }
+            console.log("View Documents: " + res.locals.viewDocuments);
+            res.render('shop/shopping-cart', {
+                products: cart.generateArray(),
+                allcats: req.session.allcats,
+                totalTax: totalTax,
+                viewDocuments: viewDocuments,
+                totalPrice: totalPrice,
+                cartJSON: cartJSON,
+                totalShipping: totalShipping,
+                grandTotal: cart.grandTotal,
+                recommendations: recommendations,
+                user: req.user,
+                localUser: (req.user.state == taxConfig.ourStateCode),
+                errorMsg: errorMsg,
+                noErrorMsg: !errorMsg,
+                successMsg: successMsg,
+                noMessage: !successMsg
+            });
+        })
+        //    Category.find({}, function(err,allcats) {
+        //  if (err) {
+        //      req.flash.error('error','Error retrieiving categories');
+        //      res.redirect('/');
+        //  }
+        //  if (!allcats) {
+        //      req.flash.error('error','Error retrieving categories.');
+        //      res.redirect('/');
 
-	// 	}
-	// 	req.session.allcats = allcats
-	// });
+    //  }
+    //  req.session.allcats = allcats
+    // });
 
 })
 
@@ -376,7 +513,7 @@ router.post('/update_shipping', isLoggedIn, function(req, res, next) {
     successMsg = req.flash('success')[0];
     var cart = new Cart(req.session.cart);
     var errorMsg = req.flash('error')[0];
-    
+
     res.render('shop/checkout', {
         products: cart.generateArray(),
         totalPrice: cart.totalPrice.toFixed(2),
@@ -416,13 +553,13 @@ router.post('/checkout', function(req, res, next) {
     var shipping_state = req.body.shipping_state;
     var shipping_zip = req.body.shipping_zip;
     var cart = new Cart(req.session.cart);
-    taxDesc="";
+    taxDesc = "";
     var subtotal = parseFloat(req.body.amount);
     var shippingtotal = 0;
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
     products = cart.generateArray();
-    shippingCalc.calculateShipping(products,function(err,result) {
+    shippingCalc.calculateShipping(products, function(err, result) {
         if (err) {
             console.log("Unable to calculate shipping " + err);
             errorMsg = req.flash('error', err.message);
@@ -430,9 +567,9 @@ router.post('/checkout', function(req, res, next) {
         }
         shippingtotal = result.totalShipping;
         if (shipping_state == taxConfig.ourStateCode) {
-            taxDesc="PA and Philadelphia Sales Tax Applies";
+            taxDesc = "PA and Philadelphia Sales Tax Applies";
             products = cart.generateArray();
-            taxCalc.calculateTaxAll(products,req.user._id,function (err,results) {
+            taxCalc.calculateTaxAll(products, req.user._id, function(err, results) {
                 if (err) {
                     console.log(err);
                     res.redirect('/');
@@ -464,7 +601,7 @@ router.post('/checkout', function(req, res, next) {
                 });
             })
         } else {
-                    console.log("Shipping Total " + shippingtotal);
+            console.log("Shipping Total " + shippingtotal);
 
             var totalTax = 0;
             var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
@@ -482,10 +619,10 @@ router.post('/checkout', function(req, res, next) {
             });
         }
     });
-})  ;
+});
 
 router.post('/create', function(req, res, next) {
-	// reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
+    // reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
     var amount = parseFloat(req.body.amount);
     var subtotal = parseFloat(req.body.subTotal);
@@ -496,7 +633,7 @@ router.post('/create', function(req, res, next) {
     var cart = new Cart(req.session.cart);
     products = cart.generateArray();
     //11-17-2016
-    tax = taxCalc.calculateTaxReturn(products,req.user._id);
+    tax = taxCalc.calculateTaxReturn(products, req.user._id);
     var create_payment = {
         "intent": "sale",
         "payer": {
@@ -506,12 +643,12 @@ router.post('/create', function(req, res, next) {
             "amount": {
                 "currency": "USD",
                 "total": String(amount.toFixed(2)),
-                "details":{
-                	// "subtotal":String(amount.toFixed(2)),
-                	// "tax":String(taxAmount.toFixed(2)),
-                	// "shipping":String(taxAmount.toFixed(2)),
-                	"handling_fee":"0.00",
-                	"shipping_discount":"0.00"
+                "details": {
+                    // "subtotal":String(amount.toFixed(2)),
+                    // "tax":String(taxAmount.toFixed(2)),
+                    // "shipping":String(taxAmount.toFixed(2)),
+                    "handling_fee": "0.00",
+                    "shipping_discount": "0.00"
                 }
             },
             "description": "Test Transaction",
@@ -534,8 +671,8 @@ router.post('/create', function(req, res, next) {
                 "sku": products[i].item._id
             }
             // if (products[i].type=="TICKET") {
-            // 	item.ticket_name = products[i].ticket_name;
-            // 	item.ticket_email = products[i].ticket_email;
+            //  item.ticket_name = products[i].ticket_name;
+            //  item.ticket_email = products[i].ticket_email;
             // }
         create_payment.transactions[0].item_list.items.push(item)
     }
@@ -625,11 +762,16 @@ router.post('/create', function(req, res, next) {
 
 router.get('/like/:id', isLoggedIn, function(req, res, next) {
     var theId = new ObjectId(req.params.id);
-    Product.findOneAndUpdate(
-        {_id: theId},
-        {$addToSet: {"likes": req.user._id}},
-        {safe: true, upsert: false}
-    ,function(err,product) {
+    Product.findOneAndUpdate({
+        _id: theId
+    }, {
+        $addToSet: {
+            "likes": req.user._id
+        }
+    }, {
+        safe: true,
+        upsert: false
+    }, function(err, product) {
         console.log(err);
     });
     res.redirect('/');
@@ -762,17 +904,20 @@ router.post('/search', function(req, res, next) {
     var q = req.body.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    search.saveSearch(q);
-    Product.aggregate([
-        { $match: { $text: { $search: q }}},
-        { $sortByCount: "$category" }
-    ], function(err, allcats) {
+    Product.aggregate([{
+        $match: {
+            $text: {
+                $search: q
+            }
+        }
+    }, {
+        $sortByCount: "$category"
+    }], function(err, allcats) {
         if (err) {
             req.flash('error', 'An error has occurred - ' + err.message);
             return res.redirect('/');
         }
-        Product.find(
-            {
+        Product.find({
                 $text: {
                     $search: q
                 }
@@ -796,7 +941,7 @@ router.post('/search', function(req, res, next) {
                     req.flash('error', "No products found for search string.");
                     return res.redirect('/');
                 }
-    			productChunks = [];
+                productChunks = [];
                 chunkSize = 4;
                 for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
                     productChunks.push(results.slice(i, i + chunkSize))
@@ -804,9 +949,9 @@ router.post('/search', function(req, res, next) {
                 res.render('shop/facet', {
                     layout: 'facet.hbs',
                     products: productChunks,
-        			allcats: allcats,
+                    allcats: allcats,
                     user: req.user,
-                    q:q,
+                    q: q,
                     errorMsg: errorMsg,
                     noErrorMsg: !errorMsg,
                     successMsg: successMsg,
@@ -825,7 +970,7 @@ router.get('/product/:id/', function(req, res, next) {
             // replace with err handling
             return res.redirect('/');
         }
-        recommendations.GetRecommendations(product,function(err,recommendations) {
+        recommendations.GetRecommendations(product, function(err, recommendations) {
             if (err) {
                 console.log("error: " + err);
                 req.flash('error', "An error has occurred - " + err.message);
