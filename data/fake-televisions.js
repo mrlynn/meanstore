@@ -36,14 +36,11 @@ for (var i=0; i < 100; i++) {
 	resNum = Math.floor((Math.random() * resolutions.length-1) + 1);
 	resolution = resolutions[resNum];
 
-	console.log(resolution);
 	brand = brands[brandNum];
 	imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
 	name = brand;
 	name = name.toUpperCase();
 	price = faker.commerce.price();
-
-	
 		product = new Product({
 			code: code,
 			name: name,
@@ -89,7 +86,7 @@ for (var i=0; i < 100; i++) {
 				exit();
 			}
 		});
-		
+
 	});
 }
 
