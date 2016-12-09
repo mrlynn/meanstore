@@ -22,6 +22,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
+  config.vm.network "forwarded_port", guest: 3307, host: 33007
   config.vm.network "forwarded_port", guest: 27017, host: 37017
   config.vm.network "forwarded_port", guest: 3000, host: 30000
   config.vm.network "forwarded_port", guest: 4022, host: 40022
@@ -147,8 +148,31 @@ node data/fake-refrigerators.js
 node data/fake-televisions.js
 node data/fake-cameras.js
 node data/fake-apparel.js
+node data/fake-users.js
 node data/category-seeder.js
 pm2 start startup.json
+
+# Install BI Connector
+
+echo "Install BI Connector..."
+
+apt-get install -y wget
+mkdir /home/vagrant/meanmart/bi
+cd /home/vagrant/meanmart/bi
+wget https://info-mongodb-com.s3.amazonaws.com/mongodb-bi/v2/mongodb-bi-linux-x86_64-ubuntu1404-v2.0.0.tgz
+tar xvf mongodb-bi-linux-x86_64-ubuntu1404-v2.0.0.tgz
+cd mongodb-bi-linux-x86_64-ubuntu1404-v2.0.0
+
+sudo install -m755 bin/mongo* /usr/local/bin/
+
+echo "Create DRDL Files from MongoDB Collections..."
+mkdir schema
+/usr/local/bin/mongodrdl --host localhost -d hackathon -c products -o schema/products_schema.drdl
+/usr/local/bin/mongodrdl --host localhost -d hackathon -c categories -o schema/categories_schema.drdl
+/usr/local/bin/mongodrdl --host localhost -d hackathon -c users -o schema/users_schema.drdl
+
+echo "Starting BI Connector SQL Proxy..."
+/usr/local/bin/mongosqld --schemaDirectory schema --mongo-uri localhost
 
 SCRIPT
 
