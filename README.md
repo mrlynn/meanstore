@@ -44,9 +44,9 @@ You should find that MongoDB has been installed and is running.  You should also
 
 ## Screenshots
 
-- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_1.png){:height="200px"}
-- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_2.png){:height="200px"}
-- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_3.png){:height="200px"}
+- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_1.png)
+- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_2.png)
+- ![Main Catalog](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/example_3.png)
 
 ## Contributing
 
