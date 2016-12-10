@@ -48,7 +48,6 @@ for (var i=0; i < maxUsers; i++) {
 				console.log('error: ',err.message);
 			}
 			done++;
-			console.log("Count: " + done);
 			if (done>=maxUsers) {
 				exit();
 			}

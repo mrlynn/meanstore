@@ -1,9 +1,8 @@
 {
   "name"             : "hackathon",
-  "cwd"              : "/Users/mlynn/Documents/SEPIA/cartling/meanstore/meanstore",
   "script"           : "./bin/www",
   "log_date_format"  : "YYYY-MM-DD HH:mm Z",
-  "exec_mode"	     : "cluster",
+  "exec_mode"	       : "fork",
   "error_file"       : "./log/hackathon/hackathon.stderr.log",
   "out_file"         : "./log/hackathon/hackathon-app.stdout.log",
   "pid_file"         : "./pids/hackathon-app.pid",
