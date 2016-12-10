@@ -107,6 +107,5 @@ This will expose the entire product catalog collection.
 ## Next Steps
 
  * [MongoDB Documentation](http://mongodb.org/)
- * [Read about Schemas](http://learnmongodbthehardway.com/)
  * [Star us on GitHub](https://github.com/mrlynn/meanstore)
  * [Tweet me](http://twitter.com/mlynn)
