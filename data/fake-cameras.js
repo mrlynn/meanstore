@@ -60,6 +60,7 @@ for (var i = 0; i < 100; i++) {
     var category = 'Camera';
     name = faker.commerce.productName() + ' Camera';
     price = faker.commerce.price();
+        cost = Math.floor(Math.random() * price) + (price / 2)  
         product = new Product({
             code: 'cam' + code,
             name: name,
@@ -68,6 +69,7 @@ for (var i = 0; i < 100; i++) {
             taxable: 'Yes',
             shipable: 'Yes',
             price: price,
+            cost: cost,
             'Product_Group': 'Camera',
             category: 'Camera',
             usersBought: usersArray,

@@ -10,7 +10,6 @@ mongoose.connect(connectionstring);
 mongoose.Promise = global.Promise;
 
 
-
 products = [];
 brands = ['MongoDB','Fubu','Sean Jean'];
 fabrics = ['wool','fur','fleece','paper','acrylic pellets','hemp'];
@@ -18,14 +17,13 @@ types = ['pullover','tee-shirt','pantsuit','jacket','vest'];
 
 /* Pull Random Product */
 var pcnt = Product.count({});
-Product.find().limit(-1).skip(Math.floor((Math.random() * pcnt-1) + 1),function(err,product) {
+Product.aggregate({$sample: { size: 1 }},function(err,product) {
 	if (err) {
 		console.log('Error ' + err.message);
 	}
 	console.log(product);
 });
 
-console.log("Product: " + product)
 
 function exit() {
 	mongoose.disconnect();

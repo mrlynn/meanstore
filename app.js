@@ -33,6 +33,7 @@ var url = require("url");
 var path = require("path");
 var winston = require("winston");
 var mongoSanitize = require('express-mongo-sanitize');
+var docs = require("express-mongoose-docs");
 
 var logger = new (winston.Logger)({
     transports: [
@@ -105,6 +106,7 @@ app.use(errorHandler());
 app.use(mongoSanitize({
   replaceWith: '_'
 }));
+docs(app, mongoose); // 2nd param is optional
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 

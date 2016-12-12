@@ -41,6 +41,8 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-printer.jpg'
 	name = faker.commerce.productName() + ' Printer';
 	price = faker.commerce.price();
+	cost = Math.floor(Math.random() * price) + (price / 2)  
+
 		product = new Product({
 			code: 'pri' + code,
 			name: name,
@@ -49,6 +51,7 @@ for (var i=0; i < 100; i++) {
 			taxable: 'Yes',
 			shipable: 'Yes',
 			price: price,
+			cost: cost,
 			'Product_Group': 'Printer',
 			category: 'Printer',
 			usersBought: items,

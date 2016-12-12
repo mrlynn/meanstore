@@ -32,19 +32,21 @@ for (var i = 0; i < 100; i++) {
         for (user in usersArray) {
             items.push(usersArray[user]._id);
         };
-    var code = 1000 + i;
-    var color = faker.commerce.color();
-    var materialBrand = faker.commerce.productMaterial();
-    typeNum = Math.floor((Math.random() * brands.length - 1) + 1);
-    brandNum = Math.floor((Math.random() * brands.length - 1) + 1);
-    fabricNum = Math.floor((Math.random() * fabrics.length - 1) + 1);
-    type = types[typeNum];
-    fabric = fabrics[fabricNum];
-    brand = brands[brandNum];
-    imagePath = '/img/' + type + '-clothes.jpg'
-    var category = 'Apparel';
-    name = faker.commerce.productName() + ' ' + type;
-    price = faker.commerce.price();
+        var code = 1000 + i;
+        var color = faker.commerce.color();
+        var materialBrand = faker.commerce.productMaterial();
+        typeNum = Math.floor((Math.random() * brands.length - 1) + 1);
+        brandNum = Math.floor((Math.random() * brands.length - 1) + 1);
+        fabricNum = Math.floor((Math.random() * fabrics.length - 1) + 1);
+        type = types[typeNum];
+        fabric = fabrics[fabricNum];
+        brand = brands[brandNum];
+        imagePath = '/img/' + type + '-clothes.jpg'
+        var category = 'Apparel';
+        name = faker.commerce.productName() + ' ' + type;
+        price = faker.commerce.price();
+        cost = Math.floor(Math.random() * price) + (price / 2)
+
         product = new Product({
             code: 'cam' + code,
             name: name,
@@ -53,6 +55,7 @@ for (var i = 0; i < 100; i++) {
             taxable: 'Yes',
             shipable: 'Yes',
             price: price,
+            cost: cost,
             'Product_Group': 'Apparel',
             category: 'Apparel',
             usersBought: items,
@@ -73,13 +76,19 @@ for (var i = 0; i < 100; i++) {
             likes: ["123321", "232122", "1232123", "d03k1231", "1231kdf1"]
         });
 
-        product.save(function(err,productId) {
+        product.save(function(err, productId) {
             if (err) {
                 console.log('error: ', err.message);
             }
-            for(user in usersArray) {
+            for (user in usersArray) {
                 items.push(usersArray[user]._id);
-                User.update({_id: usersArray[user]._id},{$push: {"purchased": productId._id }})
+                User.update({
+                    _id: usersArray[user]._id
+                }, {
+                    $push: {
+                        "purchased": productId._id
+                    }
+                })
             };
         });
         done++;

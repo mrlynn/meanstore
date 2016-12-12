@@ -13,6 +13,15 @@ a {
   color: #f09411;
 }
 
+#headermessage {
+    margin: 0;
+}
+#headermessage.affix {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
 .small-thumbnail img { 
     max-height:50px; 
     max-width:50px; 
@@ -536,5 +545,13 @@ p{
 #cover:hover #front{
     -webkit-transform:rotateY(180deg);
     transform: rotateY(180deg);
+}
+.filterHeader, h3.filterHeader {
+    color: #3a3d43;
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 4px;
+    margin-top: 0;
+    margin-bottom: 8px;
 }
 

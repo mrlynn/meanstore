@@ -28,6 +28,10 @@ var schema = new Schema({
         type: Number,
         required: true
 	},
+	cost: {
+        type: Number,
+        required: true
+	},
 	likes: [String],
 	Product_Group: {
 		type: String,
