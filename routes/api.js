@@ -19,22 +19,49 @@ Category.find({}, function(err,categories) {
 		res.redirect('/');
 	}
 });
-/* get all categories */
+
+/**
+ * Present statistics for various database objects
+ * @constructor
+ */
+router.get('/stats', function(req, res, next) {
+	var url = 'mongodb://localhost:27017/hackathon';
+	MongoClient.connect(url, (err, db) => {
+
+    db.stats((err, stats) => {
+
+        console.dir(stats);
+        res.json(stats);
+        db.close();
+    });
+});
+})
+
+/**
+ * GET all categories
+ * @constructor
+ */
 router.get('/categories', function(req, res, next) {
 	Category.find({},function(err,categories) {
 		res.json(categories);
 	})
 });
 
-/* Get a single category */
+/**
+ * Get a single category 
+ * @constructor
+ */
 router.get('/categories/:id', function(req, res, next) {
 	Category.findById(req.params.id,function(err,category) {
 		res.json(category);
 	})
 });
 
-/* New Category */
-router.post('/categories', function(req, res, next) {
+/**
+ * POST add new category 
+ * @constructor
+ */
+ router.post('/categories', function(req, res, next) {
 	category = new Category({
 		name: req.params.name,
 		slug: slug(req.params.name),
@@ -48,21 +75,96 @@ router.post('/categories', function(req, res, next) {
 	})
 })
 
-/* delete a single category */
+/**
+ * DELETE a single category 
+ *
+ */
 router.delete('/categories/:id', function(req, res, next) {
 	Category.remove({_id: req.params.id},function(err,category) {
 		res.json(category);
 	})
 });
 
-/* GET products. */
-router.get('/products', function(req, res, next) {
+/**
+ * GET facets for category
+ * @constructor
+ */
+router.get('/facet/:category', function(req, res, next) {
+
+// db.products.aggregate([{
+//     $match: {
+//         "Product_Group": "Television"
+//     }
+// }, {
+//     $unwind: "$Attributes"
+// }, {
+//     $match: {
+//         "Attributes.Name": "Price"
+//     }
+// },{
+//     $bucket: {
+//         groupBy: "$Attributes.Value",
+//         boundaries: [0, 200, 300, 500, Infinity],
+//         output: {
+//             count: {
+//                 $sum: 1
+//             },
+//             matches: {
+//                 $push: "$Attribute.Value"
+//             }
+//         }
+//     }
+// }])
+
+
+
+
+
+
+// 	db.products.aggregate([{
+//         $match: {
+//             $text: {
+//                 $search: "sony"
+//             },
+//             category: 'Television'}
+//         },
+//         {
+//             $unwind: "$Attributes"
+//         },
+//         {
+//             $match: {
+//                 "Attributes.Name": "Screen Size"
+//             }
+//         },
+//         {
+//             $sortByCount: "$Attributes.Value"
+//         },
+//         {
+//             $limit: 5
+//         },
+//         { $project: {
+//         	'Attribute.Name': 1,
+//         	'Attribute.Value': 1
+//         }}
+//     ])
+
+})
+
+
+/**
+ * GET all categories 
+ * @constructor
+ */
+ router.get('/products', function(req, res, next) {
 	Product.find({},function(err,products) {
 		res.json(products);
 	})
 });
 
-/* GET product. */
+/**
+ * GET product. 
+ * @constructor
+ */
 router.get('/product/:id', function(req, res, next) {
 	console.log("Get Product " + req.params.id);
 	Product.findById(req.params.id,function(err,product) {
@@ -77,7 +179,10 @@ router.get('/products/:id', function(req, res, next) {
 	})
 });
 
-/* Create a product */
+/**
+ * POST - Create a product 
+ * @constructor
+ */
 router.post('/api/products', function (req, res){
   var product;
 

@@ -241,6 +241,34 @@ router.get('/category/:slug', function(req, res, next) {
     } else {
         shop = 'shop';
     }
+// Category.find({name: category_slug},function(err,category_document) {
+//     facets = [];
+
+// })
+// db.products.aggregate([{
+//     $match: {
+//         "Product_Group": "Camera"
+//     }
+// }, {
+//     $unwind: "$Attributes"
+// }, {
+//     $match: {
+//         "Attributes.Name": "Price"
+//     }
+// }, {
+//     $bucketAuto: {
+//         groupBy: "$Attributes.Value",
+//         buckets: 5
+//     }
+// }])
+
+
+
+
+
+
+
+
     Product.aggregate([{
         $match: {
             $text: {
@@ -266,7 +294,6 @@ router.get('/category/:slug', function(req, res, next) {
                 req.flash('error', 'Problem ' + err.message);
                 return res.redirect('/');
             }
-console.log("Aggout " + JSON.stringify(aggout));
             Category.findOne({
                 slug: new RegExp(category_slug, 'i')
             }, function(err, category) {
@@ -625,8 +652,9 @@ router.post('/create', function(req, res, next) {
     // reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
     var amount = parseFloat(req.body.amount);
-    var subtotal = parseFloat(req.body.subTotal);
-    var taxAmount = parseFloat(req.body.taxAmount);
+    var shippingtotal = parseFloat(req.body.shippingtotal);
+    var subtotal = parseFloat(req.body.subtotal);
+    var taxAmount = parseFloat(req.body.totalTax);
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
     }
@@ -644,9 +672,9 @@ router.post('/create', function(req, res, next) {
                 "currency": "USD",
                 "total": String(amount.toFixed(2)),
                 "details": {
-                    // "subtotal":String(amount.toFixed(2)),
-                    // "tax":String(taxAmount.toFixed(2)),
-                    // "shipping":String(taxAmount.toFixed(2)),
+                    "subtotal":String(subtotal.toFixed(2)),
+                    "tax":String(taxAmount.toFixed(2)),
+                    "shipping":String(shippingtotal.toFixed(2)),
                     "handling_fee": "0.00",
                     "shipping_discount": "0.00"
                 }
@@ -657,7 +685,7 @@ router.post('/create', function(req, res, next) {
             }
         }]
     };
-
+console.log("Create Payment: " + JSON.stringify(create_payment));
     var item_list = [];
     for (var i = 0, len = products.length; i < len; i++) {
         var price = parseFloat(products[i].price);

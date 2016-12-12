@@ -29,6 +29,7 @@ for (var i=0; i < 100; i++) {
 	imagePath = '/img/' + brand.toLowerCase() + '-refrigerator.jpg'
 	name = faker.commerce.productName() + ' Refrigerator';
 	price = faker.commerce.price();
+	cost = Math.floor(Math.random() * price) + (price / 2)  
 	
 	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
 	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
@@ -47,6 +48,7 @@ for (var i=0; i < 100; i++) {
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shipable: 'Yes',
+			cost: cost,
 			price: price,
 			'Product_Group': 'Refrigerator',
 			category: 'Refrigerator',

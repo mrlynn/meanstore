@@ -41,6 +41,8 @@ for (var i=0; i < 100; i++) {
 	name = brand;
 	name = name.toUpperCase();
 	price = faker.commerce.price();
+		cost = Math.floor(Math.random() * price) + (price / 2)  
+
 		product = new Product({
 			code: code,
 			name: name,
@@ -49,6 +51,7 @@ for (var i=0; i < 100; i++) {
 			taxable: 'Yes',
 			shipable: 'Yes',
 			price: price,
+			cost: cost,
 			usersBought: items,
 			'Product_Group': 'Television',
 			category: 'Television',

@@ -1,6 +1,19 @@
 var mongoose = require('mongoose');
 var Purchase = require('../models/purchase');
 var Cart = require('../models/cart');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+var mongodb = require("mongodb");
+
+dotenv.load({
+    path: '.env.hackathon'
+});
+
+
+    //get instance of MongoClient to establish connection
+    //Connecting to the Mongodb instance.
+    //Make sure your mongodb daemon mongod is running on port 27017 on localhost
+
 
 var Schema = mongoose.Schema;
 
@@ -44,47 +57,88 @@ orderSchema.post('save', function(doc) {
      2a. if not found add it.
      3.
      */
-    var ids = [];
-    for (var item in doc.cart.items) {
-    	ids.push(doc.cart.items[item].item.code);
-    }
-    for (var item in doc.cart.items) {
-        if (typeof doc.cart.items[item] == "object" && doc.cart.items[item]) {
-        	var prod = doc.cart.items[item].item.code;
-			var index = ids.indexOf(prod);
-			otherids = ids;
-			if(index != -1)
-			    otherids.splice( index, 1 );
-			console.log("Now Code: " + prod);
-			console.log("Other Ids: " + otherids.toString());
-	    	Purchase.findOne({'code': prod}, function(err,purchaserecord) {
-	    		if (err) {
-	    			console.log('error :' + err.message);
-	    		}
-	    		if (purchaserecord) {
-	    			 /*found a purchase record for the product - search for the products
-	    			   in the also purchased (Cart) and add them if they don't exist     */
-	    			console.log("Found a Purchase Records for product code: " + prod);
-	    		} else {
-	    			 // product purchase record not found - create one with the product and
-	    			 //   a list of all the other products purchased.
-					console.log("Did NOT find a Purchase Records for product code: " + prod);
-					if (otherids.count() > 0) {
-						purchase = new Purchase({
-							code: prod,
-							alsoPurchased: otherids
-						});
-						purchase.save(function(err) {
-							if (err) {
-								console.log('error: ' + err.message);
-							}
-							console.log("Purchase record created for " + prod);
-						})
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    dbHost = process.env.MONGODB_URI;
+	var db;
+
+	var MongoClient = mongodb.MongoClient;
+
+
+    MongoClient.connect(dbHost, function(err, db){
+  		if ( err ) {
+  			console.log("Error: " + errror.message);
+  		}
+	    var dateObj = new Date();
+		var month = dateObj.getUTCMonth(); //months from 1-12
+		var day = dateObj.getUTCDate();
+		var year = dateObj.getUTCFullYear();
+		var sdoc = {};
+		var monthname = months[month];
+		var setupdate = { $set : {} };
+		var incupdate = { $inc : {} };
+		incupdate.$inc['months.' + months[month] + '.sales'] = doc.cart.grandTotal;
+		incupdate.$inc['ytd'] = doc.cart.grandTotal;
+		console.log("inc: " + JSON.stringify(incupdate));
+		db.collection('sales',function(err,collection) {
+			if (err) {
+				console.log('error ' + error.message);
+			}
+			collection.update(
+				{
+					year: year
+				},
+				
+					incupdate
+				,
+				{
+					upsert: true
+				}, function(err,result) {
+					if (err) {
+						console.log("Error " + err.message);
 					}
-	    		}
-		    })
-		}
-	}
+					console.log("RESULT: " + JSON.stringify(result));
+			});
+		})
+
+    });
+//     for (var item in doc.cart.items) {
+//         if (typeof doc.cart.items[item] == "object" && doc.cart.items[item]) {
+//         	var prod = doc.cart.items[item].item.code;
+// 			var index = ids.indexOf(prod);
+// 			otherids = ids;
+// 			if(index != -1)
+// 			    otherids.splice( index, 1 );
+// 			console.log("Now Code: " + prod);
+// 			console.log("Other Ids: " + otherids.toString());
+// 	    	Purchase.findOne({'code': prod}, function(err,purchaserecord) {
+// 	    		if (err) {
+// 	    			console.log('error :' + err.message);
+// 	    		}
+// 	    		if (purchaserecord) {
+// 	    			 /*found a purchase record for the product - search for the products
+// 	    			   in the also purchased (Cart) and add them if they don't exist     */
+// 	    			console.log("Found a Purchase Records for product code: " + prod);
+// 	    		} else {
+// 	    			 // product purchase record not found - create one with the product and
+// 	    			 //   a list of all the other products purchased.
+// 					console.log("Did NOT find a Purchase Records for product code: " + prod);
+// 					if (otherids.count() > 0) {
+// 						purchase = new Purchase({
+// 							code: prod,
+// 							alsoPurchased: otherids
+// 						});
+// 						purchase.save(function(err) {
+// 							if (err) {
+// 								console.log('error: ' + err.message);
+// 							}
+// 							console.log("Purchase record created for " + prod);
+// 						})
+// 					}
+// 	    		}
+// 		    })
+// 		}
+// 	}
 });
 
 this.createPurchase = function(product,othersArray,cb) {

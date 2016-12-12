@@ -13,50 +13,50 @@
 /* Fonts! */
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdreg.eot');
-  src: url('/static/font/akzidgrostdreg.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdreg.woff') format('woff'), url('/static/font/akzidgrostdreg.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdreg.eot');
+  src: url('/fonts/akzidgrostdreg.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdreg.woff') format('woff'), url('/fonts/akzidgrostdreg.ttf') format('truetype');
   font-style: normal;
   font-weight: normal;
 }
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdita.eot');
-  src: url('/static/font/akzidgrostdita.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdita.woff') format('woff'), url('/static/font/akzidgrostdita.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdita.eot');
+  src: url('/fonts/akzidgrostdita.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdita.woff') format('woff'), url('/fonts/akzidgrostdita.ttf') format('truetype');
   font-style: italic;
   font-weight: normal;
 }
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdmed.eot');
-  src: url('/static/font/akzidgrostdmed.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdmed.woff') format('woff'), url('/static/font/akzidgrostdmed.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdmed.eot');
+  src: url('/fonts/akzidgrostdmed.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdmed.woff') format('woff'), url('/fonts/akzidgrostdmed.ttf') format('truetype');
   font-style: normal;
   font-weight: bold;
 }
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdmedita.eot');
-  src: url('/static/font/akzidgrostdmedita.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdmedita.woff') format('woff'), url('/static/font/akzidgrostdmedita.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdmedita.eot');
+  src: url('/fonts/akzidgrostdmedita.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdmedita.woff') format('woff'), url('/fonts/akzidgrostdmedita.ttf') format('truetype');
   font-style: italic;
   font-weight: bold;
 }
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdlig.eot');
-  src: url('/static/font/akzidgrostdlig.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdlig.woff') format('woff'), url('/static/font/akzidgrostdlig.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdlig.eot');
+  src: url('/fonts/akzidgrostdlig.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdlig.woff') format('woff'), url('/fonts/akzidgrostdlig.ttf') format('truetype');
   font-style: normal;
   font-weight: 200;
 }
 @font-face {
   font-family: 'Akzidenz';
-  src: url('/static/font/akzidgrostdligita.eot');
-  src: url('/static/font/akzidgrostdligita.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdligita.woff') format('woff'), url('/static/font/akzidgrostdligita.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdligita.eot');
+  src: url('/fonts/akzidgrostdligita.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdligita.woff') format('woff'), url('/fonts/akzidgrostdligita.ttf') format('truetype');
   font-style: italic;
   font-weight: 200;
 }
 @font-face {
   font-family: 'Akzidenz Cnd';
-  src: url('/static/font/akzidgrostdligcnd.eot');
-  src: url('/static/font/akzidgrostdligcnd.eot#iefix') format('embedded-opentype'), url('/static/font/akzidgrostdligcnd.woff') format('woff'), url('/static/font/akzidgrostdligcnd.ttf') format('truetype');
+  src: url('/fonts/akzidgrostdligcnd.eot');
+  src: url('/fonts/akzidgrostdligcnd.eot#iefix') format('embedded-opentype'), url('/fonts/akzidgrostdligcnd.woff') format('woff'), url('/fonts/akzidgrostdligcnd.ttf') format('truetype');
   font-style: normal;
   font-weight: 200;
 }
@@ -64,8 +64,8 @@
   font-family: 'MMS Icons';
   font-style: normal;
   font-weight: normal;
-  src: url('/static/font/MMSIcons-Regular.eot');
-  src: url('/static/font/MMSIcons-Regular.eot#iefix') format('embedded-opentype'), url('/static/font/MMSIcons-Regular.woff') format('woff'), url('/static/font/MMSIcons-Regular.ttf') format('truetype');
+  src: url('/fonts/MMSIcons-Regular.eot');
+  src: url('/fonts/MMSIcons-Regular.eot#iefix') format('embedded-opentype'), url('/fonts/MMSIcons-Regular.woff') format('woff'), url('/fonts/MMSIcons-Regular.ttf') format('truetype');
   
   /* IE9 Compat Modes */
   /* Safari, Android, iOS */
@@ -73,20 +73,20 @@
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: 'MMS Icons';
-    src: url('/static/font/MMSIcons-Regular.svg') format('svg');
+    src: url('/fonts/MMSIcons-Regular.svg') format('svg');
   }
 }
 @font-face {
   font-family: 'MMS Illustrations';
   font-style: normal;
   font-weight: normal;
-  src: url('/static/font/MMSIllustrations-Regular.eot');
-  src: url('/static/font/MMSIllustrations-Regular.eot?#iefix') format('embedded-opentype'), url('/static/font/MMSIllustrations-Regular.woff') format('woff'), url('/static/font/MMSIllustrations-Regular.ttf') format('truetype');
+  src: url('/fonts/MMSIllustrations-Regular.eot');
+  src: url('/fonts/MMSIllustrations-Regular.eot?#iefix') format('embedded-opentype'), url('/fonts/MMSIllustrations-Regular.woff') format('woff'), url('/fonts/MMSIllustrations-Regular.ttf') format('truetype');
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
     font-family: 'MMS Illustrations';
-    src: url('/static/font/MMSIllustrations-Regular.svg') format('svg');
+    src: url('/fonts/MMSIllustrations-Regular.svg') format('svg');
   }
 }
 html,

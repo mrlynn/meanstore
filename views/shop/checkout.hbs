@@ -175,6 +175,9 @@
 								<input type='submit' value='Pay with Paypal >' class='btn btn-primary text-right'><br><a href='/whypaypal'>Why PayPal?</a>
 							</div>
 							<input type="hidden" name="amount" value="{{grandtotal}}">
+							<input type="hidden" name="subtotal" value="{{subtotal}}">
+							<input type="hidden" name="totalTax" value="{{totalTax}}">
+							<input type="hidden" name="shippingtotal" value="{{shippingtotal}}">
 							<input type="hidden" name="method" value="paypal">
 						</form>
 					</div>
