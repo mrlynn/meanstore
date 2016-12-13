@@ -1,4 +1,4 @@
-[MEANStore - MeanMart](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/meanmart-banner1.png)
+![MEANStore - MeanMart](https://raw.githubusercontent.com/mrlynn/meanstore/meanmart/public/images/meanmart-banner1.png)
 # MEANStore - MeanMart
 
 An example ecommerce / Retail software solution demonstrating the power and flexibility of MongoDB.
