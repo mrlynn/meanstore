@@ -1,6 +1,8 @@
 var Product = require('../models/product');
 var User = require('../models/user');
 var Category = require('../models/category');
+var faker = require('faker');
+
 var mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
