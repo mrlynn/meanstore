@@ -2,12 +2,19 @@ var Product = require('../models/product');
 var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+dotenv.load({
+    path: '.env.hackathon'
+});
 
-var faker = require('faker');
-var Config = require('../config/config');
-var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
-mongoose.connect(connectionstring);
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connection.on('error', () => {
+  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
+  process.exit();
+});
 // Product.remove({},function(err,results) {});
 // Category.remove({},function(err,results) {});
 products = [];

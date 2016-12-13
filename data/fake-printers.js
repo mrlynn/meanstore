@@ -4,11 +4,14 @@ var Category = require('../models/category');
 var mongoose = require('mongoose');
 var faker = require('faker');
 var Config = require('../config/config');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+dotenv.load({
+    path: '.env.hackathon'
+});
 var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
 mongoose.connect(connectionstring);
 mongoose.Promise = global.Promise;
-
-
 
 // Product.remove({},function(err,results) {});
 // Category.remove({},function(err,results) {});
