@@ -6,18 +6,17 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- Optional theme -->
-        <link rel="stylesheet" href="/stylesheets/mongostrap-theme.css">
-
-        {{!--     <link rel='stylesheet' href='/stylesheets/flatly.bootstrap.min.css' />
-        --}}    <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel="stylesheet" href="/stylesheets/mongostrap-theme.css">      
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link href="/stylesheets/bootstrap-tour.min.css" rel="stylesheet">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link href="/stylesheets/shop-homepage.css" rel="stylesheet">
         <script src="https://use.fontawesome.com/0f323c4f82.js"></script>
+
         <script src="/javascripts/custom.js"></script>
-        <script src="/javascripts/jquery-2.1.4.min.js"></script>
     </head>
     <body>
-              <!--layouts: layout.hbs-->
+              <!--layouts: facet.hbs-->
     {{> nav}}
     <div id="container">
         <div id="row">
@@ -28,10 +27,40 @@
         </div> <!--/container-->
         {{> footer}}
         <!-- Latest compiled and minified JavaScript -->
-        <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+         <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+            <script src="/javascripts/bootstrap-tour.min.js"></script>
+
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+         </script>
         <input id="input_notify_message" value="" type="hidden">
         <input id="input_notify_message_type" value="" type="hidden">
         <div id="notify_message"></div>
     </body>
+
+    <script>
+    var tour = new Tour({
+        steps: [{
+            element: "#add-to-cart",
+            title: "Click here to add item to cart",
+            content: "The first step is to put something in your cart.  Once you do this, you'll see a '1' appear next to the Shopping Cart link.  This indicates that you have one item in your cart."
+        },
+        {
+            element: "#products-features",
+            title: "Each Product Can Have Different Facets",
+            content: "Because MongoDB leverages a flexible, schema-less (or schema on read) storage methodology, each product can have many different and varied features or facets."
+        },
+        {
+            element: "#view-code",
+            title: "Click Here to View Code",
+            content: "We've enabled you to see what the product catalog looks like as a MongoDB Collection"
+        },
+        {
+            element: "#shopping-cart",
+            title: "Click Here to View Shopping Cart",
+            content: "Once you have items in your cart, click here to begin the check-out process."
+        }]
+    });
+    tour.init();
+    tour.start();
+    </script>
 </html>

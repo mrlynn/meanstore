@@ -1,6 +1,18 @@
 var Product = require('../models/product');
 var mongoose = require('mongoose');
-mongoose.connect('localhost:27017/roundup')
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+dotenv.load({
+    path: '.env.hackathon'
+});
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connection.on('error', () => {
+  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
+  process.exit();
+});
 
 var products = [
 	new Product({

@@ -33,8 +33,6 @@ var fs = require('fs');
 "use strict";
 
 
-
-
 var useFacets = (process.env.facets === true);
 useFacets = true;
 var frontPageCategory = process.env.frontPageCategory;
@@ -177,6 +175,12 @@ router.get('/overview', function(req, res, next) {
 router.get('/', function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
+    var tutorial = req.params.tutorial;
+    if (tutorial==1) {
+        req.session.tutorial = true;
+    } else {
+        req.session.tutorial = false;
+    }
     var categoryrecord = {
         "_id": "ObjectId('58485813edf44d95fb117223')",
         "name": "Television",
@@ -185,6 +189,7 @@ router.get('/', function(req, res, next) {
         "ancestors": [],
         "__v": 0
     };
+
     Product.aggregate([{
         $sortByCount: "$category"
     }], function(err, allcats) {
@@ -216,6 +221,7 @@ router.get('/', function(req, res, next) {
                 noErrorMsg: !errorMsg,
                 successMsg: successMsg,
                 viewDocuments: viewDocuments,
+                tutorial: tutorial,
                 noMessage: !successMsg,
                 isLoggedIn: req.isAuthenticated()
             });

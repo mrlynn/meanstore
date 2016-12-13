@@ -14,9 +14,6 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
             <li>
-
-
-
             </li>
             <li>
                 <a href="/overview">
@@ -43,7 +40,7 @@
                 </li>
                 {{/if}}
                 <li>
-                    <a href="shopping-cart">
+                    <a id="shopping-cart" href="shopping-cart">
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
                         {{#if session.cart.totalQty }}
                         <span class="badge btn-success">{{ session.cart.totalQty }}</span>
