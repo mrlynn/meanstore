@@ -164,19 +164,6 @@ app.use(function(req,res,next) {
         console.log("Local Allcats " + res.locals.allcats);
         logger.log('info','Local All Categories ' + res.locals.allcats);
     }
-
-    // Use connect method to connect to the server
-    MongoClient.connect(process.env.MONGODB_URI, function(err, db) {
-      assert.equal(null, err);
-      console.log("Connected successfully to server");
-      var collection = db.collection('orders');
-      collection.count({'status': 'approved'},function(err, items) {
-        console.log("items: " + items);
-      });
-      db.close();
-    });
-
-
     res.locals.login = req.isAuthenticated();
     if (res.locals.login) {
       res.locals.admin = (req.user.role == 'admin');

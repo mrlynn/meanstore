@@ -773,7 +773,12 @@ router.post('/create', function(req, res, next) {
                 }
                 // Create Order Record with a pending status.
                 var order = new Order({
-                    user: req.user,
+                    user: {
+                        id: req.user._id,
+                        first_name: req.user.first_name,
+                        last_name: req.user.last_name,
+                        email: req.user.email
+                    },
                     cart: cart,
                     shipping_address: req.body.shipping_addr1,
                     shipping_city: req.body.shipping_city,

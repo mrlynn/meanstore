@@ -30,7 +30,35 @@ db.orders.aggregate([
      }
    ])
 
+# Total by month/year
 
+db.orders.aggregate([{
+	$group:
+	{
+		_id: { period: { year: { $year: "$created"}, month: { $month: "$created"}}},
+		total: { $sum: "$cart.grandTotal" }
+	}
+}])
+// {
+//   "result": [
+//     {
+//       "_id": {
+//         "period": {
+//           "year": 2016,
+//           "month": 12
+//         }
+//       },
+//       "total": 23338.5
+//     },
+//     {
+//       "_id": {
+//         "period": {
+//           "year": 2016,
+//           "month": 11
+//         }
+//       },
+//       "total": 54382
+//     }
 
 # Approved orders grouped by category
 # This does not work

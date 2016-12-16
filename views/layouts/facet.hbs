@@ -36,7 +36,7 @@
         <input id="input_notify_message_type" value="" type="hidden">
         <div id="notify_message"></div>
     </body>
-
+    {{if viewTour}}
     <script>
     var tour = new Tour({
         steps: [{
@@ -81,4 +81,5 @@
     tour.init();
     tour.start();
     </script>
+    {{/if}}
 </html>
