@@ -3,6 +3,7 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var Ticket = require('../models/ticket');
 var Order = require('../models/order');
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -14,7 +15,6 @@ var fs = require('fs');
 var csv = require('ya-csv');
 var uuid = require('uuid');
 var Config = require('../config/config');
-
 
 var csrfProtection = csrf();
 
@@ -30,9 +30,7 @@ router.get('/', function(req, res, next) {
     		return res.error('err');
     	}
      	console.log('back with total ', tot);
-
     });
-
     Order.find({}, function(err, docs) {
         console.log("orders: " + docs);
         Product.find(function(err, products) {
@@ -48,7 +46,7 @@ router.get('/', function(req, res, next) {
             //   	});
             res.render('admin/index', {
                 layout: 'admin.hbs',
-                products: products,
+                products: productChunks,
                 errorMsg: errorMsg,
                 successMsg: successMsg,
                 noErrorMsg: !errorMsg,
@@ -60,7 +58,53 @@ router.get('/', function(req, res, next) {
         });
     });
 });
+router.get('/orders',function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Orders";
+    var adminPageUrl = "/admin/orders";
+    Order.find({"status": 'approved'}, function(err, orders) {
+        if (err) {
+            console.log(error.message);
+            res.send(500,"error fetching orders");
+        }
+        res.render('admin/orders', {
+            adminPageTitle: adminPageTitle,
+            adminPageUrl: adminPageUrl,
+            layout: 'admin-page.hbs',
+            csrfToken: req.csrfToken(),
+            noMessage: !successMsg,
+            noErrorMsg: !errorMsg,
+            errorMsg: errorMsg,
+            user: req.user, 
+            orders: orders,
+            isLoggedIn:req.isAuthenticated(),
+            successMsg: successMsg
+        });
+    })
+})
 
+/* Display all tickets purchased */
+router.get('/tickets',function(req, res, next) {
+    
+
+    Ticket.find({},function(err,tickets) {
+        if (err) {
+            console.log("Error: " + err.message);
+        }
+        res.render('admin/tickets', {
+            layout: 'admin-page.hbs',
+            csrfToken: req.csrfToken(),
+            noMessage: !successMsg,
+            noErrorMsg: !errorMsg,
+            errorMsg: errorMsg,
+            user: req.user, 
+            isLoggedIn:req.isAuthenticated(),
+            successMsg: successMsg
+        });
+    })
+
+})
 /* Render file upload for data input */
 router.get('/import', function(req, res, next) {
     successMsg = req.flash('success')[0];
@@ -124,8 +168,7 @@ router.get('/products', function(req, res, next) {
             req.flash('error','Error while retrieving products.');
             return res.redirect('/books');
         }
-        console.log("orders: " + books);
-        Product.find(function(err, books) {
+        Product.find(function(err, products) {
             // productChunks = [];
             // chunkSize = 5;
             // for (var i = (5 - chunkSize); i < books.length; i += chunkSize) {

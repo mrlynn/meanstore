@@ -45,6 +45,11 @@
             content: "The first step is to put something in your cart.  Once you do this, you'll see a '1' appear next to the Shopping Cart link.  This indicates that you have one item in your cart."
         },
         {
+            element: "#products-likes",
+            title: "Click Here to Like",
+            content: "Likes are stored right in the same document as the product details.  This saves disk fetchs.  All related information is stored together."
+        },
+        {
             element: "#products-features",
             title: "Each Product Can Have Different Facets",
             content: "Because MongoDB leverages a flexible, schema-less (or schema on read) storage methodology, each product can have many different and varied features or facets."
@@ -58,6 +63,19 @@
             element: "#shopping-cart",
             title: "Click Here to View Shopping Cart",
             content: "Once you have items in your cart, click here to begin the check-out process."
+        },
+        {
+            element: "#view-aggregation",
+            title: "Click Here to View Aggregation",
+            content: "MongoDB 3.4 Supports Faceted Search.  Click here to view an example we use in MEAMMart to produce a faceted search box."
+        },
+        {
+            element: "#view-search",
+            title: "Search for Text",
+            content: "MongoDB 3.4 Supports Text Search.  This combined with faceted search gives us the ability to drill down into categories and other facets leveraging text search.  Click Next to search for an example.",
+            redirect: function(){
+                document.location.href = '/search/?q=rubber';
+            };
         }]
     });
     tour.init();
