@@ -26,11 +26,12 @@ var schema = new Schema({
 	},
 	price: {
         type: Number,
-        required: true
+        required: true,
+        get: getPrice
 	},
 	cost: {
         type: Number,
-        required: true
+        required: false
 	},
 	likes: [String],
 	Product_Group: {
@@ -188,6 +189,13 @@ schema.virtual('isApparel')
 schema.methods.setPrice = function(price) {
 	this.price = price;
 };
+function getPrice(price) {
+	return (price / 100).toFixed(2);
+
+}
+schema.methods.getPrice = function(price) {
+	return (num / 100).toFixed(2);
+}
 schema.plugin(random);
 
 schema.index({name: 'text',title:'text',description:'text',category:'text'});

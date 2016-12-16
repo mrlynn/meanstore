@@ -43,17 +43,17 @@ module.exports = function Cart(oldCart) {
 			if (err) {
 				console.log('error :' + err.message);
 			}
-
 		})
 		this.totalTax = results.taxAmount;
 		// this.totalShipping = results.shippingAmount;
 	};
+
 	this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
 		var storedItem = this.items[id];
 		var locals = {};
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
+			storedItem = this.items[id] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: 0, size: 0, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);
@@ -82,14 +82,13 @@ module.exports = function Cart(oldCart) {
 		};
 		if (taxable=='yes' || taxable==true) {
 			storedItem.taxAmount = ((price * taxRate) * 100)/100;
+			this.totalTax += ((price * .06) * 100)/100;
 		} else {
 			storedItem.taxAmount = 0;
+			this.totalTax = 0;
 		}
-		this.totalTax += ((price * .06) * 100)/100;
 		storedItem.priceWithTax = (parseFloat(price) + parseFloat(storedItem.taxAmount));
 		storedItem.itemTotal = ((parseFloat(price) * storedItem.qty));
-
-
 	};
 
 	/* Empty all items from cart */
@@ -135,6 +134,19 @@ module.exports = function Cart(oldCart) {
 
 	};
 
+	this.generateObject = function() {
+		var obj = {}
+		for(var id in this.items) {
+			obj = {
+				id: id,
+				ticket_name: this.items[id].item.ticket_name,
+				email: this.items[id].item.ticket_email,
+				size: this.items[id].item.size
+			}
+			return obj;
+		}
+	}
+
 	/* create an array of the items in the cart */
 	this.generateArray = function() {
 		var arr = [];
@@ -155,26 +167,55 @@ module.exports = function Cart(oldCart) {
 		var month = dateObj.getUTCMonth() + 1; //months from 1-12
 		var day = dateObj.getUTCDate();
 		var year = dateObj.getUTCFullYear();
-
 		if (!products) {
 			return
 		}
 
 		var item_list = [];
 		for (var i = 0, len = products.length; i < len; i++) {
-			if (products[i].type == 'TICKET') {
+			var itemcode = products[i].item.code;
+			var itemgroup = products[i].item.Product_Group;
+			var ticket_email = products[i].item.ticket_email;
+			var code = products[i].item.code;
+			var ticket_name = products[i].item.ticket_name;
+			var dateobj = new Date();
+			if (itemgroup == 'TICKET') {
 				ticket = new Ticket({
-					user: user,
-					ticket_email: products[i].ticket_email,
-					ticket_name: products[i].ticket_name,
-					ticket_type: products[i].type
+					user:{
+						first_name: user.first_name,
+						last_name: user.last_name,
+						email: user.email
+					},
+					ticket_email: ticket_email,
+					ticket_name: ticket_name,
+					ticket_type: itemgroup
 				})
 				ticket.save(function(err,ticket) {
 					if (err) {
 						res.send('500','Problem saving ticket.');
+						console.log('Error Saving Ticket ' + err.message);
 					}
-					return ticket;
 				});
+				User.findById(user._id, function(err,userdoc) {
+					if (err) {
+						console.log("Unable to find user " + user._id);
+					}
+					User.update({_id:user._id},
+						{$push:
+							{purchased:
+								{code: code, purchased: dateobj}
+							}
+						},function(err, newuserdoc){
+					    	if (err) console.log("error " + error.message);
+						});
+					});
+				return ticket;
+
+			} else {
+				if (products[i].item.Product_Group == 'APPAREL') {
+//Code logic for apparel purchase
+				}
+
 			}
 		}
 	}

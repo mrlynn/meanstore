@@ -3,6 +3,7 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var Ticket = require('../models/ticket');
 var Order = require('../models/order');
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -14,11 +15,12 @@ var fs = require('fs');
 var csv = require('ya-csv');
 var uuid = require('uuid');
 var Config = require('../config/config');
-
-
+var Stats = require('../local_modules/stats');
 var csrfProtection = csrf();
 
 router.use(csrfProtection);
+
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -30,9 +32,7 @@ router.get('/', function(req, res, next) {
     		return res.error('err');
     	}
      	console.log('back with total ', tot);
-
     });
-
     Order.find({}, function(err, docs) {
         console.log("orders: " + docs);
         Product.find(function(err, products) {
@@ -48,7 +48,7 @@ router.get('/', function(req, res, next) {
             //   	});
             res.render('admin/index', {
                 layout: 'admin.hbs',
-                products: products,
+                products: productChunks,
                 errorMsg: errorMsg,
                 successMsg: successMsg,
                 noErrorMsg: !errorMsg,
@@ -60,7 +60,60 @@ router.get('/', function(req, res, next) {
         });
     });
 });
+router.get('/orders',function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Orders";
+    var adminPageUrl = "/admin/orders";
 
+    console.log("Stats in route " + JSON.stringify(res.locals.stats));
+    Order.find({"status": 'approved'}, function(err, orders) {
+        Stats.getStats(function(err,stats){
+            console.log("Got Stats? " + JSON.stringify(stats));
+            if (err) {
+                console.log(error.message);
+                res.send(500,"error fetching orders");
+            }
+            res.render('admin/orders', {
+                adminPageTitle: adminPageTitle,
+                adminPageUrl: adminPageUrl,
+                layout: 'admin-page.hbs',
+                csrfToken: req.csrfToken(),
+                noMessage: !successMsg,
+                noErrorMsg: !errorMsg,
+                errorMsg: errorMsg,
+                user: req.user, 
+                stats: stats,
+                orders: orders,
+                isLoggedIn:req.isAuthenticated(),
+                successMsg: successMsg
+            });
+        })
+
+    })
+})
+
+/* Display all tickets purchased */
+router.get('/tickets',function(req, res, next) {
+    
+
+    Ticket.find({},function(err,tickets) {
+        if (err) {
+            console.log("Error: " + err.message);
+        }
+        res.render('admin/tickets', {
+            layout: 'admin-page.hbs',
+            csrfToken: req.csrfToken(),
+            noMessage: !successMsg,
+            noErrorMsg: !errorMsg,
+            errorMsg: errorMsg,
+            user: req.user, 
+            isLoggedIn:req.isAuthenticated(),
+            successMsg: successMsg
+        });
+    })
+
+})
 /* Render file upload for data input */
 router.get('/import', function(req, res, next) {
     successMsg = req.flash('success')[0];
@@ -114,43 +167,37 @@ router.post('/import', function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/products', function(req, res, next) {
+router.get('/products',function(req, res, next) {
     successMsg = req.flash('success')[0];
-    errorMsg = req.flash('error')[0]
-    var conditions = {
-    }
-    Product.find(conditions, function(err, books) {
-        if (err) {
-            req.flash('error','Error while retrieving products.');
-            return res.redirect('/books');
-        }
-        console.log("orders: " + books);
-        Product.find(function(err, books) {
-            // productChunks = [];
-            // chunkSize = 5;
-            // for (var i = (5 - chunkSize); i < books.length; i += chunkSize) {
-            //     productChunks.push(books.slice(i, i + chunkSize))
-            // }
-            // res.render('shop/index', {
-            // 	title: 'MEAN Store', 
-            // 	products: productChunks,
-            // 	user: user
-            //   	});
-            req.session.shopUrl = "/books";
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Orders";
+    var adminPageUrl = "/admin/products";
+
+    console.log("Stats in route " + JSON.stringify(res.locals.stats));
+    Product.find({}, function(err, products) {
+        Stats.getStats(function(err,stats){
+            if (err) {
+                console.log(error.message);
+                res.send(500,"error fetching orders");
+            }
             res.render('admin/products', {
-                layout: 'books.hbs',
-           	 	csrfToken: req.csrfToken(),
-                products: books,
+                adminPageTitle: adminPageTitle,
+                adminPageUrl: adminPageUrl,
+                layout: 'admin-page.hbs',
+                csrfToken: req.csrfToken(),
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
                 errorMsg: errorMsg,
                 user: req.user, 
+                stats: stats,
+                products: products,
                 isLoggedIn:req.isAuthenticated(),
                 successMsg: successMsg
             });
-        });
-    });
-});
+        })
+
+    })
+})
 
 router.get('/edit-product/:id', function(req, res, next) {
 	productId = req.params.id;

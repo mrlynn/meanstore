@@ -34,7 +34,8 @@ var fs = require('fs');
 
 
 var useFacets = (process.env.facets === true);
-useFacets = true;
+var viewTour = (process.env.viewTour === true);
+useFacets = false;
 var frontPageCategory = process.env.frontPageCategory;
 var viewDocuments = process.env.viewDocuments;
 
@@ -223,6 +224,7 @@ router.get('/', function(req, res, next) {
                 viewDocuments: viewDocuments,
                 tutorial: tutorial,
                 noMessage: !successMsg,
+                viewTour: viewTour,
                 isLoggedIn: req.isAuthenticated()
             });
         });
@@ -400,9 +402,9 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
         // cart.cartShippingTotal()
         cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
         // cart.totalTax = 0;
-        console.log("Cart.totaltax = " + cart.totalTax);
         cart.totalShipping = 0;
-        req.session.cart = cart; // store cart in session
+        req.session.cart = cart;
+        console.log("CART: " + JSON.stringify(cart)); // store cart in session
         req.flash('success', 'Item successfully added to cart. ');
         res.redirect('/');
         // });
@@ -477,6 +479,7 @@ router.get('/shopping-cart', function(req, res, next) {
         });
     }
     var cart = new Cart(req.session.cart);
+    console.log("CART from sb: " + JSON.stringify(cart));
     var cartJSON = JSON.stringify(cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
@@ -486,43 +489,44 @@ router.get('/shopping-cart', function(req, res, next) {
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
     var products = cart.generateArray();
     recommendations.GetRecommendations(cart, function(err, recommendations) {
-            if (err) {
-                errorMsg = req.flash('error :', err.message);
-            }
-            if (!recommendations && res.locals.showRecommendations) {
-                recommendations = [{
-                    code: 'cam1000',
-                    title: 'Gorgeous Fresh Hat Camera',
-                    description: 'Error ea velit et explicabo.',
-                    price: 973,
-                    imagePath: '/img/lumix-camera.jpg'
-                }, {
-                    code: 'cam1001',
-                    title: 'Tasty Metal Chicken Camera',
-                    description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
-                    price: 360,
-                    imagePath: '/img/sony-camera.jpg'
-                }]
-            }
-            console.log("View Documents: " + res.locals.viewDocuments);
-            res.render('shop/shopping-cart', {
-                products: cart.generateArray(),
-                allcats: req.session.allcats,
-                totalTax: totalTax,
-                viewDocuments: viewDocuments,
-                totalPrice: totalPrice,
-                cartJSON: cartJSON,
-                totalShipping: totalShipping,
-                grandTotal: cart.grandTotal,
-                recommendations: recommendations,
-                user: req.user,
-                localUser: (req.user.state == taxConfig.ourStateCode),
-                errorMsg: errorMsg,
-                noErrorMsg: !errorMsg,
-                successMsg: successMsg,
-                noMessage: !successMsg
-            });
-        })
+        if (err) {
+            errorMsg = req.flash('error :', err.message);
+        }
+        if (!recommendations && res.locals.showRecommendations) {
+            recommendations = [{
+                code: 'cam1000',
+                title: 'Gorgeous Fresh Hat Camera',
+                description: 'Error ea velit et explicabo.',
+                price: 973,
+                imagePath: '/img/lumix-camera.jpg'
+            }, {
+                code: 'cam1001',
+                title: 'Tasty Metal Chicken Camera',
+                description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
+                price: 360,
+                imagePath: '/img/sony-camera.jpg'
+            }]
+        }
+        console.log("View Documents: " + res.locals.viewDocuments);
+        res.render('shop/shopping-cart', {
+            products: cart.generateArray(),
+            items: cart.generateObject(),
+            allcats: req.session.allcats,
+            totalTax: totalTax,
+            viewDocuments: viewDocuments,
+            totalPrice: totalPrice,
+            cartJSON: cartJSON,
+            totalShipping: totalShipping,
+            grandTotal: cart.grandTotal,
+            recommendations: recommendations,
+            user: req.user,
+            localUser: (req.user.state == taxConfig.ourStateCode),
+            errorMsg: errorMsg,
+            noErrorMsg: !errorMsg,
+            successMsg: successMsg,
+            noMessage: !successMsg
+        });
+    })
         //    Category.find({}, function(err,allcats) {
         //  if (err) {
         //      req.flash.error('error','Error retrieiving categories');
@@ -581,6 +585,8 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
 
 router.post('/checkout', function(req, res, next) {
     var method = req.body.method;
+    var item_name = req.body.item_name;
+    console.log("req.body: " + JSON.stringify(req.body));
     var shipping_addr1 = req.body.shipping_addr1;
     var shipping_city = req.body.shipping_city;
     var shipping_state = req.body.shipping_state;
@@ -655,6 +661,8 @@ router.post('/checkout', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
+    console.log("--------");
+        console.log(JSON.stringify(req.body));
     // reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
     var amount = parseFloat(req.body.amount);
@@ -685,28 +693,36 @@ router.post('/create', function(req, res, next) {
                     "shipping_discount": "0.00"
                 }
             },
-            "description": "Test Transaction",
+            "description": "Purchase",
             "item_list": {
                 "items": []
             }
         }]
     };
-console.log("Create Payment: " + JSON.stringify(create_payment));
+    var custom = {}
     var item_list = [];
     for (var i = 0, len = products.length; i < len; i++) {
         var price = parseFloat(products[i].price);
         price = String(price.toFixed(2));
         qty = Number(products[i].qty);
+        tname = 'ticket_name_' + i;
+        var ticket_name = req.body['ticket_name_' + i];
+        var ticket_email = req.body['ticket_email_' + i];
+
+        console.log("Ticket Name: " + ticket_name);
+        console.log("Ticket Email: " + ticket_name);
+        custom[i] = { "ticket_name": ticket_name, "ticket_email": ticket_email };
         item = {
                 "name": products[i].item.title,
                 "price": price,
                 "quantity": qty,
                 "currency": "USD",
-                "sku": products[i].item._id
+                "sku": products[i].item.code
             }
-            // if (products[i].type=="TICKET") {
-            //  item.ticket_name = products[i].ticket_name;
-            //  item.ticket_email = products[i].ticket_email;
+            // if (products[i].item.Product_Group=="TICKET") {
+            //     item.ticket_name = ticket_name;
+            //     item.ticket_email = ticket_email;
+            //     console.log("TICKET_NAME: " + item.ticket_name);
             // }
         create_payment.transactions[0].item_list.items.push(item)
     }
@@ -731,6 +747,7 @@ console.log("Create Payment: " + JSON.stringify(create_payment));
             }
         }];
         create_payment.payer.payment_method = 'credit_card';
+        create_payment.custom = custom;
         create_payment.payer.funding_instruments = funding_instruments;
     }
     //
@@ -756,7 +773,12 @@ console.log("Create Payment: " + JSON.stringify(create_payment));
                 }
                 // Create Order Record with a pending status.
                 var order = new Order({
-                    user: req.user,
+                    user: {
+                        id: req.user._id,
+                        first_name: req.user.first_name,
+                        last_name: req.user.last_name,
+                        email: req.user.email
+                    },
                     cart: cart,
                     shipping_address: req.body.shipping_addr1,
                     shipping_city: req.body.shipping_city,
@@ -825,8 +847,11 @@ router.get('/execute', function(req, res, next) {
             res.render('error', {
                 'error': error
             });
+
         } else {
             // Update payment record with new state - should be approved.
+            console.log("---");
+            console.log("Payment from return: " + JSON.stringify(payment));
             Payment.find({
                 id: paymentId
             }, function(err, paymentDocument) {
@@ -890,10 +915,9 @@ router.get('/execute', function(req, res, next) {
                 });
                 var cart = new Cart(req.session.cart);
                 products = cart.generateArray();
-
                 req.flash('success', "Successfully processed payment!");
                 var transporter = nodemailer.createTransport(smtpConfig.connectString);
-                tickets = cart.ticketSale(products, req.user._id);
+                tickets = cart.ticketSale(products, req.user);
                 req.cart = null;
                 var cart = new Cart({});
                 req.session.cart = cart;

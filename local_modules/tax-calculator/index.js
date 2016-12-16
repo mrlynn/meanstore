@@ -68,12 +68,17 @@ module.exports = {
 					err = null;
 					callback(err,results);
 
-
 				})
 
 			} else {
+				var price = Number(product.price).toFixed(2);
 				callback(null,{
-
+						productId: productId,
+						taxable: product.taxable,
+						price: parseFloat(price),
+						taxRate: 0,
+						taxAmount: 0,
+						priceWithTax: parseFloat(price)
 				})
 			}
 		})

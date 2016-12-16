@@ -58,7 +58,12 @@ var userSchema = new Schema({
 		type: Date, default: Date.now()
 	},
 	likes: [String],
-	purchased: [String],
+	purchased: [{
+		code: String,
+		purchased: {
+			type: Date, default: Date.now()
+		}
+	}],
 	orders:[{
 		order: {
 			type: String,

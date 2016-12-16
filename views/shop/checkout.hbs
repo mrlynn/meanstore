@@ -98,6 +98,7 @@
 									<input type="hidden" name="no_shipping" value="1">
 									<input type="hidden" name="rm" value="2"> <!-- the buyer's browser is redirected to the return url using POST -->
 									<!-- Text input-->
+
 								</div>
 								<table class="table table-condensed">
 									<thead>
@@ -118,6 +119,21 @@
 										<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
 										<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
 										<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
+
+
+										<input type="hidden" name="item_name[null]" value="" />
+										<input type="hidden" name="item_name[{{ @index }}]" value="{{this.item.name}}" />
+										<input type="hidden" name="item_title[{{ @index }}]" value="{{this.item.title}}" />
+										<input type="hidden" name="item_id[{{ @index }}]" value="{{this.item._id}}" />
+										<input type="hidden" name="item_ticket_name[{{ @index }}]" value="{{this.ticket_name}}" />
+										<input type="hidden" name="item_ticket_email[{{ @index }}]" value="{{this.ticket_email}}" />
+										<input type="hidden" name="item_amount[{{ @index }}]" value="{{this.price}}" />
+										<input type="hidden" name="item_tax_amount[{{ @index }}]" value="{{this.totalTax}}" />
+										<input type="hidden" name="ticket_name_{{@index}}" value="{{this.ticket_name}}" />
+										<input type="hidden" name="ticket_email_{{@index}}" value="{{this.ticket_email}}" />
+
+
+
 										<tr>
 											<td>{{this.item.title}}</td>
 											<td class="text-right">{{this.qty}}</td>

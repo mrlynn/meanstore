@@ -20,7 +20,6 @@ mongoose.connection.on('error', () => {
 });
 
 
-
 products = [];
 brands = ['MongoDB','Fubu','Sean Jean'];
 fabrics = ['wool','fur','fleece','paper','acrylic pellets','hemp'];

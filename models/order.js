@@ -18,7 +18,9 @@ dotenv.load({
 var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
-	user: {type: Schema.Types.ObjectId, ref: 'User'},
+	user: {
+		type: Object, required: false
+	},
 	cart: {type: Object, required: false},
 	billing_address: {type: String, required: false},
 	billing_city: {type: String, required: false},
@@ -32,16 +34,6 @@ var orderSchema = new Schema({
 	name: {type: String, required: false},
 	paymentId: {type: String, required: false},
 	status: {type: String, required: false},
-	owner: {
-		ticket_name: {
-			type: String,
-			required: false
-		},
-		ticket_email: {
-			type: String,
-			required: false
-		}
-	},
 	created: {
 		type: Date,
 		default: Date.now
