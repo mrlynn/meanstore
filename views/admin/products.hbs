@@ -24,283 +24,285 @@
             </div>
         </div>
         <!-- /.row -->
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-check fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">{{stats.totalApprovedOrders}}</div>
-                                <div>Total Approved Orders</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-tasks fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">{{stats.totalAmountReceived}}</div>
-                                <div>Total Amount Collected</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="panel panel-yellow">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-shopping-cart fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">124</div>
-                                <div>New Orders!</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="panel panel-red">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-support fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">13</div>
-                                <div>Support Tickets!</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        {{>adminmetrics}}
         <!-- /.row -->
         <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-                    <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+                        <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
                         {{successMsg}}
                     </div>
                     <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
-                        {{errorMsg}}
-                    </div>
+                    {{errorMsg}}
                 </div>
             </div>
-            <div class="row">
-                <div class="panel-body">
-                    <div class="dataTable_wrapper">
-                        <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                            <thead>
-                                <tr>
-                                    <th><h2>Product</h2></th>
-                                    <th><h2>Name</h2></th>
-                                    <th><h2>Title</h2></th>
-                                    <th><h2>Description</h2></th>
-                                    <th><h2>Category</h2></th>
-                                    <th><h2>Price</h2></th>
-                                    <th><h2>Action</h2></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each products }}
-                                <tr class="odd gradeX">
-                                    <form action="/edit" method="POST">
+        </div>
+        <div class="row">
+            <div class="panel-body">
+                <p data-placement="top" class='text-right' data-toggle="tooltip" title="Add New Product ">
+                    <button class="ui right floated btn btn-success btn-lg" data-title="Add" data-toggle="modal" data-target="#add">Add Product <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </p>
+                <!-- Add Dialog -->
+                <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="/admin/add-product" method="POST">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                <h4 class="modal-title custom_align" id="Heading">Add New Product</h4>
+                            </div>
+                            <form action='/admin/add-product' METHOD='post'>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label for='name'>Name</label>
+                                    <input class="form-control" [(ngModel)]="newProduct.title" name='name' type="text" placeholder=""></li>
+                                </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label for='title'>Title</label>
+                                    <input class="form-control" [(ngModel)]="newProduct.price" name='title' type="text" placeholder=""></li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label for='price'>Price</label>
+                                    <input class="form-control" [(ngModel)]="newProduct.price" name='price' type="text" placeholder=""></li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <label for='shippable'>Shippable?</label>
+                                        <div class="material-switch pull-right">
+                                            No <input id="shippable" name="shippable" type="checkbox"/>
+                                            <label for="shippable" class="label-success"></label> Yes
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <label for='taxable'>Taxable?</label>
+                                        <div class="material-switch pull-right">
+                                            No <input id="taxable" name="taxable" type="checkbox"/>
+                                            <label for="taxable" class="label-success"></label> Yes
+                                        </div>
+                                    </li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label for='description'>Description</label>
+                                    <textarea rows="2" class="form-control" [(ngModel)]="newProduct.description" name='description' placeholder=""></textarea></li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label for='category'>Category</label>
+                                    <select class='form-control' name='category'>
+                                        {{#each allcats}}
+                                            <option value="{{this.name}}">{{this.slug}}</option>
+                                        {{/each}}
+                                    </select>
+                                    </li>
+                                    </ul>
+                                </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onClick='submit();' class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Add</button>
+                            </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th><h2>Product</h2></th>
+                                <th><h2>Name</h2></th>
+                                <th><h2>Title</h2></th>
+                                <th><h2>Description</h2></th>
+                                <th><h2>Category</h2></th>
+                                <th><h2>Price</h2></th>
+                                <th><h2>Edit</h2></th>
+                                <th><h2>Delete</h2></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products }}
+                            <tr class="odd gradeX">
+                                <form action="/admin/edit-product" method="POST">
                                     <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                    <td>{{this._id}}</td>
+                                    <td>{{this.code}}</td>
                                     <td>{{this.name}}</td>
-                                    <td>{{this.title}}<br>{{this.description}}</td>
+                                    <td>{{this.title}}</td><td>{{this.description}}</td>
                                     <td>{{this.category}}</td>
                                     <td class="text-right">${{this.price}}</td>
-                                    <td class="center">
-                                        <p class="text-center">
-                                        <a href="/admin/edit-order/{{this._id}}" class="btn btn-primary" role="button">Edit</a>
+                                    <td width=5%>
+                                        <p data-placement="top" data-toggle="tooltip" title="Edit">
+                                            <button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit"><span class="glyphicon glyphicon-pencil"></span></button>
                                         </p>
                                     </td>
-                                    </form>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Donut Chart</h3>
-            </div>
-            <div class="panel-body">
-                <div id="morris-donut-chart"></div>
-                <div class="text-right">
-                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Tasks Panel</h3>
-        </div>
-        <div class="panel-body">
-            <div class="list-group">
-                <a href="#" class="list-group-item">
-                    <span class="badge">just now</span>
-                    <i class="fa fa-fw fa-calendar"></i> Calendar updated
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">4 minutes ago</span>
-                    <i class="fa fa-fw fa-comment"></i> Commented on a post
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">23 minutes ago</span>
-                    <i class="fa fa-fw fa-truck"></i> Order 392 shipped
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">46 minutes ago</span>
-                    <i class="fa fa-fw fa-money"></i> Invoice 653 has been paid
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">1 hour ago</span>
-                    <i class="fa fa-fw fa-user"></i> A new user has been added
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">2 hours ago</span>
-                    <i class="fa fa-fw fa-check"></i> Completed task: "pick up dry cleaning"
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">yesterday</span>
-                    <i class="fa fa-fw fa-globe"></i> Saved the world
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">two days ago</span>
-                    <i class="fa fa-fw fa-check"></i> Completed task: "fix error on sales page"
-                </a>
-            </div>
-            <div class="text-right">
-                <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    <td width=5%>
+                                        <p data-placement="top" data-toggle="tooltip" title="Delete">
+                                            <button class="btn btn-danger btn-xs" (click)="removeProduct(product)" data-title="Delete" data-toggle="modal" data-id="{{product._id}}" data-target="#delete"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </p>
+                                    </td>
+                                </form>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+</div>
+</div>
+<!-- /.row -->
+<div class="row">
 <div class="col-lg-4">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Transactions Panel</h3>
+<div class="panel panel-default">
+    <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Donut Chart</h3>
+</div>
+<div class="panel-body">
+    <div id="morris-donut-chart"></div>
+    <div class="text-right">
+        <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
-    <div class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>Order #</th>
-                        <th>Order Date</th>
-                        <th>Order Time</th>
-                        <th>Amount (USD)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>10/21/2013</td>
-                        <td>3:29 PM</td>
-                        <td>$321.33</td>
-                    </tr>
-                    <tr>
-                        <td>3325</td>
-                        <td>10/21/2013</td>
-                        <td>3:20 PM</td>
-                        <td>$234.34</td>
-                    </tr>
-                    <tr>
-                        <td>3324</td>
-                        <td>10/21/2013</td>
-                        <td>3:03 PM</td>
-                        <td>$724.17</td>
-                    </tr>
-                    <tr>
-                        <td>3323</td>
-                        <td>10/21/2013</td>
-                        <td>3:00 PM</td>
-                        <td>$23.71</td>
-                    </tr>
-                    <tr>
-                        <td>3322</td>
-                        <td>10/21/2013</td>
-                        <td>2:49 PM</td>
-                        <td>$8345.23</td>
-                    </tr>
-                    <tr>
-                        <td>3321</td>
-                        <td>10/21/2013</td>
-                        <td>2:23 PM</td>
-                        <td>$245.12</td>
-                    </tr>
-                    <tr>
-                        <td>3320</td>
-                        <td>10/21/2013</td>
-                        <td>2:15 PM</td>
-                        <td>$5663.54</td>
-                    </tr>
-                    <tr>
-                        <td>3319</td>
-                        <td>10/21/2013</td>
-                        <td>2:13 PM</td>
-                        <td>$943.45</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="text-right">
-            <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Tasks Panel</h3>
+</div>
+<div class="panel-body">
+<div class="list-group">
+    <a href="#" class="list-group-item">
+        <span class="badge">just now</span>
+        <i class="fa fa-fw fa-calendar"></i> Calendar updated
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">4 minutes ago</span>
+        <i class="fa fa-fw fa-comment"></i> Commented on a post
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">23 minutes ago</span>
+        <i class="fa fa-fw fa-truck"></i> Order 392 shipped
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">46 minutes ago</span>
+        <i class="fa fa-fw fa-money"></i> Invoice 653 has been paid
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">1 hour ago</span>
+        <i class="fa fa-fw fa-user"></i> A new user has been added
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">2 hours ago</span>
+        <i class="fa fa-fw fa-check"></i> Completed task: "pick up dry cleaning"
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">yesterday</span>
+        <i class="fa fa-fw fa-globe"></i> Saved the world
+    </a>
+    <a href="#" class="list-group-item">
+        <span class="badge">two days ago</span>
+        <i class="fa fa-fw fa-check"></i> Completed task: "fix error on sales page"
+    </a>
+</div>
+<div class="text-right">
+    <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Transactions Panel</h3>
+</div>
+<div class="panel-body">
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Order #</th>
+            <th>Order Date</th>
+            <th>Order Time</th>
+            <th>Amount (USD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td>10/21/2013</td>
+            <td>3:29 PM</td>
+            <td>$321.33</td>
+        </tr>
+        <tr>
+            <td>3325</td>
+            <td>10/21/2013</td>
+            <td>3:20 PM</td>
+            <td>$234.34</td>
+        </tr>
+        <tr>
+            <td>3324</td>
+            <td>10/21/2013</td>
+            <td>3:03 PM</td>
+            <td>$724.17</td>
+        </tr>
+        <tr>
+            <td>3323</td>
+            <td>10/21/2013</td>
+            <td>3:00 PM</td>
+            <td>$23.71</td>
+        </tr>
+        <tr>
+            <td>3322</td>
+            <td>10/21/2013</td>
+            <td>2:49 PM</td>
+            <td>$8345.23</td>
+        </tr>
+        <tr>
+            <td>3321</td>
+            <td>10/21/2013</td>
+            <td>2:23 PM</td>
+            <td>$245.12</td>
+        </tr>
+        <tr>
+            <td>3320</td>
+            <td>10/21/2013</td>
+            <td>2:15 PM</td>
+            <td>$5663.54</td>
+        </tr>
+        <tr>
+            <td>3319</td>
+            <td>10/21/2013</td>
+            <td>2:13 PM</td>
+            <td>$943.45</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div class="text-right">
+<a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div>
 </div>
 </div>
 </div>

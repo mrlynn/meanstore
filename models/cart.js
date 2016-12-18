@@ -1,6 +1,7 @@
 var User = require('../models/user');
 var Product = require('../models/product');
 var Ticket = require('../models/ticket');
+var Apparel = require('../models/apparel');
 var taxCalc = require('../local_modules/tax-calculator');
 var async = require('async');
 var shippingCalc = require('../local_modules/shipping-calculator');
@@ -51,9 +52,20 @@ module.exports = function Cart(oldCart) {
 	this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
 		var storedItem = this.items[id];
 		var locals = {};
+		for(var itemid in oldCart.items) {
+	    	if (id==itemid) {
+	    		if (oldCart.items[itemid].item.Product_Group=='VARPRICE') {
+	    			console.log("DUPLICATE");
+	    			error = {
+	    				message: 'Unable to add duplicate donations.  Please clear previous donation before adding another.'
+	    			}
+	    			return error;
+	    		}
+	    	}
+	    }
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: 0, size: 0, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
+			storedItem = this.items[id] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, size: size, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);
@@ -174,10 +186,13 @@ module.exports = function Cart(oldCart) {
 		var item_list = [];
 		for (var i = 0, len = products.length; i < len; i++) {
 			var itemcode = products[i].item.code;
+			var product_id = products[i].item._id;
 			var itemgroup = products[i].item.Product_Group;
 			var ticket_email = products[i].item.ticket_email;
 			var code = products[i].item.code;
 			var ticket_name = products[i].item.ticket_name;
+			var size = products[i].item.size;
+			console.log("SIZE: " + size);
 			var dateobj = new Date();
 			if (itemgroup == 'TICKET') {
 				ticket = new Ticket({
@@ -211,11 +226,38 @@ module.exports = function Cart(oldCart) {
 					});
 				return ticket;
 
-			} else {
+			} else { // ticket type
 				if (products[i].item.Product_Group == 'APPAREL') {
-//Code logic for apparel purchase
+					apparel = new Apparel({
+						user:{
+							first_name: user.first_name,
+							last_name: user.last_name,
+							email: user.email
+						},
+						size: size,
+						product_id: product_id
+					});
+					apparel.save(function(err,ticket) {
+						if (err) {
+							res.send('500','Problem saving ticket.');
+							console.log('Error Saving Ticket ' + err.message);
+						}
+						User.findById(user._id, function(err,userdoc) {
+							if (err) {
+								console.log("Unable to find user " + user._id);
+							}
+							User.update({_id:user._id},
+								{$push:
+									{purchased:
+										{code: code, purchased: dateobj}
+									}
+								},function(err, newuserdoc){
+							    	if (err) console.log("error " + error.message);
+								});
+							});
+							return ticket;
+					});
 				}
-
 			}
 		}
 	}

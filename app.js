@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
+var moment = require('moment');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
 var session = require('express-session');
@@ -36,6 +37,8 @@ var path = require("path");
 var winston = require("winston");
 var mongoSanitize = require('express-mongo-sanitize');
 var docs = require("express-mongoose-docs");
+var csrf = require('csurf');
+
 
 var logger = new (winston.Logger)({
     transports: [
@@ -86,10 +89,13 @@ var hbs = expressHbs.create({
         option: function(value) {
           var selected = value.toLowerCase() === (this.toString()).toLowerCase() ? 'selected="selected"' : '';
           return '<option value="' + this + '" ' + selected + '>' + this + '</option>';
+        },
+        formatDate: function (date, format) {
+            return moment(date).format(format);
         }
     },
     defaultLayout: 'layout',
-    extname: '.hbs'
+    extname: '.hbs',
 });
 
 app.engine('.hbs', hbs.engine);
@@ -101,7 +107,14 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(validator());
+app.use(validator({
+  gte: function(param, num) {
+        return param >= num;
+  },
+  lte: function(param, num) {
+        return param >= num;
+  }
+}));
 app.use(cookieParser());
 app.use(breadcrumbs.init());
 app.use(errorHandler());
@@ -129,41 +142,20 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Create global logged in variable login to indicate whether the user is logged in or not.
+// app.use(csrf());
 
 app.use(function(req,res,next) {
-    if (typeof res.locals.allcats != 'undefined') {
-        Category.find({}, function(err, allcats) {
-            if (err) {
-              res.send('500','Error retrieving categories.');
-            }
-            if (!allcats) {
-                res.send('500','Error retrieving categories.');
+    // if (typeof res.locals.allcats == 'undefined') {
 
-            }
-            for(cat in allcats) {
-                Product.aggregate([
-                {
-                    $match: {
-                        category: {$eq: cat.name}
-                    }
-                },
-                {
-                    $group: {
-                        _id: '$category',
-                        count: { $sum: 1 }
-                    }
-                }
-
-                ], function(err,allcategories) {
-                });
-            }
-        });
-        res.locals.allcats = allcats;
-        app.set('allcats',allcats);
-        res.locals.allcategories = allcategories;
-        console.log("Local Allcats " + res.locals.allcats);
-        logger.log('info','Local All Categories ' + res.locals.allcats);
-    }
+      Category.find({}, function(err, allcats) {
+          if (err || !allcats) {
+            res.send('500','Error retrieving categories.');
+          }
+          res.locals.allcats = allcats;
+          app.set('allcats', allcats);
+          app.locals.allcats = allcats;
+      });
+    // }
     res.locals.login = req.isAuthenticated();
     if (res.locals.login) {
       res.locals.admin = (req.user.role == 'admin');
@@ -178,10 +170,10 @@ app.use(function(req,res,next) {
     var pageName = path.basename(parsed.pathname);
     res.locals.pageName = pageName.toLowerCase();
     res.locals.req = req;
+    // res.locals._csrf = req.csrfToken();
+
     next();
 });
-
-
 app.use(fileUpload());
 
 app.use('/facet', facetRoutes);
@@ -191,7 +183,6 @@ app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/category', routes);
 app.use('/', routes);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

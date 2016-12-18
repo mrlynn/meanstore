@@ -32,7 +32,6 @@ var fs = require('fs');
 
 "use strict";
 
-
 var useFacets = (process.env.facets === true);
 var viewTour = (process.env.viewTour === true);
 useFacets = false;
@@ -355,6 +354,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var ticket_email = req.body.ticket_email || null;
     var errorMsg = req.flash('error')[0];
     var price = req.body.price || null;
+    console.log("Price: " + price);
     var type = req.body.type || null;
 
     /* new product to be added to cart */
@@ -364,7 +364,17 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
     }
-
+    if (type =='VARPRICE') {
+        if (price >= 1000) {
+            errors=1;
+            req.flash('error', 'Unable to accept donations greater than $1000.00');
+            return res.redirect('/');
+        }
+        if (price < 0) {
+            req.flash('error', 'Unable to process negative donations.');
+            return res.redirect('/');
+        }
+    }
     var errors = req.validationErrors();
     if (errors) {
         returnObject = {
@@ -382,9 +392,10 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     //  return res.redirect('/');
     // }
 
-    var size = req.body.size || null;
+    var size = req.body.option || null;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
+    console.log("Product ID: " + productId);
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
@@ -400,13 +411,23 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
         //  }
         // cart.cartTaxTotal(req.user._id);
         // cart.cartShippingTotal()
-        cart.add(product, product.id, product.price, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
+        if (product.Product_Group == 'VARPRICE') {
+            theprice = price;
+        } else {
+            theprice = product.price;
+        }
+        added=cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shipable, req.user._id);
         // cart.totalTax = 0;
-        cart.totalShipping = 0;
-        req.session.cart = cart;
-        console.log("CART: " + JSON.stringify(cart)); // store cart in session
-        req.flash('success', 'Item successfully added to cart. ');
-        res.redirect('/');
+        if (added) {
+            req.flash('error', added.message);
+            res.redirect('/');
+        } else {
+            cart.totalShipping = 0;
+            req.session.cart = cart;
+            req.flash('success', 'Item successfully added to cart. ');
+            res.redirect('/');
+        }
+        
         // });
     });
 });
@@ -414,7 +435,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 router.get('/add-to-cart/:id/', function(req, res, next) {
     var ticket_name = req.body.ticket_name || "";
     var ticket_email = req.body.ticket_email || "";
-    var size = req.session.size || "";
+    var size = req.body.option || "";
     var productId = req.params.id;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -645,6 +666,11 @@ router.post('/checkout', function(req, res, next) {
             var totalTax = 0;
             var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
             res.render('shop/checkout', {
+                user: req.user,
+                shipping_addr1: shipping_addr1,
+                shipping_city: shipping_city,
+                shipping_state: shipping_state,
+                shipping_zip: shipping_zip,
                 taxDesc: taxDesc,
                 products: cart.generateArray(),
                 subtotal: subtotal,
@@ -708,9 +734,10 @@ router.post('/create', function(req, res, next) {
         tname = 'ticket_name_' + i;
         var ticket_name = req.body['ticket_name_' + i];
         var ticket_email = req.body['ticket_email_' + i];
-
+        var size = req.body['size_' + i];
         console.log("Ticket Name: " + ticket_name);
         console.log("Ticket Email: " + ticket_name);
+        console.log("Size: " + size);
         custom[i] = { "ticket_name": ticket_name, "ticket_email": ticket_email };
         item = {
                 "name": products[i].item.title,
@@ -1004,8 +1031,8 @@ router.post('/search', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
                     productChunks.push(results.slice(i, i + chunkSize))
                 }
-                res.render('shop/facet', {
-                    layout: 'facet.hbs',
+                res.render(shopPage, {
+                    layout: shopLayout,
                     products: productChunks,
                     allcats: allcats,
                     user: req.user,
