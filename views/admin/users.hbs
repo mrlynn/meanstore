@@ -1,0 +1,304 @@
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    {{adminPageTitle}}
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/admin">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-bar-chart-o"></i> {{adminPageTitle}}
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-success" {{#if noMessage}}hidden{{/if}}>{{successMsg}}</div>
+                <div class="alert alert-success" {{#if noErrorMsg}}hidden{{/if}}>{{errorMsg}}</div>
+            </div>
+        </div>
+        <!-- /.row -->
+        {{>adminmetrics}}
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+                        <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+                        {{successMsg}}
+                    </div>
+                    <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+                    {{errorMsg}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel-heading">
+                    <ul class="nav nav-pills">
+                        <li role="presentation" class="{{#if allUsers}} active {{/if}}"><a href="/admin/users?filter=allUsers">All Users</a></li>
+                        <li role="presentation" class="{{#if adminUsers}} active {{/if}}"><a href="/admin/users?filter=adminUsers">Admin Users </a></li>
+                        <li role="presentation" class="{{#if nonAdminUsers}} active {{/if}}"><a href="/admin/users?filter=nonAdminUsers">Non Admin Users</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th><h3>Name</h3></th>
+                                <th><h3>Email</h3></th>
+                                <th><h3>Address</h3></th>
+                                <th><h3>Telephone</h3></th>
+                                <th><h3>Role</h3></th>
+                                <th><h3>Purchases</h3></th>
+                                <th><h3>Edit</h3></th>
+                                <th><h3>Delete</h3></th>
+                                <th><h3>View</h3></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each users }}
+                            <tr class="odd gradeX">
+                                <input type='hidden' id='id' name='userId' value='{{ this._id }}'>
+                                <td>{{this.first_name}} {{this.last_name}} </td>
+                                <td><a href=mailto://{{this.email}}>{{this.email}}</a></td>
+                                <td>
+                                    {{this.address1}}<br>{{this.city}}, {{this.state}} {{this.zipcode}}
+                                </td>
+                    <td class="text-left">{{this.telephone}}</td>
+                    <td class="text-left">{{this.role}}</td>
+                    <td class="text-right">
+                        {{#each this.purchased}}
+                        {{this.code}}
+                        {{/each}}
+                    </td>
+                    <td>
+                        <p data-placement="top" data-toggle="tooltip" title="Update User ">
+                            <button class="ui right floated btn btn-success btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit"> <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                        </p>
+                    <!-- Add Dialog -->
+                    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                    <h4 class="modal-title custom_align" id="Heading">Update User</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action='/admin/update-user' method='POST'>
+                                        <input type='hidden' name='_id' value='{{this._id}}'>
+                                        <div class="form-group">
+                                            <label for='status'>Role</label>
+                                            <select class='form-control' name='status'>
+                                                <option value='admin'>Admin</option>
+                                                <option value=''>Normal</option>
+                                                <option value='banned'>Disabled</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for='note'>Note</label>
+                                            <textarea class='form-control' name='note'></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" onClick="submit();" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                </td>
+                <td width=5%>
+                    <form action='/admin/delete-user' method='POST'>
+                        <input type=hidden name='_id' value='{{_id}}'>
+                        {{!--                                             <input type="hidden" id="_csrf" name="_csrf" value="{{csrfToken}}" />
+                        --}}                                        <p data-placement="top" data-toggle="tooltip" title="Delete">
+                            <button class="btn btn-danger btn-xs" onClick="submit();"><span class="glyphicon glyphicon-trash"></span></button>
+                        </p>
+                    </form>
+                </td>
+                <td>
+                    <p data-placement="top" class='text-right' data-toggle="tooltip" title="View Order Document ">
+                        <button class="ui right floated btn btn-warning btn-xs" data-title="view" data-toggle="modal" data-target="#view"><span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </p>
+                    <!-- Add Dialog -->
+                    <div class="modal fade" id="view" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                    <h4 class="modal-title custom_align" id="Heading">Add New Product</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{this}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onClick='submit();' class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- /.row -->
+<div class="row">
+<div class="col-lg-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Donut Chart</h3>
+</div>
+<div class="panel-body">
+<div id="morris-donut-chart"></div>
+<div class="text-right">
+<a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Tasks Panel</h3>
+</div>
+<div class="panel-body">
+<div class="list-group">
+<a href="#" class="list-group-item">
+<span class="badge">just now</span>
+<i class="fa fa-fw fa-calendar"></i> Calendar updated
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">4 minutes ago</span>
+<i class="fa fa-fw fa-comment"></i> Commented on a post
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">23 minutes ago</span>
+<i class="fa fa-fw fa-truck"></i> Order 392 shipped
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">46 minutes ago</span>
+<i class="fa fa-fw fa-money"></i> Invoice 653 has been paid
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">1 hour ago</span>
+<i class="fa fa-fw fa-user"></i> A new user has been added
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">2 hours ago</span>
+<i class="fa fa-fw fa-check"></i> Completed task: "pick up dry cleaning"
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">yesterday</span>
+<i class="fa fa-fw fa-globe"></i> Saved the world
+</a>
+<a href="#" class="list-group-item">
+<span class="badge">two days ago</span>
+<i class="fa fa-fw fa-check"></i> Completed task: "fix error on sales page"
+</a>
+</div>
+<div class="text-right">
+<a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="panel panel-default">
+<div class="panel-heading">
+<h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Transactions Panel</h3>
+</div>
+<div class="panel-body">
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-striped">
+<thead>
+<tr>
+<th>Order #</th>
+<th>Order Date</th>
+<th>Order Time</th>
+<th>Amount (USD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>10/21/2013</td>
+<td>3:29 PM</td>
+<td>$321.33</td>
+</tr>
+<tr>
+<td>3325</td>
+<td>10/21/2013</td>
+<td>3:20 PM</td>
+<td>$234.34</td>
+</tr>
+<tr>
+<td>3324</td>
+<td>10/21/2013</td>
+<td>3:03 PM</td>
+<td>$724.17</td>
+</tr>
+<tr>
+<td>3323</td>
+<td>10/21/2013</td>
+<td>3:00 PM</td>
+<td>$23.71</td>
+</tr>
+<tr>
+<td>3322</td>
+<td>10/21/2013</td>
+<td>2:49 PM</td>
+<td>$8345.23</td>
+</tr>
+<tr>
+<td>3321</td>
+<td>10/21/2013</td>
+<td>2:23 PM</td>
+<td>$245.12</td>
+</tr>
+<tr>
+<td>3320</td>
+<td>10/21/2013</td>
+<td>2:15 PM</td>
+<td>$5663.54</td>
+</tr>
+<tr>
+<td>3319</td>
+<td>10/21/2013</td>
+<td>2:13 PM</td>
+<td>$943.45</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="text-right">
+<a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+</div>

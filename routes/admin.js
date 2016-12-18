@@ -3,11 +3,13 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var User = require('../models/user');
 var Ticket = require('../models/ticket');
 var Order = require('../models/order');
 var passport = require('passport');
+var moment = require('moment');
 var mongoose = require('mongoose');
-var csrf = require('csurf');
+// var csrf = require('csurf');
 var User = require('../models/user');
 var Payment = require('../models/payment');
 var fileUpload = require('express-fileupload');
@@ -16,11 +18,9 @@ var csv = require('ya-csv');
 var uuid = require('uuid');
 var Config = require('../config/config');
 var Stats = require('../local_modules/stats');
-var csrfProtection = csrf();
+// var csrfProtection = csrf();
 
-router.use(csrfProtection);
-
-
+// router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -47,7 +47,7 @@ router.get('/', function(req, res, next) {
             // 	user: user
             //   	});
             res.render('admin/index', {
-                layout: 'admin.hbs',
+                layout: 'admin-page.hbs',
                 products: productChunks,
                 errorMsg: errorMsg,
                 successMsg: successMsg,
@@ -60,14 +60,38 @@ router.get('/', function(req, res, next) {
         });
     });
 });
-router.get('/orders',function(req, res, next) {
+router.get('/orders:filter?',function(req, res, next) {
+
+    var filter = req.query.filter;
+    console.log("Filter " + filter);
+
+    if (!filter || filter=='allOrders') {
+        var allOrders = true;
+        var pendingOrders = false;
+        var pickedUpOrders = false;
+        qryFilter = {};
+    } else {
+        if (filter=='pendingOrders') {
+            var allOrders = false;
+            var pendingOrders = true;
+            var pickedUpOrders = false;
+            qryFilter = {$or: [{ receipt_status: 'pending'},{receipt_status: 'partial'}, {receipt_status: 'New'}, {receipt_status: ''}]};
+        } else {
+            if (filter=='pickedUpOrders'|| filter=='complete') {
+                var allOrders = false;
+                var pendingOrders = false;
+                var pickedUpOrders = true;
+                qryFilter = {receipt_status: 'complete'};
+            } 
+        }
+    }
     successMsg = req.flash('success')[0];
     errorMsg = req.flash('error')[0];
     var adminPageTitle = "Orders";
     var adminPageUrl = "/admin/orders";
 
     console.log("Stats in route " + JSON.stringify(res.locals.stats));
-    Order.find({"status": 'approved'}, function(err, orders) {
+    Order.find(qryFilter, function(err, orders) {
         Stats.getStats(function(err,stats){
             console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
@@ -78,9 +102,12 @@ router.get('/orders',function(req, res, next) {
                 adminPageTitle: adminPageTitle,
                 adminPageUrl: adminPageUrl,
                 layout: 'admin-page.hbs',
-                csrfToken: req.csrfToken(),
+                // csrfToken: req.csrfToken(),
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
+                allOrders: allOrders,
+                pendingOrders: pendingOrders,
+                pickedUpOrders: pickedUpOrders,
                 errorMsg: errorMsg,
                 user: req.user, 
                 stats: stats,
@@ -93,9 +120,107 @@ router.get('/orders',function(req, res, next) {
     })
 })
 
+router.post('/delete-order', function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var order_id = req.body._id;
+
+    Order.remove({_id: order_id}, function(err) {
+        if (err) {
+            res.send(500,'Error deleting order.');
+        }
+        res.redirect('/admin/orders');
+    })
+})
+
+router.post('/update-order', function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var status = req.body.status;
+    var receiver = req.body.receiver;
+    var note = req.body.note;
+    var order_id = req.body._id;
+    var query = { '_id': order_id };
+    Order.findOne({_id: order_id}, function(err, order) {
+        console.log("Order: " + order);
+        if (err) {
+            res.send(500,'Error deleting order.');
+        }
+        order.receipt_status = status;
+        order.note = note;
+        order.receiver = receiver;
+        order.save(function(err) {
+            if (err)
+                console.log("ERROR: " + err.message);
+        })
+        res.redirect('/admin/orders');
+    })
+})
+
+router.get('/users:filter?',function(req, res, next) {
+
+    var filter = req.query.filter;
+    console.log("Filter " + filter);
+    qryFilter = {};
+
+    if (!filter || filter=='allOrders') {
+        var allUsers = true;
+        var adminUsers = false;
+        var nonAdminUsers = false;
+        qryFilter = {};
+    } else {
+        if (filter=='adminUsers') {
+            var allUsers = false;
+            var adminUsers = true;
+            var nonAdminUsers = false;
+            qryFilter = { role: 'admin'};
+        } else {
+            if (filter=='nonAdminUsers') {
+                var allUsers = false;
+                var adminUsers = false;
+                var nonAdminUsers = true;
+                qryFilter = {$or: [{ role: ''},{role: 'user'}, {role: 'New'}, {role: 'visitor'}]};
+            }
+        }
+    }
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Users";
+    var adminPageUrl = "/admin/users";
+
+    console.log("Stats in route " + JSON.stringify(res.locals.stats));
+    User.find(qryFilter, function(err, users) {
+        Stats.getStats(function(err,stats){
+            console.log("Got Stats? " + JSON.stringify(stats));
+            if (err) {
+                console.log(error.message);
+                res.send(500,"error fetching orders");
+            }
+            res.render('admin/users', {
+                adminPageTitle: adminPageTitle,
+                adminPageUrl: adminPageUrl,
+                layout: 'admin-page.hbs',
+                // csrfToken: req.csrfToken(),
+                noMessage: !successMsg,
+                noErrorMsg: !errorMsg,
+                allUsers: allUsers,
+                adminUsers: adminUsers,
+                nonAdminUsers: nonAdminUsers,
+                errorMsg: errorMsg,
+                user: req.user, 
+                stats: stats,
+                users: users,
+                isLoggedIn:req.isAuthenticated(),
+                successMsg: successMsg
+            });
+        })
+
+    })
+})
+
+
 /* Display all tickets purchased */
 router.get('/tickets',function(req, res, next) {
-    
 
     Ticket.find({},function(err,tickets) {
         if (err) {
@@ -103,7 +228,7 @@ router.get('/tickets',function(req, res, next) {
         }
         res.render('admin/tickets', {
             layout: 'admin-page.hbs',
-            csrfToken: req.csrfToken(),
+            // csrfToken: req.csrfToken(),
             noMessage: !successMsg,
             noErrorMsg: !errorMsg,
             errorMsg: errorMsg,
@@ -120,7 +245,7 @@ router.get('/import', function(req, res, next) {
     errorMsg = req.flash('error')[0]
     res.render('admin/import', {
 	    layout: 'admin-page.hbs',
-		csrfToken: req.csrfToken(),
+		// csrfToken: req.csrfToken(),
 	    noMessage: !successMsg,
 	    noErrorMsg: !errorMsg,
 	    errorMsg: errorMsg,
@@ -170,31 +295,34 @@ router.post('/import', function(req, res, next) {
 router.get('/products',function(req, res, next) {
     successMsg = req.flash('success')[0];
     errorMsg = req.flash('error')[0];
-    var adminPageTitle = "Orders";
+    var adminPageTitle = "Products";
     var adminPageUrl = "/admin/products";
-
-    console.log("Stats in route " + JSON.stringify(res.locals.stats));
     Product.find({}, function(err, products) {
+        Category.find({},function(err,allcats) {
+
         Stats.getStats(function(err,stats){
             if (err) {
                 console.log(error.message);
-                res.send(500,"error fetching orders");
+                res.send(500,"error fetching products");
             }
             res.render('admin/products', {
                 adminPageTitle: adminPageTitle,
                 adminPageUrl: adminPageUrl,
                 layout: 'admin-page.hbs',
-                csrfToken: req.csrfToken(),
+                // csrfToken: req.csrfToken(),
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
                 errorMsg: errorMsg,
-                user: req.user, 
+                user: req.user,
                 stats: stats,
                 products: products,
+                allcats: allcats,
                 isLoggedIn:req.isAuthenticated(),
                 successMsg: successMsg
             });
         })
+    });
+
 
     })
 })
@@ -221,10 +349,6 @@ router.get('/edit-product/:id', function(req, res, next) {
     	})
     });
 })
-
-router.get('/orders', function(req, res, next) {
-	res.render('admin/orders',{layout: "adminPage"});
-});
 
 router.post('/product/:id', function(req, res, next) {
     productID = req.params.id;

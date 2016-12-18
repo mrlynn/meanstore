@@ -9,11 +9,9 @@ dotenv.load({
     path: '.env.hackathon'
 });
 
-
     //get instance of MongoClient to establish connection
     //Connecting to the Mongodb instance.
     //Make sure your mongodb daemon mongod is running on port 27017 on localhost
-
 
 var Schema = mongoose.Schema;
 
@@ -34,6 +32,11 @@ var orderSchema = new Schema({
 	name: {type: String, required: false},
 	paymentId: {type: String, required: false},
 	status: {type: String, required: false},
+	receipt_status: {type: String, required: false, default: 'New'},
+	receiver: {type: String, required: false},
+	note: {
+		type: String
+	},
 	created: {
 		type: Date,
 		default: Date.now
@@ -56,7 +59,6 @@ orderSchema.post('save', function(doc) {
 
 	var MongoClient = mongodb.MongoClient;
 
-
     MongoClient.connect(dbHost, function(err, db){
   		if ( err ) {
   			console.log("Error: " + errror.message);
@@ -71,7 +73,6 @@ orderSchema.post('save', function(doc) {
 		var incupdate = { $inc : {} };
 		incupdate.$inc['months.' + months[month] + '.sales'] = doc.cart.grandTotal;
 		incupdate.$inc['ytd'] = doc.cart.grandTotal;
-		console.log("inc: " + JSON.stringify(incupdate));
 		db.collection('sales',function(err,collection) {
 			if (err) {
 				console.log('error ' + error.message);
