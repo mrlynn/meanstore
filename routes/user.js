@@ -12,6 +12,7 @@ var bcrypt = require('bcrypt-nodejs');
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
+var meanlogger = require('../local_modules/meanlogger');
 
 var smtpConfig = require('../config/smtp-config.js');
 
@@ -49,6 +50,8 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
     });
 });
 router.get('/logout', isLoggedIn, function(req, res, next) {
+    meanlogger.log("key","logged out",req.user);
+
     req.session.destroy()
     req.logout();
     res.redirect('/');
@@ -235,6 +238,7 @@ router.post('/signup', passport.authenticate('local.signup', {
     failureRedirect: '/user/signup',
     failureFlash: true
 }), function(req, res, next) {
+    meanlogger.log("key","signup attempt",req.user);
     if (req.session.oldUrl) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
@@ -246,6 +250,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 router.get('/signin', function(req, res, next) {
     req.session.oldUrl = req.get('referer');
+    console.log("asdf");
     var messages = req.flash('error');
     res.render('user/signin', {
         layout: 'fullpage.hbs',
@@ -261,15 +266,24 @@ router.post('/signin', passport.authenticate('local.signin', {
     failureFlash: true
 }), function(req, res, next) {
     console.log("Referer: " + req.get('Referer'));
-
+    meanlogger.log("key","logged in",req.user);
     if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
         res.redirect(oldUrl);
     } else {
-        res.render('user/profile', {
-            user: req.user
-        });
+        User.findOne({_id: req.user._id}, function(err,user) {
+            user.lastlogin=Date.now();
+            user.save(function(err,docs) {
+                if (err) {
+                    console.log("Unable to save user.");
+                }
+            })
+            res.render('user/profile', {
+                user: req.user
+            });
+        })
+
     }
 });
 

@@ -9,14 +9,14 @@
 </div>
 {{/each}}
 
-
+{{!-- 
 
 db.products.aggregate([
 	{ $match: { "Product_Group": "Camera"}},
 	{ $unwind: "$Attributes"},
-	{ $match: {"Attribute.Name": "Video Resolution"}},
+	{ $match: {"Attributes.Name": "Video Resolution"}},
 	{ $bucketAuto: {
-		 groupBy: "$Attribute.Value",     buckets: 4 }
+		 groupBy: "$Attributes.Value",     buckets: 4 }
 	}
 ])
 
@@ -37,3 +37,4 @@ db.products.aggregate([
       	buckets: 6
     	}}
 ])
+ --}}

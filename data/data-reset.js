@@ -24,12 +24,12 @@ Product.remove({},function(err,results) {
 			console.log('error: ', err.message);
 		}
 		console.log('Results: ' + JSON.stringify(results));
-		User.remove({}, function(err, results) {
-			if (err) {
-				console.log('error: ', err.message);
-				process.exit(-1);
-			}
-		});
+		// User.remove({}, function(err, results) {
+		// 	if (err) {
+		// 		console.log('error: ', err.message);
+		// 		process.exit(-1);
+		// 	}
+		// });
 	});
 	process.exit();
 });

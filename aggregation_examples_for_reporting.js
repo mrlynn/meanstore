@@ -70,7 +70,9 @@ db.orders.aggregate([
     	}
         $group:
          {
-           _id:  category,
+           _id:  {
+              category: "$cart.items."
+            },
            totalAmount: { $sum: "$cart.grandTotal" },
            count: { $sum: 1 }
          }
@@ -107,4 +109,42 @@ db.orders.aggregate([
 ])
 
 # 
+
+# Faceted Search Example
+# top selling product_group
+
+
+db.products.aggregate([{
+    $match: {
+        $text: {
+            $search: "test"
+        },
+        Product_Group: "Television"
+    }
+}, {
+    $unwind: "$Attributes"
+}, {
+    $match: {
+        "Attributes.Name": "brand"
+    }
+}, {
+    $sortByCount: "$Attributes.Value"
+}, {
+    $limit: 5
+}])
+
+
+
+db.products.aggregate([
+    {$match: { "Product_Group": "Television"}},
+    {$unwind: "$Attributes"},
+    {$match: {"Attribute.Name": "Price"}},
+    {$bucket: {  
+                groupBy: "$Attribute.Value",
+               boundaries: [0, 200, 300, 500, 600, 700, 800, Infinity],                                          
+              }
+    }
+])
+
+
 

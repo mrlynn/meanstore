@@ -22,6 +22,8 @@ var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+var meanlogger = require('../local_modules/meanlogger');
+
 dotenv.load({
     path: '.env.hackathon'
 });
@@ -34,7 +36,7 @@ var fs = require('fs');
 
 var useFacets = (process.env.facets === true);
 var viewTour = (process.env.viewTour === true);
-useFacets = false;
+useFacets = true;
 var frontPageCategory = process.env.frontPageCategory;
 var viewDocuments = process.env.viewDocuments;
 
@@ -189,42 +191,46 @@ router.get('/', function(req, res, next) {
         "ancestors": [],
         "__v": 0
     };
+    Category.find({},function(err, navcats) {
 
-    Product.aggregate([{
-        $sortByCount: "$category"
-    }], function(err, allcats) {
-        if (frontPageCategory) {
-            categCondition = {
-                category: frontPageCategory
-            };
-        } else {
-            categCondition = {};
-        }
-        Product.find(categCondition, function(err, docs) {
-            productChunks = [];
-            productJSON = [];
-            chunkSize = 4;
-            for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
-                productChunks.push(docs.slice(i, i + chunkSize));
+    
+        Product.aggregate([{
+            $sortByCount: "$category"
+        }], function(err, allcats) {
+            if (frontPageCategory) {
+                categCondition = {
+                    category: frontPageCategory
+                };
+            } else {
+                categCondition = {};
             }
-            res.render(shopPage, {
-                layout: shopLayout,
-                title: title,
-                categoryrecord: JSON.stringify(categoryrecord),
-                showRecommendations: eval(res.locals.showRecommendations),
-                allcategories: res.locals.allcategories,
-                keywords: Config.keywords,
-                products: productChunks,
-                user: req.user,
-                allcats: allcats,
-                errorMsg: errorMsg,
-                noErrorMsg: !errorMsg,
-                successMsg: successMsg,
-                viewDocuments: viewDocuments,
-                tutorial: tutorial,
-                noMessage: !successMsg,
-                viewTour: viewTour,
-                isLoggedIn: req.isAuthenticated()
+            Product.find(categCondition, function(err, docs) {
+                productChunks = [];
+                productJSON = [];
+                chunkSize = 4;
+                for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
+                    productChunks.push(docs.slice(i, i + chunkSize));
+                }
+                res.render(shopPage, {
+                    layout: shopLayout,
+                    title: title,
+                    categoryrecord: JSON.stringify(categoryrecord),
+                    showRecommendations: eval(res.locals.showRecommendations),
+                    allcategories: res.locals.allcategories,
+                    keywords: Config.keywords,
+                    products: productChunks,
+                    user: req.user,
+                    allcats: allcats,
+                    navcats: navcats,
+                    errorMsg: errorMsg,
+                    noErrorMsg: !errorMsg,
+                    successMsg: successMsg,
+                    viewDocuments: viewDocuments,
+                    tutorial: tutorial,
+                    noMessage: !successMsg,
+                    viewTour: viewTour,
+                    isLoggedIn: req.isAuthenticated()
+                });
             });
         });
     });
@@ -244,7 +250,7 @@ router.get('/category/:slug', function(req, res, next) {
         layout = 'layout.hbs'
     }
     if (fs.existsSync(shop)) {
-        shop = category_slug;
+        shop = 'shop/' + category_slug;
     } else {
         shop = 'shop';
     }
@@ -268,13 +274,6 @@ router.get('/category/:slug', function(req, res, next) {
 //         buckets: 5
 //     }
 // }])
-
-
-
-
-
-
-
 
     Product.aggregate([{
         $match: {
@@ -319,18 +318,20 @@ router.get('/category/:slug', function(req, res, next) {
                         'category': new RegExp(category.name, 'i')
                     }]
                 }, function(err, products) {
-                    productChunks = [];
-                    chunkSize = 4;
-                    for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
-                        productChunks.push(products.slice(i, i + chunkSize))
-                    };
-                    console.log("View Documents: " + res.locals.viewDocuments);
-                    res.render('shop/facet', {
-                        layout: 'facet.hbs',
+                    if (category.format!='table') {
+                        productChunks = [];
+                        chunkSize = 4;
+                        for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+                            productChunks.push(products.slice(i, i + chunkSize))
+                        };
+                        products = productChunks
+                    }
+                    res.render(shop, {
+                        layout: layout,
                         allcats: allcats,
                         viewDocuments: viewDocuments,
                         category: category,
-                        products: productChunks,
+                        products: products,
                         productChunks: productChunks,
                         user: req.user,
                         q: q,
@@ -418,6 +419,8 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
         }
         added=cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shipable, req.user._id);
         // cart.totalTax = 0;
+        meanlogger.log('plus','Added ' + product.name + ' to cart',req.user);
+
         if (added) {
             req.flash('error', added.message);
             res.redirect('/');
@@ -453,7 +456,9 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
                 taxAmount = taxInfo.taxAmount;
             }
             cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
-            req.session.cart = cart; // store cart in session
+            req.session.cart = cart; 
+            meanlogger.log('plus','Added ' + product.name + ' to cart',req.user);
+// store cart in session
 
             req.flash('success', 'Item Successfully added to cart.' + JSON.stringify(cart));
             res.redirect('/');
@@ -465,6 +470,8 @@ router.get('/empty-cart', isLoggedIn, function(req, res, next) {
     var cart = new Cart({});
     cart.empty();
     req.session.cart = cart;
+    meanlogger.log('trash','Emptied cart',req.user);
+
     res.redirect('/');
 
 });
@@ -592,6 +599,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     successMsg = req.flash('success')[0];
     var cart = new Cart(req.session.cart);
     var errorMsg = req.flash('error')[0];
+    meanlogger.log('shopping-cart','Viewed checkout',req.user);
 
     res.render('shop/checkout', {
         products: cart.generateArray(),
@@ -613,6 +621,8 @@ router.post('/checkout', function(req, res, next) {
     var shipping_state = req.body.shipping_state;
     var shipping_zip = req.body.shipping_zip;
     var cart = new Cart(req.session.cart);
+    meanlogger.log('shopping-cart','Viewed checkout',req.user);
+
     taxDesc = "";
     var subtotal = parseFloat(req.body.amount);
     var shippingtotal = 0;
@@ -932,6 +942,8 @@ router.get('/execute', function(req, res, next) {
                                 text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
                                     'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
                             };
+                            meanlogger.log('dollar','Completed Purchase',req.user);
+
                             transporter.sendMail(mailOptions, function(err) {
                                 if (err) {
                                     console.log(err);
@@ -1031,6 +1043,8 @@ router.post('/search', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
                     productChunks.push(results.slice(i, i + chunkSize))
                 }
+                meanlogger.log('search','Searched for  ' + q,req.user);
+
                 res.render(shopPage, {
                     layout: shopLayout,
                     products: productChunks,

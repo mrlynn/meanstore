@@ -15,6 +15,9 @@ var schema = new Schema({
 	description: {
 		type: String
 	},
+	layout: {
+		type: String
+	},
 	ancestors: [{
 		id: {type: Schema.Types.ObjectId, ref: 'Category', required: false},
 	}],
