@@ -57,6 +57,9 @@ var userSchema = new Schema({
 	created: {
 		type: Date, default: Date.now()
 	},
+	lastlogin: {
+		type: Date, default: Date.now()
+	},
 	likes: [String],
 	purchased: [{
 		code: String,
@@ -97,7 +100,10 @@ var userSchema = new Schema({
               type: String
             }
         }]
-	}]
+	}],
+	facebook: {
+		type: String
+	}
 });
 
 userSchema.pre('save', function(next) {

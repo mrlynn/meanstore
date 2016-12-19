@@ -13,91 +13,88 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-            <li>
-            </li>
-            <li>
-                <a href="/overview">
-                    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About
-                </a>
-            </li>
-                {{#if allcats }}
+                <li>
+                </li>
+                <li>
+                    <a href="/overview">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About
+                    </a>
+                </li>
+                {{#if navcats }}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;Categories
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="/">All</a></li>
-                        {{#each allcats}}
-                            <li><a href="/category/{{this._id}}">{{this._id}}</a></li>
+                        {{#each navcats}}
+                        <li><a href="/category/{{this.slug}}">{{this.slug}}</a></li>
                         {{/each}}
-                        <li>
+                    <li>
                         <button class="btn btn-success btn-sm" data-title="View" data-toggle="modal" data-target="#category-modal">View Category Document <span class="glyphicon glyphicon-search"></span>
-</button>
-</p>
-<!-- Add Dialog -->
-                        </li>
-                    </ul>
+                        </button>
+                    </p>
+                    <!-- Add Dialog -->
                 </li>
-                {{/if}}
-                <li>
-                    <a id="shopping-cart" href="shopping-cart">
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
-                        {{#if session.cart.totalQty }}
-                        <span class="badge btn-success">{{ session.cart.totalQty }}</span>
-                        {{/if}}
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;User Menu
-                    </a>
-                    <ul class="dropdown-menu">
-                        {{#if login }}
-
-                        <li><a href="/user/profile">User Account</a></li>
-                        <li role="separator" class="divider"></li>
-                        {{#if admin }}
-                        <li><a href="/admin/setup">Configuration</a></li>
-                        <li role="separator" class="divider"></li>
-                        {{/if}}
-                        <li><a href="/user/logout">Logout</a></li>
-                        {{ else }}
-                        <li><a href="/user/signup">Sign Up</a></li>
-                        <li><a href="/user/signin">Sign In</a></li>
-                        {{/if}}
-                    </ul>
-                </li>
-                {{!-- <li>
-                    <a href="http://aasepia.org"><i class="fa fa-chevron-left" aria-hidden="true"></i>Back to SEPIA</a>
-                </li> --}}
-                </ul>
-
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-    </div>
-    <!-- /.container -->
+            </ul>
+        </li>
+    {{/if}}
+    <li>
+        <a id="shopping-cart" href="shopping-cart">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
+            {{#if session.cart.totalQty }}
+            <span class="badge btn-success">{{ session.cart.totalQty }}</span>
+        {{/if}}
+    </a>
+</li>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+        <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;User Menu
+    </a>
+    <ul class="dropdown-menu">
+        {{#if login }}
+        <li><a href="/user/profile">User Account</a></li>
+        <li role="separator" class="divider"></li>
+        {{#if admin }}
+        <li><a href="/admin/products">Administration</a></li>
+        <li role="separator" class="divider"></li>
+    {{/if}}
+    <li><a href="/user/logout">Logout</a></li>
+    {{ else }}
+    <li><a href="/user/signup">Sign Up</a></li>
+    <li><a href="/user/signin">Sign In</a></li>
+{{/if}}
+</ul>
+</li>
+{{!-- <li>
+<a href="http://aasepia.org"><i class="fa fa-chevron-left" aria-hidden="true"></i>Back to SEPIA</a>
+</li> --}}
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</div>
+</div>
+<!-- /.container -->
 </nav>
 <div class="clear-fix"></div>
-
 <div class="modal fade" id="category-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                <h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+<h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
+</div>
+<div class="modal-body">
+<div class="form-group">
 {{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
- --}}                    <pre>{{categoryrecord}}</pre>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
+--}}                    <pre>{{categoryrecord}}</pre>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+</div>
+</div>
+<!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>

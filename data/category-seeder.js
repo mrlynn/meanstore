@@ -25,7 +25,7 @@ Product.find().distinct('category', function(err,categories) {
 		}
 		var cname = categories[i];
 		console.log('cname ' + cname);
-		var cslug = slug(cname);
+		var cslug = slug(cname)
 		category = new Category({
 			name: cname,
 			slug :cslug
@@ -37,6 +37,17 @@ Product.find().distinct('category', function(err,categories) {
 			}
 		})
 	}
+	Category.findOne({slug: 'Books'},function(err,category) {
+		if (err || !category) {
+			console.log("Error: " + err.message);
+		}
+		category.layout='table';
+		category.save(function(err) {
+			if(err) {
+				console.log("Unable to save category.");
+			}
+		})
+	})
 });
 
 function exit() {

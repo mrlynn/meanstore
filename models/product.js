@@ -8,6 +8,9 @@ var schema = new Schema({
 		type: Number,
 		required: false
 	},
+	status: {
+		type: String
+	},
 	imagePath: {
 		type: String,
 		required: false

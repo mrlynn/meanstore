@@ -1,0 +1,13 @@
+<div class="panel-body">
+    <div class="list-group">
+        {{#each activities}}
+            <a href="/admin/activities?id={{this._id}}" class="list-group-item">
+                <span class="badge"></span>
+                <i class="fa fa-fw fa-{{this.type}}"></i> {{this.message}}
+            </a>
+        {{/each}}
+    </div>
+    <div class="text-right">
+        <a href="/admin/activities">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var moment = require('moment');
+var timeago = require('helper-timeago');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
 var session = require('express-session');
@@ -38,7 +39,6 @@ var winston = require("winston");
 var mongoSanitize = require('express-mongo-sanitize');
 var docs = require("express-mongoose-docs");
 var csrf = require('csurf');
-
 
 var logger = new (winston.Logger)({
     transports: [
@@ -92,6 +92,12 @@ var hbs = expressHbs.create({
         },
         formatDate: function (date, format) {
             return moment(date).format(format);
+        },
+        timeAgo: function(date) {
+          return timeago(date);
+        },
+        JSON: function(obj) {
+          return JSON.stringify(obj);
         }
     },
     defaultLayout: 'layout',
@@ -147,13 +153,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next) {
     // if (typeof res.locals.allcats == 'undefined') {
 
-      Category.find({}, function(err, allcats) {
-          if (err || !allcats) {
+      Category.find({}, function(err, navcats) {
+          if (err || !navcats) {
             res.send('500','Error retrieving categories.');
           }
-          res.locals.allcats = allcats;
-          app.set('allcats', allcats);
-          app.locals.allcats = allcats;
+          res.locals.navcats = navcats;
+          app.set('navcats', navcats);
+          app.locals.navcats = navcats;
       });
     // }
     res.locals.login = req.isAuthenticated();

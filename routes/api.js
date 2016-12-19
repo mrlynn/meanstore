@@ -12,6 +12,7 @@ var MongoClient = require('mongodb').MongoClient
 var taxConfig = require('../config/tax-config.js');
 var Config = require('../config/config.js');
 var taxCalc = require('../local_modules/tax-calculator');
+var meanlogger = require('../local_modules/meanlogger');
 
 Category.find({}, function(err,categories) {
 	if (err) {
