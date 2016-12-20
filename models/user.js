@@ -49,7 +49,7 @@ var userSchema = new Schema({
 	role: {
 		type: String,
 		required: false,
-		enum: ['visitor','administrator']
+		enum: ['visitor','admin']
 	},
 	acceptedTOS: {
 		type: Date
@@ -102,6 +102,7 @@ var userSchema = new Schema({
         }]
 	}],
 	facebook: String,
+	twitter: String,
 	profile: {
 	    name: String,
 	    gender: String,

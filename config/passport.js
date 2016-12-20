@@ -4,6 +4,7 @@ var LocalStrategy = require('passport-local').Strategy;
 const dotenv = require('dotenv');
 
 const FacebookStrategy = require('passport-facebook').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 
 dotenv.load({ path: '.env.hackathon' });
 
@@ -188,6 +189,61 @@ passport.use(new FacebookStrategy({
             done(err, user);
           });
         }
+      });
+    });
+  }
+}));
+
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.TWITTER_SECRET,
+  callbackURL: '/user/twitter/callback',
+  passReqToCallback: true
+}, (req, accessToken, tokenSecret, profile, done) => {
+  if (req.user) {
+    User.findOne({ twitter: profile.id }, (err, existingUser) => {
+      if (err) { return done(err); }
+      if (existingUser) {
+        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        done(err);
+      } else {
+        User.findById(req.user.id, (err, user) => {
+          if (err) { return done(err); }
+          user.twitter = profile.id;
+          user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+          user.profile.name = user.profile.name || profile.displayName;
+          user.first_name = user.first_name || profile.displayName;
+          user.profile.location = user.profile.location || profile._json.location;
+          user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
+          user.save((err) => {
+            if (err) { return done(err); }
+            req.flash('info', { msg: 'Twitter account has been linked.' });
+            done(err, user);
+          });
+        });
+      }
+    });
+  } else {
+    User.findOne({ twitter: profile.id }, (err, existingUser) => {
+      if (err) { 
+        console.log("ERROR: " + err.message);
+        return done(err); 
+      }
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+      const user = new User();
+      // Twitter will not provide an email address.  Period.
+      // But a person’s twitter username is guaranteed to be unique
+      // so we can "fake" a twitter email address as follows:
+      user.email = `${profile.username}@twitter.com`;
+      user.twitter = profile.id;
+      user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+      user.profile.name = profile.displayName;
+      user.profile.location = profile._json.location;
+      user.profile.picture = profile._json.profile_image_url_https;
+      user.save((err) => {
+        done(err, user);
       });
     });
   }

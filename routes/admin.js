@@ -222,7 +222,44 @@ router.get('/users:filter?', isAdmin, function(req, res, next) {
         })
 
     })
-})
+});
+
+/* Edit User */
+router.post('/edit-user',isAdmin, function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    user = {};
+    User.findById(req.params.id, function(err, user) {
+        if (err) {
+            console.log("ERROR: " + err.message);
+        } else {
+            if (!user) {
+                user = new User({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    email: req.body.email,
+                    role: req.body.role
+                });
+            } else {
+                user.first_name = req.body.first_name || '';
+                user.last_name = req.last_name.name || '';
+                user.email = req.body.email || '';
+                user.role = req.body.role || '';
+            }
+        }
+        user.save(function(err) {
+            if (!err) {
+                console.log("updated");
+            } else {
+                console.log(err);
+            }
+            res.redirect('/admin/users');
+        })
+    });
+
+});
+
+
 /* Delete Users */
 
 router.post('/delete-user',  isAdmin, function(req, res, next) {
@@ -579,6 +616,44 @@ router.get('/categories:filter?', isAdmin,function(req, res, next) {
             });
         });
     });
+});
+
+router.post('/edit-category',isAdmin, function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    category = {};
+    Category.findById(req.body.id, function(err, category) {
+
+        if (err) {
+            console.log("ERROR: " + err.message);
+        } else {
+            if (!category) {
+                category = new Category({
+                    description: req.body.description,
+                    name: req.body.name,
+                    slug: req.body.slug,
+                    layout: req.body.layout
+                });
+            } else {
+                category.description = req.body.description || '';
+                category.name = req.body.name || '';
+                category.slug = req.body.slug || '';
+                category.layout = req.body.layout || '';
+                category.updated = Date.now();
+            }
+        }
+                                console.log("Found: " + JSON.stringify(category));
+
+        category.save(function(err) {
+            if (!err) {
+                console.log("updated");
+            } else {
+                console.log(err);
+            }
+            res.redirect('/admin/categories');
+        })
+    });
+
 });
 
 router.get('/configuration',isAdmin, function(req, res, next) {

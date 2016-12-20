@@ -13,7 +13,8 @@ var schema = new Schema({
 		required: false,
 	},
 	description: {
-		type: String
+		type: String,
+		required: false
 	},
 	layout: {
 		type: String
@@ -21,7 +22,11 @@ var schema = new Schema({
 	ancestors: [{
 		id: {type: Schema.Types.ObjectId, ref: 'Category', required: false},
 	}],
-	attributes: [ String ]
+	attributes: [ String ],
+	updated: {
+		type: Date,
+		default: Date.now()
+	}
 });
 
 module.exports = mongoose.model('Category',schema);
