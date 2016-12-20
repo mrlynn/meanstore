@@ -21,7 +21,7 @@ var uuid = require('uuid');
 var Config = require('../config/config');
 var Stats = require('../local_modules/stats');
 var meanlogger = require('../local_modules/meanlogger');
-
+var fileUpload = require('express-fileupload');
 // var csrfProtection = csrf();
 
 // router.use(csrfProtection);
@@ -135,7 +135,7 @@ router.post('/delete-order',  isAdmin, function(req, res, next) {
         if (err) {
             res.send(500,'Error deleting order.');
         }
-        res.redirect('/admin/orders');
+        return res.redirect('/admin/orders');
     })
 })
 
@@ -159,7 +159,7 @@ router.post('/update-order',  isAdmin, function(req, res, next) {
             if (err)
                 console.log("ERROR: " + err.message);
         })
-        res.redirect('/admin/orders');
+        return res.redirect('/admin/orders');
     })
 })
 
@@ -235,7 +235,7 @@ router.post('/delete-user',  isAdmin, function(req, res, next) {
         if (err) {
             res.send(500,'Error deleting user.');
         }
-        res.redirect('/admin/users');
+        return res.redirect('/admin/users');
     })
 })
 /* Display all tickets purchased */
@@ -328,7 +328,7 @@ router.post('/delete-activity',  isAdmin, function(req, res, next) {
         if (err) {
             res.send(500,'Error deleting order.');
         }
-        res.redirect('/admin/activities');
+        return res.redirect('/admin/activities');
     })
 })
 
@@ -397,7 +397,7 @@ router.get('/products:filter?', isAdmin,function(req, res, next) {
     if (!filter || filter=='allProducts') {
         var allProducts = true;
         var deletedProducts = false;
-        qryFilter = {};
+        qryFilter = {status: { $ne: 'deleted'}};
     } else {
         if (filter=='deletedProducts') {
             var allOrders = false;
@@ -451,7 +451,7 @@ router.post('/delete-product',  isAdmin, function(req, res, next) {
             } else {
                 console.log(err);
             }
-            res.redirect('/admin/products');
+            return res.redirect('/admin/products');
         });
     })
 })
@@ -477,9 +477,46 @@ router.get('/edit-product/:id',  isAdmin,function(req, res, next) {
 
     	})
     });
-})
+});
 
-router.post('/product/:id',  isAdmin,function(req, res, next) {
+router.post('/add-product',isAdmin, function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    var imageFile;
+
+    if (!req.files) {
+        res.send('No files were uploaded.');
+        return;
+    }
+
+    imageFile = req.files.imageFile;
+    imageFile.mv(process.env.imagePath + '/' + req.body.name + '.png' , function(err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        product = new Product({
+            name: req.body.name,
+            code: req.body.code,
+            title: req.body.title,
+            price: parseFloat((req.body.price * 100).toFixed(2)),
+            description: req.body.description,
+            shippable: req.body.shippable,
+            taxable: req.body.taxable,
+            category: req.body.category,
+            imagePath: '/images/' + req.body.name + '.png'
+        })
+        product.save(function(err) {
+            if (err) {
+                req.flash('error','Error: ' + err.message);
+                return res.redirect('/admin/products');
+            }
+            console.log("product: " + product);
+            return res.redirect('/admin/products');
+        });
+    });
+});
+
+router.post('/product/:id', isAdmin,function(req, res, next) {
     productID = req.params.id;
     Product.findById(req.params.id, function(err, product) {
         product.title = req.body.title;
@@ -495,10 +532,7 @@ router.post('/product/:id',  isAdmin,function(req, res, next) {
         } else {
             console.log(err);
         }
-        res.render('admin/index', {
-            products: productChunks,
-            noErrors: 1
-        });
+        res.redirect('/admin/products');
     })
 });
 
@@ -580,12 +614,12 @@ router.get('/setup', isAdmin, function(req, res, next) {
 module.exports = router;
 function isAdmin(req, res, next) {
     if (!req.isAuthenticated()|| !req.user) {
-        res.redirect('/');
+        return res.redirect('/');
     } else {
         if (req.user.role == 'admin') {
             return next();
         } else {
-            res.redirect('/');
+            return res.redirect('/');
         }
     }
 }
@@ -594,7 +628,7 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/');
+    return res.redirect('/');
 }
 
 function notLoggedIn(req, res, next) {

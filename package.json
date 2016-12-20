@@ -51,6 +51,7 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
+    "passport-oauth": "^1.0.0",
     "passport-wordpress": "0.0.4",
     "paypal-rest-sdk": "^1.6.9",
     "prompt": "^1.0.0",

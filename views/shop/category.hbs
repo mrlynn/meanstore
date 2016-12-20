@@ -32,13 +32,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{# each products }}
+                                {{#each products}}
+                                <div class="row">
+                                    {{# each this}}
                                 <tr class="odd gradeX">
                                     <form action="add-to-cart" method="POST">
                                     <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                    <td><h3>{{this.code}}</h3></td>
-                                    <td><h3>{{this.name}}</h3>{{this.title}}</td>
-                                    <td><h4>{{this.category}}</h4></td>
+                                    <td>{{this.code}}</td>
+                                    <td>{{this.name}}{{this.title}}</td>
+                                    <td>{{this.category}}</td>
                                     <td class="text-right"><h4>${{this.price}}</h4></td>
                                     <td class="center">
                                         {{#if ../isLoggedIn}}
@@ -52,6 +54,7 @@
                                         {{/if}}
                                     </td>
                                 </tr>
+                                {{/each}}
                                 {{/each}}
                             </tbody>
                         </table>

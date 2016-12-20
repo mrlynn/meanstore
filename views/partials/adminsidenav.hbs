@@ -1,102 +1,76 @@
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/admin">{{title}}</a>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                </li>
-                <li>
-                    <a href="/overview">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About
-                    </a>
-                </li>
-                {{#if allcats }}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;Categories
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/">All</a></li>
-                        {{#each allcats}}
-                        <li><a href="/category/{{this._id}}">{{this._id}}</a></li>
-                    {{/each}}
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/admin">{{title}}</a>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+            </li>
+            <li>
+                <a href="/overview">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About
+                </a>
+            </li>
+            {{#if allcats }}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;Categories
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/">All</a></li>
+                    {{#each allcats}}
+                    <li><a href="/category/{{this._id}}">{{this._id}}</a></li>
+                {{/each}}
                     <li>
                         <button class="btn btn-success btn-sm" data-title="View" data-toggle="modal" data-target="#category-modal">View Category Document <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </p>
-                    <!-- Add Dialog -->
+                <!-- Add Dialog -->
                 </li>
-            </ul>
-        </li>
-    {{/if}}
-    <li>
-        <a id="shopping-cart" href="/shopping-cart">
-            <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
-            {{#if session.cart.totalQty }}
-            <span class="badge btn-success">{{ session.cart.totalQty }}</span>
-        {{/if}}
-    </a>
-</li>
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-        <span class="fa fa-caret-down" title="User Menu" aria-hidden="true"></span>&nbsp;User Menu
-    </a>
-    <ul class="dropdown-menu">
-        {{#if login }}
-        <li><a href="/user/profile">User Account</a></li>
-        <li role="separator" class="divider"></li>
-        {{#if admin }}
-        <li><a href="/admin/products">Administration</a></li>
-        <li role="separator" class="divider"></li>
-    {{/if}}
-    <li><a href="/user/logout">Logout</a></li>
-    {{ else }}
-    <li><a href="/user/signup">Sign Up</a></li>
-    <li><a href="/user/signin">Sign In</a></li>
+        </ul>
+    </li>
 {{/if}}
-</ul>
+<li>
+    <a id="shopping-cart" href="/shopping-cart">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Shopping Cart
+        {{#if session.cart.totalQty }}
+        <span class="badge btn-success">{{ session.cart.totalQty }}</span>
+    {{/if}}
+</a>
 </li>
 {{!-- <li>
 <a href="http://aasepia.org"><i class="fa fa-chevron-left" aria-hidden="true"></i>Back to SEPIA</a>
 </li> --}}
 </ul>
-
-
-
-
-
-
-
-            </div>
-            <!-- Top Menu Items -->
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="/admin/orders"><i class="fa fa-fw fa-bar-chart-o"></i> Orders</a>
-                    </li>
-                    <li>
-                        <a href="/admin/products"><i class="fa fa-fw fa-table"></i> Products</a>
-                    </li>
-                    <li>
-                        <a href="/admin/categories"><i class="fa fa-fw fa-table"></i> Categories</a>
-                    </li>
-                    <li>
-                        <a href="/admin/users"><i class="fa fa-fw fa-user"></i> Users</a>
-                    </li>
-                    <li>
-                        <a href="/admin/activities"><i class="fa fa-fw fa-table"></i> Activity Log</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
+</div>
+<!-- Top Menu Items -->
+<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+<ul class="nav navbar-nav side-nav">
+<li class="active">
+<a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+</li>
+<li>
+<a href="/admin/orders"><i class="fa fa-fw fa-bar-chart-o"></i> Orders</a>
+</li>
+<li>
+<a href="/admin/products"><i class="fa fa-fw fa-table"></i> Products</a>
+</li>
+<li>
+<a href="/admin/categories"><i class="fa fa-fw fa-table"></i> Categories</a>
+</li>
+<li>
+<a href="/admin/users"><i class="fa fa-fw fa-user"></i> Users</a>
+</li>
+<li>
+<a href="/admin/activities"><i class="fa fa-fw fa-table"></i> Activity Log</a>
+</li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>

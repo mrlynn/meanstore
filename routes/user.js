@@ -3,6 +3,7 @@ var router = express.Router();
 var Product = require('../models/product');
 var csrf = require('csurf');
 var passport = require('passport');
+var passportFacebook = require( 'passport-facebook' );
 var User = require('../models/user');
 var Payment = require('../models/payment');
 var Order = require('../models/order');
@@ -112,7 +113,7 @@ router.post('/forgot', function(req, res, next) {
             // var smtpConfig = {
             //     host: 'smtp.gmail.com',
             //     port: 465,
-            //     secure: true, // use SSL 
+            //     secure: true, // use SSL
             //     auth: {
             //         user: 'you@yourmail.org',
             //         pass: 'yourpassword!'
@@ -250,7 +251,6 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 router.get('/signin', function(req, res, next) {
     req.session.oldUrl = req.get('referer');
-    console.log("asdf");
     var messages = req.flash('error');
     res.render('user/signin', {
         layout: 'fullpage.hbs',
@@ -285,6 +285,14 @@ router.post('/signin', passport.authenticate('local.signin', {
         })
 
     }
+});
+
+router.get('/facebook', passport.authenticate('facebook', { 
+    scope: ['email', 'user_location'] 
+}));
+
+router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/signin' }), (req, res) => {
+    res.redirect(req.session.returnTo || '/');
 });
 
 module.exports = router;

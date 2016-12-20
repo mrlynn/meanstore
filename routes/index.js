@@ -192,8 +192,6 @@ router.get('/', function(req, res, next) {
         "__v": 0
     };
     Category.find({},function(err, navcats) {
-
-    
         Product.aggregate([{
             $sortByCount: "$category"
         }], function(err, allcats) {
@@ -242,39 +240,6 @@ router.get('/category/:slug', function(req, res, next) {
     var q = req.query.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    var layout = 'views/layouts/' + category_slug + '.hbs';
-    var shop = 'views/shop/' + category_slug + '.hbs';
-    if (fs.existsSync(layout)) {
-        layout = category_slug + '.hbs';
-    } else {
-        layout = 'layout.hbs'
-    }
-    if (fs.existsSync(shop)) {
-        shop = 'shop/' + category_slug;
-    } else {
-        shop = 'shop';
-    }
-// Category.find({name: category_slug},function(err,category_document) {
-//     facets = [];
-
-// })
-// db.products.aggregate([{
-//     $match: {
-//         "Product_Group": "Camera"
-//     }
-// }, {
-//     $unwind: "$Attributes"
-// }, {
-//     $match: {
-//         "Attributes.Name": "Price"
-//     }
-// }, {
-//     $bucketAuto: {
-//         groupBy: "$Attributes.Value",
-//         buckets: 5
-//     }
-// }])
-
     Product.aggregate([{
         $match: {
             $text: {
@@ -326,8 +291,8 @@ router.get('/category/:slug', function(req, res, next) {
                         };
                         products = productChunks
                     }
-                    res.render(shop, {
-                        layout: layout,
+                    res.render('shop/category', {
+                        layout: 'books',
                         allcats: allcats,
                         viewDocuments: viewDocuments,
                         category: category,
@@ -355,7 +320,6 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var ticket_email = req.body.ticket_email || null;
     var errorMsg = req.flash('error')[0];
     var price = req.body.price || null;
-    console.log("Price: " + price);
     var type = req.body.type || null;
 
     /* new product to be added to cart */
@@ -396,22 +360,13 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var size = req.body.option || null;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
-    console.log("Product ID: " + productId);
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-        // taxcalc.calculateTax(product.id,req.user._id,function(err,response) {
-        //  if (err) {
-        //      taxAmount=0;
-        //  } else {
-        //      taxAmount = response.taxAmount;
-        //      console.log('tax amount: ' + taxAmount);
-        //  }
-        // cart.cartTaxTotal(req.user._id);
-        // cart.cartShippingTotal()
+        
         if (product.Product_Group == 'VARPRICE') {
             theprice = price;
         } else {
@@ -507,7 +462,6 @@ router.get('/shopping-cart', function(req, res, next) {
         });
     }
     var cart = new Cart(req.session.cart);
-    console.log("CART from sb: " + JSON.stringify(cart));
     var cartJSON = JSON.stringify(cart);
     var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
     var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
@@ -535,7 +489,6 @@ router.get('/shopping-cart', function(req, res, next) {
                 imagePath: '/img/sony-camera.jpg'
             }]
         }
-        console.log("View Documents: " + res.locals.viewDocuments);
         res.render('shop/shopping-cart', {
             products: cart.generateArray(),
             items: cart.generateObject(),
@@ -615,7 +568,6 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
 router.post('/checkout', function(req, res, next) {
     var method = req.body.method;
     var item_name = req.body.item_name;
-    console.log("req.body: " + JSON.stringify(req.body));
     var shipping_addr1 = req.body.shipping_addr1;
     var shipping_city = req.body.shipping_city;
     var shipping_state = req.body.shipping_state;
@@ -647,7 +599,6 @@ router.post('/checkout', function(req, res, next) {
                 if (!req.session.cart) {
                     return res.redirect('/shopping-cart');
                 }
-                console.log("Results: " + JSON.stringify(results));
                 var totalTax = results.taxAmount.toFixed(2);
                 var grandtotal = (parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal));
                 var errorMsg = req.flash('error')[0];
@@ -671,8 +622,6 @@ router.post('/checkout', function(req, res, next) {
                 });
             })
         } else {
-            console.log("Shipping Total " + shippingtotal);
-
             var totalTax = 0;
             var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
             res.render('shop/checkout', {
@@ -697,8 +646,6 @@ router.post('/checkout', function(req, res, next) {
 });
 
 router.post('/create', function(req, res, next) {
-    console.log("--------");
-        console.log(JSON.stringify(req.body));
     // reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
     var amount = parseFloat(req.body.amount);
@@ -745,9 +692,6 @@ router.post('/create', function(req, res, next) {
         var ticket_name = req.body['ticket_name_' + i];
         var ticket_email = req.body['ticket_email_' + i];
         var size = req.body['size_' + i];
-        console.log("Ticket Name: " + ticket_name);
-        console.log("Ticket Email: " + ticket_name);
-        console.log("Size: " + size);
         custom[i] = { "ticket_name": ticket_name, "ticket_email": ticket_email };
         item = {
                 "name": products[i].item.title,
@@ -878,6 +822,7 @@ router.get('/execute', function(req, res, next) {
     var details = {
         "payer_id": PayerID
     };
+
     var payment = paypal.payment.execute(paymentId, details, function(error, payment) {
         if (error) {
             console.log(error);
@@ -887,8 +832,7 @@ router.get('/execute', function(req, res, next) {
 
         } else {
             // Update payment record with new state - should be approved.
-            console.log("---");
-            console.log("Payment from return: " + JSON.stringify(payment));
+
             Payment.find({
                 id: paymentId
             }, function(err, paymentDocument) {
@@ -943,7 +887,6 @@ router.get('/execute', function(req, res, next) {
                                     'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
                             };
                             meanlogger.log('dollar','Completed Purchase',req.user);
-
                             transporter.sendMail(mailOptions, function(err) {
                                 if (err) {
                                     console.log(err);

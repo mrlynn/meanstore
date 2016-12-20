@@ -50,7 +50,6 @@
             </div>
 
             </div>
-            
             <div class="panel-body">
                 <p data-placement="top" class='text-right' data-toggle="tooltip" title="Add New Product ">
                     <button class="ui right floated btn btn-success btn-lg" data-title="Add" data-toggle="modal" data-target="#add">Add Product <span class="glyphicon glyphicon-plus"></span>
@@ -60,37 +59,29 @@
                 <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="/admin/add-product" method="POST">
-
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                                 <h4 class="modal-title custom_align" id="Heading">Add New Product</h4>
                             </div>
-                            <form action='/admin/add-product' METHOD='post'>
+                            <form action='/admin/add-product' METHOD='post' encType="multipart/form-data">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <ul class="list-group">
                                     <li class="list-group-item">
                                     <label for='name'>Name</label>
-                                    <input class="form-control" [(ngModel)]="newProduct.title" name='name' type="text" placeholder=""></li>
+                                    <input class="form-control"  name='name' type="text" placeholder=""></li>
                                 </ul>
                                 </div>
                                 <div class="form-group">
                                     <ul class="list-group">
                                     <li class="list-group-item">
-                                    <label for='title'>Title</label>
-                                    <input class="form-control" [(ngModel)]="newProduct.price" name='title' type="text" placeholder=""></li>
-                                    </ul>
-                                </div>
-                                <div class="form-group">
-                                    <ul class="list-group">
+                                    <label for='title'>SKU/Code</label>
+                                    <input class="form-control"  name='code' type="text" placeholder=""></li>
                                     <li class="list-group-item">
+                                    <label for='title'>Title</label>
+                                    <input class="form-control"  name='title' type="text" placeholder=""></li>                                    <li class="list-group-item">
                                     <label for='price'>Price</label>
-                                    <input class="form-control" [(ngModel)]="newProduct.price" name='price' type="text" placeholder=""></li>
-                                    </ul>
-                                </div>
-                                <div class="form-group">
-                                    <ul class="list-group">
+                                    <input class="form-control"  name='price' type="text" placeholder=""></li>
                                     <li class="list-group-item">
                                         <label for='shippable'>Shippable?</label>
                                         <div class="material-switch pull-right">
@@ -105,17 +96,9 @@
                                             <label for="taxable" class="label-success"></label> Yes
                                         </div>
                                     </li>
-                                    </ul>
-                                </div>
-                                <div class="form-group">
-                                    <ul class="list-group">
                                     <li class="list-group-item">
                                     <label for='description'>Description</label>
                                     <textarea rows="2" class="form-control" [(ngModel)]="newProduct.description" name='description' placeholder=""></textarea></li>
-                                    </ul>
-                                </div>
-                                <div class="form-group">
-                                    <ul class="list-group">
                                     <li class="list-group-item">
                                     <label for='category'>Category</label>
                                     <select class='form-control' name='category'>
@@ -129,15 +112,14 @@
                                 <div class="form-group">
                                     <ul class="list-group">
                                         <li class="list-group-item">
-                                            <label for='image'>Image</label>
-                                            <input type='file' name='image' class='form-control'>
+                                            <label for='imageFile'>Image</label>
+                                            <input type='file' name='imageFile' class='form-control'>
                                         </li>
                                     </ul>
                                 </div>
-                                </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" onClick='submit();' class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Add</button>
+                                <button type="button" onClick="submit();" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-plus"></span> Add</button>
                             </div>
                             </form>
                         </div>
@@ -150,6 +132,7 @@
                         <thead>
                             <tr>
                                 <th><h2>Product</h2></th>
+                                <th><h2>Image</h2></th>
                                 <th><h2>Name</h2></th>
                                 <th><h2>Title</h2></th>
                                 <th><h2>Description</h2></th>
@@ -161,9 +144,10 @@
                         </thead>
                         <tbody>
                             {{#each products }}
-                            <tr class="odd gradeX">
+                                <tr class="odd gradeX">
                                     <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                     <td>{{this.code}}</td>
+                                    <td><img src='{{this.imagePath}}' width=50></td>
                                     <td>{{this.name}}</td>
                                     <td>{{this.title}}</td><td>{{this.description}}</td>
                                     <td>{{this.category}}</td>
@@ -183,9 +167,8 @@
                                         </p>
                                         </form>
                                     </td>
-                                </form>
-                            </tr>
-                        {{/each}}
+                               </tr>
+                            {{/each}}
                     </tbody>
                 </table>
             </div>
