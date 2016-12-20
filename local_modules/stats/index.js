@@ -74,7 +74,6 @@ module.exports = {
             stats.banquetTickets = parseFloat(stats.banquetTickets).toFixed(0);
             stats.apparelSold = parseFloat(stats.apparelSold).toFixed(0);
             stats.itemCount = parseFloat(stats.itemCount).toFixed(0);
-            console.log("Stats: " + JSON.stringify(stats));
             callback(null, stats);
         })
     }

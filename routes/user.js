@@ -4,6 +4,7 @@ var Product = require('../models/product');
 var csrf = require('csurf');
 var passport = require('passport');
 var passportFacebook = require( 'passport-facebook' );
+var passportTwitter = require( 'passport-twitter' );
 var User = require('../models/user');
 var Payment = require('../models/payment');
 var Order = require('../models/order');
@@ -287,12 +288,17 @@ router.post('/signin', passport.authenticate('local.signin', {
     }
 });
 
-router.get('/facebook', passport.authenticate('facebook', { 
-    scope: ['email', 'user_location'] 
+router.get('/facebook', passport.authenticate('facebook', {
+    scope: ['email', 'user_location']
 }));
 
 router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/signin' }), (req, res) => {
     res.redirect(req.session.returnTo || '/');
+});
+
+router.get('/twitter', passport.authenticate('twitter'));
+router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/signin' }), (req, res) => {
+  res.redirect(req.session.returnTo || '/');
 });
 
 module.exports = router;

@@ -360,6 +360,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var size = req.body.option || null;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
+    console.log("Product ID: " + productId);
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
@@ -573,8 +574,21 @@ router.post('/checkout', function(req, res, next) {
     var shipping_state = req.body.shipping_state;
     var shipping_zip = req.body.shipping_zip;
     var cart = new Cart(req.session.cart);
+    req.checkBody("shipping_addr1", "Enter a valid shipping address.");
+    req.checkBody("shipping_city", "Enter a valid shipping city.");
+    req.checkBody("shipping_state", "Enter a valid shipping state.");
+    req.checkBody("shipping_zip", "Enter a valid shipping address.");
     meanlogger.log('shopping-cart','Viewed checkout',req.user);
-
+    var errors = req.validationErrors();
+    if (errors) {
+        returnObject = {
+            errorMsg: errors,
+            noErrorMsg: false,
+            noMessage: true
+        };
+        req.flash('error', 'Invalid shipping information.');
+        return res.redirect('/checkout');
+    }
     taxDesc = "";
     var subtotal = parseFloat(req.body.amount);
     var shippingtotal = 0;
