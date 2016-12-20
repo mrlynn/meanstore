@@ -133,7 +133,7 @@ db.products.aggregate([{
     $limit: 5
 }])
 
-
+# Aggregate - manual bucketing
 
 db.products.aggregate([
     {$match: { "Product_Group": "Television"}},
@@ -146,5 +146,67 @@ db.products.aggregate([
     }
 ])
 
+# aggregate - automatic bucketing
 
+db.products.aggregate([
+  {
+  $match: {
+    "Product_Group": "Television"
+  }
+  },
+ {$unwind: "$Attributes"},
+ {$match: {"Attributes.Name": "Screen Size"}},
+ {$bucketAuto: {
+        groupBy: "$Attributes.Value",
+        buckets: 4
+      }}
+])
+
+# aggregate - automatic bucketing
+
+db.products.aggregate([
+  {
+  $match: {
+    "Product_Group": "Television"
+  }
+  },
+ {$unwind: "$Attributes"},
+ {$match: {"Attributes.Name": "Number of Ports"}},
+ {$bucketAuto: {
+        groupBy: "$Attributes.Value",
+        buckets: 4
+      }}
+])
+
+
+# aggregate - multiple assert.fail(
+  db.products.aggregate([
+  {
+  $match: {
+    "Product_Group": "Television"
+  }
+  },
+  {$unwind: "$Attributes"},
+  {
+  $facet: {
+
+             "Screen Sizes": [
+                   {$match: {"Attributes.Name": "Number of Ports"}},
+                    {$bucketAuto: {
+                       groupBy: "$Attributes.Value", buckets: 4
+                                  }
+                    }
+               ],
+
+            "Price Ranges": [
+                    {$match: {"Attributes.Name": "Price"}},
+                    {$bucket: {
+                      groupBy: "$Attributes.Value",
+                      boundaries: [0, 700, 800, 900, Infinity]
+                           }
+                    }
+               ]
+          }
+  }
+])
 
