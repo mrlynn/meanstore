@@ -101,9 +101,15 @@ var userSchema = new Schema({
             }
         }]
 	}],
-	facebook: {
-		type: String
-	}
+	facebook: String,
+	profile: {
+	    name: String,
+	    gender: String,
+	    location: String,
+	    website: String,
+	    picture: String
+	},
+	tokens: Array
 });
 
 userSchema.pre('save', function(next) {
