@@ -251,12 +251,17 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', function(req, res, next) {
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
     req.session.oldUrl = req.get('referer');
     var messages = req.flash('error');
     res.render('user/signin', {
         layout: 'fullpage.hbs',
         csrfToken: req.csrfToken(),
         message: messages,
+        noErrorMsg: !errorMsg,
+        successMsg: successMsg,
+        noMessage: !successMsg,
         hasErrors: messages.length > 0
     });
 });
