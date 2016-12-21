@@ -7,6 +7,7 @@ var Product = require('../models/product');
 var User = require('../models/user');
 var Ticket = require('../models/ticket');
 var Activity = require('../models/activity');
+var Event = require('../models/events');
 var Order = require('../models/order');
 var passport = require('passport');
 var moment = require('moment');
@@ -298,10 +299,8 @@ router.get('/tickets', isAdmin, function(req, res, next) {
 
 /* display logger activities */
 router.get('/activities:filter?', isAdmin, function(req, res, next) {
-
     var filter = req.query.filter;
     console.log("Filter " + filter);
-
     if (!filter || filter=='allOrders') {
         var allOrders = true;
         var pendingOrders = false;
@@ -363,11 +362,93 @@ router.post('/delete-activity',  isAdmin, function(req, res, next) {
 
     Activity.remove({_id: activity_id}, function(err) {
         if (err) {
-            res.send(500,'Error deleting order.');
+            res.send(500,'Error deleting activity.');
         }
         return res.redirect('/admin/activities');
     })
 })
+
+
+/* display logger events */
+router.get('/events:filter?', isAdmin, function(req, res, next) {
+
+    var filter = req.query.filter;
+
+    if (!filter || filter=='allEvents') {
+        var allEvents = true;
+        var likeEvents = false;
+        var viewEvents = false;
+        var purchaseEvents = false;
+        qryFilter = {};
+    } else {
+        if (filter=='likeEvents') {
+            var allEvents = false;
+            var likeEvents = true;
+            var viewEvents = false;
+            var purchaseEvents = false;
+            qryFilter = { action: 'like' };
+        } else {
+            if (filter=='viewEvents') {
+                var allEvents = false;
+                var likeEvents = false;
+                var viewEvents = true;
+                var purchaseEvents = false;
+                qryFilter = { action: 'view' };
+            } else {
+                var allEvents = false;
+                var likeEvents = false;
+                var viewEvents = false;
+                var purchaseEvents = true;
+                qryFilter = { action: 'purchase' };
+            }
+        }
+    }
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Event Log";
+    var adminPageUrl = "/admin/events";
+
+    Event.find(qryFilter).sort({when: 'desc'}).exec( function(err, events) {
+        Stats.getStats(function(err,stats){
+            console.log("Got Stats? " + JSON.stringify(stats));
+            if (err) {
+                console.log(error.message);
+                res.send(500,"error fetching orders");
+            }
+            res.render('admin/events', {
+                adminPageTitle: adminPageTitle,
+                adminPageUrl: adminPageUrl,
+                layout: 'admin-page.hbs',
+                // csrfToken: req.csrfToken(),
+                noMessage: !successMsg,
+                noErrorMsg: !errorMsg,
+                allEvents: allEvents,
+                likeEvents: likeEvents,
+                viewEvents: viewEvents,
+                purchaseEvents: purchaseEvents,
+                errorMsg: errorMsg,
+                user: req.user,
+                stats: stats,
+                events: events,
+                isLoggedIn:req.isAuthenticated(),
+                successMsg: successMsg
+            });
+        });
+    });
+});
+
+router.post('/delete-event',  isAdmin, function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    meanlogger.log("trash","Deleting Event " + req.body.id,req.user);
+    Event.remove({_id: req.body.id}, function(err) {
+        if (err) {
+            res.send(500,'Error deleting event.');
+        }
+        return res.redirect('/admin/events');
+    })
+})
+
 
 /* Render file upload for data input */
 router.get('/import',  isAdmin, function(req, res, next) {
@@ -655,6 +736,29 @@ router.post('/edit-category',isAdmin, function(req, res, next) {
     });
 
 });
+
+router.post('/delete-category',isAdmin, function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+
+    Category.findOne({_id: req.body.id}, function(err, category) {
+        if (err) {
+            res.send(500,'Error deleting category.');
+        }
+        category.status = 'deleted';
+        category.save(function(err) {
+            if (!err) {
+                console.log("updated");
+                req.flash('success','Category deleted.');
+
+            } else {
+                console.log(err);
+                req.flash('error','Unable to delete category');
+            }
+            return res.redirect('/admin/categories');
+        });
+    })
+})
 
 router.get('/configuration',isAdmin, function(req, res, next) {
     errorMsg = req.flash('error')[0];

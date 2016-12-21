@@ -35,8 +35,8 @@ for (var i=0; i < maxUsers; i++) {
 			console.log('tick...');
 		};
 		user = new User({
-			firstName: faker.name.firstName(),
-			lastName: faker.name.lastName(),
+			first_name: faker.name.firstName(),
+			last_name: faker.name.lastName(),
 			email: faker.internet.email(),
 			password: "nopassword",
 			addr1: faker.address.streetAddress(),

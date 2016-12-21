@@ -52,7 +52,7 @@ router.get('/profile', isLoggedIn, function(req, res, next) {
     });
 });
 router.get('/logout', isLoggedIn, function(req, res, next) {
-    meanlogger.log("key","logged out",req.user);
+    meanlogger.log("auth","logged out",req.user);
 
     req.session.destroy()
     req.logout();
@@ -240,7 +240,7 @@ router.post('/signup', passport.authenticate('local.signup', {
     failureRedirect: '/user/signup',
     failureFlash: true
 }), function(req, res, next) {
-    meanlogger.log("key","signup attempt",req.user);
+    meanlogger.log("auth","signup attempt",req.user);
     if (req.session.oldUrl) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
@@ -267,7 +267,7 @@ router.post('/signin', passport.authenticate('local.signin', {
     failureFlash: true
 }), function(req, res, next) {
     console.log("Referer: " + req.get('Referer'));
-    meanlogger.log("key","logged in",req.user);
+    meanlogger.log("auth","logged in",req.user);
     if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
@@ -292,12 +292,17 @@ router.get('/facebook', passport.authenticate('facebook', {
     scope: ['email', 'user_location']
 }));
 
-router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/signin' }), (req, res) => {
+router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/user/signin' }), (req, res) => {
     res.redirect(req.session.returnTo || '/');
 });
 
 router.get('/twitter', passport.authenticate('twitter'));
-router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/signin' }), (req, res) => {
+router.get('/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/user/signin' }), (req, res) => {
+  res.redirect(req.session.returnTo || '/');
+});
+
+router.get('/google', passport.authenticate('google', { scope: 'profile email' }));
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/user/signin' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 
