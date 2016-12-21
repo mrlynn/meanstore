@@ -7,6 +7,7 @@ var faker = require('faker');
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+
 dotenv.load({
     path: '.env.hackathon'
 });

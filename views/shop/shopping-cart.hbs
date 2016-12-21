@@ -39,7 +39,7 @@
             <div class="modal-body">
                 <div class="form-group">
 {{!--                     <textarea rows='15' class="form-control">{{cartJSON}}</textarea>
- --}}                    <pre>{{cartJSON}}</pre>
+ --}}                    <pre>{{JSON cartJSON}}</pre>
                 </div>
             </div>
             <div class="modal-footer">
@@ -99,7 +99,15 @@
 										<input type="hidden" name="item_tax_amount[{{ @index }}]" value="{{this.totalTax}}" />
 
 										<tr>
-											<td>{{this.item.title}}</td>
+											<td>{{this.item.title}}
+											{{#if this.ticket_name}}
+												<div class='tiny'><b>Name:</b> {{this.ticket_name}}<br>
+												<b>Email:</b> {{this.ticket_email}}</div>
+											{{/if}}
+											{{#if this.size}}
+												<div class='tiny'><b>Size:</b> {{this.size}}
+											{{/if}}
+											</td>
 											<td>{{this.qty}}</td>
 											<td class='text-right' text-align="right">${{this.price}}</td>
 											<td class='text-right' text-align="right">${{this.itemTotal}}</td>

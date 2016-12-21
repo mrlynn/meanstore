@@ -3,6 +3,7 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var Event = require('../models/events');
 var Purchase = require('../models/purchase');
 var Order = require('../models/order');
 var User = require('../models/user');
@@ -56,129 +57,132 @@ router.get('/whypaypal', function(req, res, next) {
     res.render('shop/whypaypal');
 });
 router.get('/overview', function(req, res, next) {
-        categoryrecord = {
-            "_id": "ObjectId('58485813edf44d95fb117223')",
-            "name": "Television",
-            "slug": "Television",
-            "attributes": [],
-            "ancestors": [],
-            "__v": 0
-        };
-        orderrecord = {
-            "_id": "ObjectId('5825f1bce3c20070202ee287')",
-            "user": "ObjectId('5825d55ba32a1c41e7ce321c')",
-            "cart": {
-                "items": {
-                    "5825d1870ec3cd4d15d0d9c8": {
-                        "item": {
-                            "_id": "5825d1870ec3cd4d15d0d9c8",
-                            "code": "cam1002",
-                            "name": "Generic Granite Keyboard Camera",
-                            "title": "Lumix Practical plum Generic Granite Keyboard Camera",
-                            "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
-                            "taxable": true,
-                            "shipable": true,
-                            "price": 10200,
-                            "Product_Group": "Camera",
-                            "category": "Camera",
-                            "imagePath": "/img/lumix-camera.jpg",
-                            "__v": 0,
-                            "salesYearMonth": [],
-                            "salesYTD": [],
-                            "categories": [],
-                            "update": "2016-11-11T14:11:18.773Z",
-                            "created": "2016-11-11T14:11:18.773Z",
-                            "options": [],
-                            "Attributes": [{
-                                "Name": "color",
-                                "Value": "plum",
-                                "_id": "5825d1870ec3cd4d15d0d9cf"
-                            }, {
-                                "Name": "brand",
-                                "Value": "Lumix",
-                                "_id": "5825d1870ec3cd4d15d0d9ce"
-                            }, {
-                                "Name": "Memory Card Type",
-                                "Value": "SD",
-                                "_id": "5825d1870ec3cd4d15d0d9cd"
-                            }, {
-                                "Name": "Image Resolution",
-                                "Value": "29 Megapixels",
-                                "_id": "5825d1870ec3cd4d15d0d9cc"
-                            }, {
-                                "Name": "Video Resolution",
-                                "Value": "8k",
-                                "_id": "5825d1870ec3cd4d15d0d9cb"
-                            }, {
-                                "Name": "Optical Zoom",
-                                "Value": "23mm",
-                                "_id": "5825d1870ec3cd4d15d0d9ca"
-                            }, {
-                                "Name": "Price",
-                                "Value": "102.00",
-                                "_id": "5825d1870ec3cd4d15d0d9c9"
-                            }]
-                        },
-                        "qty": 1,
-                        "price": 102,
-                        "size": 0,
-                        "taxAmount": 0,
-                        "taxable": "Yes",
-                        "shipable": "Yes",
-                        "itemTotal": "102.00"
-                    }
-                },
-                "totalQty": 1,
-                "totalTax": 0,
-                "totalShipping": 0,
-                "totalPrice": 102,
-                "grandTotal": 102,
-                "totalPriceWithTax": 0
+    categoryrecord = {
+        "_id": "ObjectId('58485813edf44d95fb117223')",
+        "name": "Television",
+        "slug": "Television",
+        "attributes": [],
+        "ancestors": [],
+        "__v": 0
+    };
+    orderrecord = {
+        "_id": "ObjectId('5825f1bce3c20070202ee287')",
+        "user": "ObjectId('5825d55ba32a1c41e7ce321c')",
+        "cart": {
+            "items": {
+                "5825d1870ec3cd4d15d0d9c8": {
+                    "item": {
+                        "_id": "5825d1870ec3cd4d15d0d9c8",
+                        "code": "cam1002",
+                        "name": "Generic Granite Keyboard Camera",
+                        "title": "Lumix Practical plum Generic Granite Keyboard Camera",
+                        "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
+                        "taxable": true,
+                        "shipable": true,
+                        "price": 10200,
+                        "Product_Group": "Camera",
+                        "category": "Camera",
+                        "imagePath": "/img/lumix-camera.jpg",
+                        "__v": 0,
+                        "salesYearMonth": [],
+                        "salesYTD": [],
+                        "categories": [],
+                        "update": "2016-11-11T14:11:18.773Z",
+                        "created": "2016-11-11T14:11:18.773Z",
+                        "options": [],
+                        "Attributes": [{
+                            "Name": "color",
+                            "Value": "plum",
+                            "_id": "5825d1870ec3cd4d15d0d9cf"
+                        }, {
+                            "Name": "brand",
+                            "Value": "Lumix",
+                            "_id": "5825d1870ec3cd4d15d0d9ce"
+                        }, {
+                            "Name": "Memory Card Type",
+                            "Value": "SD",
+                            "_id": "5825d1870ec3cd4d15d0d9cd"
+                        }, {
+                            "Name": "Image Resolution",
+                            "Value": "29 Megapixels",
+                            "_id": "5825d1870ec3cd4d15d0d9cc"
+                        }, {
+                            "Name": "Video Resolution",
+                            "Value": "8k",
+                            "_id": "5825d1870ec3cd4d15d0d9cb"
+                        }, {
+                            "Name": "Optical Zoom",
+                            "Value": "23mm",
+                            "_id": "5825d1870ec3cd4d15d0d9ca"
+                        }, {
+                            "Name": "Price",
+                            "Value": "102.00",
+                            "_id": "5825d1870ec3cd4d15d0d9c9"
+                        }]
+                    },
+                    "qty": 1,
+                    "price": 102,
+                    "size": 0,
+                    "taxAmount": 0,
+                    "taxable": "Yes",
+                    "shipable": "Yes",
+                    "itemTotal": "102.00"
+                }
             },
-            "address": "123 Main St.",
-            "city": "Anywhere",
-            "state": "PA",
-            "paymentId": "PAY-8E858244005728329LAS7DPA",
-            "status": "approved",
-            "created": "ISODate('2016-11-11T16:28:44.943Z')",
-            "__v": 0
-        };
-        userrecord = {
-            _id: '5829d84b9304197fdc58a918',
-            role: 'visitor',
-            zipcode: '19147',
-            state: 'PA',
-            city: 'Philadelphia',
-            addr1: '123 S. Main St.',
-            last_name: 'Smith',
-            first_name: 'Samantha',
-            password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
-            email: 'blahblahblah@gmail.com',
-            __v: 0,
-            orders: [],
-            purchased: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
-            likes: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
-            created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)'
-        };
-        Product.findOne({}, function(err, doc) {
-            if (err) {
-                console.log("Problem fetching one random record.");
-            }
-            console.log("doc " + doc);
-            res.render('overview', {
-                layout: 'overview.hbs',
-                user: JSON.stringify(userrecord),
-                product: doc,
-                order: JSON.stringify(orderrecord)
-            });
+            "totalQty": 1,
+            "totalTax": 0,
+            "totalShipping": 0,
+            "totalPrice": 102,
+            "grandTotal": 102,
+            "totalPriceWithTax": 0
+        },
+        "address": "123 Main St.",
+        "city": "Anywhere",
+        "state": "PA",
+        "paymentId": "PAY-8E858244005728329LAS7DPA",
+        "status": "approved",
+        "created": "ISODate('2016-11-11T16:28:44.943Z')",
+        "__v": 0
+    };
+    userrecord = {
+        _id: '5829d84b9304197fdc58a918',
+        role: 'visitor',
+        zipcode: '19147',
+        state: 'PA',
+        city: 'Philadelphia',
+        addr1: '123 S. Main St.',
+        last_name: 'Smith',
+        first_name: 'Samantha',
+        password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
+        email: 'blahblahblah@gmail.com',
+        __v: 0,
+        orders: [],
+        purchased: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+        likes: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+        created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)'
+    };
+    Product.findOne({}, function(err, doc) {
+        if (err) {
+            console.log("Problem fetching one random record.");
+        }
+        console.log("doc " + doc);
+        res.render('overview', {
+            layout: 'overview.hbs',
+            user: JSON.stringify(userrecord),
+            product: doc,
+            order: JSON.stringify(orderrecord)
         });
-    })
-    /* GET home page. */
+    });
+})
+
+/* GET home page. */
 router.get('/', function(req, res, next) {
+   
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
+
     var tutorial = req.params.tutorial;
-    if (tutorial==1) {
+    if (tutorial == 1) {
         req.session.tutorial = true;
     } else {
         req.session.tutorial = false;
@@ -191,7 +195,7 @@ router.get('/', function(req, res, next) {
         "ancestors": [],
         "__v": 0
     };
-    Category.find({},function(err, navcats) {
+    Category.find({}, function(err, navcats) {
         Product.aggregate([{
             $sortByCount: "$category"
         }], function(err, allcats) {
@@ -283,7 +287,7 @@ router.get('/category/:slug', function(req, res, next) {
                         'category': new RegExp(category.name, 'i')
                     }]
                 }, function(err, products) {
-                    if (category.format!='table') {
+                    if (category.format != 'table') {
                         productChunks = [];
                         chunkSize = 4;
                         for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
@@ -311,7 +315,6 @@ router.get('/category/:slug', function(req, res, next) {
             });
         });
     })
-
 });
 
 router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
@@ -329,9 +332,9 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
     }
-    if (type =='VARPRICE') {
+    if (type == 'VARPRICE') {
         if (price >= 1000) {
-            errors=1;
+            errors = 1;
             req.flash('error', 'Unable to accept donations greater than $1000.00');
             return res.redirect('/');
         }
@@ -367,15 +370,15 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-        
+
         if (product.Product_Group == 'VARPRICE') {
             theprice = price;
         } else {
             theprice = product.price;
         }
-        added=cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shipable, req.user._id);
+        added = cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shipable, req.user._id);
         // cart.totalTax = 0;
-        meanlogger.log('plus','Added ' + product.name + ' to cart',req.user);
+        meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
 
         if (added) {
             req.flash('error', added.message);
@@ -386,7 +389,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
             req.flash('success', 'Item successfully added to cart. ');
             res.redirect('/');
         }
-        
+
         // });
     });
 });
@@ -412,9 +415,9 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
                 taxAmount = taxInfo.taxAmount;
             }
             cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
-            req.session.cart = cart; 
-            meanlogger.log('plus','Added ' + product.name + ' to cart',req.user);
-// store cart in session
+            req.session.cart = cart;
+            meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
+            // store cart in session
 
             req.flash('success', 'Item Successfully added to cart.' + JSON.stringify(cart));
             res.redirect('/');
@@ -426,7 +429,7 @@ router.get('/empty-cart', isLoggedIn, function(req, res, next) {
     var cart = new Cart({});
     cart.empty();
     req.session.cart = cart;
-    meanlogger.log('trash','Emptied cart',req.user);
+    meanlogger.log('trash', 'Emptied cart', req.user);
 
     res.redirect('/');
 
@@ -454,6 +457,9 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 });
 
 router.get('/shopping-cart', function(req, res, next) {
+    if (res.locals.needsAddress||req.user.addr1==='undefined'||req.user.addr1==null) {
+        req.flash('error', 'Please complete your profile with your address information');
+    }
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
     if (!req.session.cart) {
@@ -472,43 +478,43 @@ router.get('/shopping-cart', function(req, res, next) {
     var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
     var products = cart.generateArray();
     recommendations.GetRecommendations(cart, function(err, recommendations) {
-        if (err) {
-            errorMsg = req.flash('error :', err.message);
-        }
-        if (!recommendations && res.locals.showRecommendations) {
-            recommendations = [{
-                code: 'cam1000',
-                title: 'Gorgeous Fresh Hat Camera',
-                description: 'Error ea velit et explicabo.',
-                price: 973,
-                imagePath: '/img/lumix-camera.jpg'
-            }, {
-                code: 'cam1001',
-                title: 'Tasty Metal Chicken Camera',
-                description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
-                price: 360,
-                imagePath: '/img/sony-camera.jpg'
-            }]
-        }
-        res.render('shop/shopping-cart', {
-            products: cart.generateArray(),
-            items: cart.generateObject(),
-            allcats: req.session.allcats,
-            totalTax: totalTax,
-            viewDocuments: viewDocuments,
-            totalPrice: totalPrice,
-            cartJSON: cartJSON,
-            totalShipping: totalShipping,
-            grandTotal: cart.grandTotal,
-            recommendations: recommendations,
-            user: req.user,
-            localUser: (req.user.state == taxConfig.ourStateCode),
-            errorMsg: errorMsg,
-            noErrorMsg: !errorMsg,
-            successMsg: successMsg,
-            noMessage: !successMsg
-        });
-    })
+            if (err) {
+                errorMsg = req.flash('error :', err.message);
+            }
+            if (!recommendations && res.locals.showRecommendations) {
+                recommendations = [{
+                    code: 'cam1000',
+                    title: 'Gorgeous Fresh Hat Camera',
+                    description: 'Error ea velit et explicabo.',
+                    price: 973,
+                    imagePath: '/img/lumix-camera.jpg'
+                }, {
+                    code: 'cam1001',
+                    title: 'Tasty Metal Chicken Camera',
+                    description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
+                    price: 360,
+                    imagePath: '/img/sony-camera.jpg'
+                }]
+            }
+            res.render('shop/shopping-cart', {
+                products: cart.generateArray(),
+                items: cart.generateObject(),
+                allcats: req.session.allcats,
+                totalTax: totalTax,
+                viewDocuments: viewDocuments,
+                totalPrice: totalPrice,
+                cartJSON: cartJSON,
+                totalShipping: totalShipping,
+                grandTotal: cart.grandTotal,
+                recommendations: recommendations,
+                user: req.user,
+                localUser: (req.user.state == taxConfig.ourStateCode),
+                errorMsg: errorMsg,
+                noErrorMsg: !errorMsg,
+                successMsg: successMsg,
+                noMessage: !successMsg
+            });
+        })
         //    Category.find({}, function(err,allcats) {
         //  if (err) {
         //      req.flash.error('error','Error retrieiving categories');
@@ -553,7 +559,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     successMsg = req.flash('success')[0];
     var cart = new Cart(req.session.cart);
     var errorMsg = req.flash('error')[0];
-    meanlogger.log('shopping-cart','Viewed checkout',req.user);
+    meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
 
     res.render('shop/checkout', {
         products: cart.generateArray(),
@@ -578,7 +584,7 @@ router.post('/checkout', function(req, res, next) {
     req.checkBody("shipping_city", "Enter a valid shipping city.");
     req.checkBody("shipping_state", "Enter a valid shipping state.");
     req.checkBody("shipping_zip", "Enter a valid shipping address.");
-    meanlogger.log('shopping-cart','Viewed checkout',req.user);
+    meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
     var errors = req.validationErrors();
     if (errors) {
         returnObject = {
@@ -683,9 +689,9 @@ router.post('/create', function(req, res, next) {
                 "currency": "USD",
                 "total": String(amount.toFixed(2)),
                 "details": {
-                    "subtotal":String(subtotal.toFixed(2)),
-                    "tax":String(taxAmount.toFixed(2)),
-                    "shipping":String(shippingtotal.toFixed(2)),
+                    "subtotal": String(subtotal.toFixed(2)),
+                    "tax": String(taxAmount.toFixed(2)),
+                    "shipping": String(shippingtotal.toFixed(2)),
                     "handling_fee": "0.00",
                     "shipping_discount": "0.00"
                 }
@@ -706,7 +712,10 @@ router.post('/create', function(req, res, next) {
         var ticket_name = req.body['ticket_name_' + i];
         var ticket_email = req.body['ticket_email_' + i];
         var size = req.body['size_' + i];
-        custom[i] = { "ticket_name": ticket_name, "ticket_email": ticket_email };
+        custom[i] = {
+            "ticket_name": ticket_name,
+            "ticket_email": ticket_email
+        };
         item = {
                 "name": products[i].item.title,
                 "price": price,
@@ -823,6 +832,30 @@ router.get('/like/:id', isLoggedIn, function(req, res, next) {
         safe: true,
         upsert: false
     }, function(err, product) {
+        event = new Event({
+            namespace: 'products',
+            person: {
+                id: req.user._id,
+                first_name: req.user.first_name,
+                last_name: req.user.last_name,
+                email: req.user.email,
+            },
+            action: 'like',
+            thing: {
+                type: "product",
+                id: product._id,
+                name: product.name,
+                category: product.category,
+                Product_Group: product.Product_Group
+            }
+        });
+        console.log("Event: " + JSON.stringify(event));
+        event.save(function(err,eventId) {
+            if (err) {
+                console.log("Error: " + err.message);
+                return -1;
+            }
+        })
         console.log(err);
     });
     res.redirect('/');
@@ -900,7 +933,7 @@ router.get('/execute', function(req, res, next) {
                                 text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
                                     'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
                             };
-                            meanlogger.log('dollar','Completed Purchase',req.user);
+                            meanlogger.log('dollar', 'Completed Purchase', req.user);
                             transporter.sendMail(mailOptions, function(err) {
                                 if (err) {
                                     console.log(err);
@@ -1000,7 +1033,7 @@ router.post('/search', function(req, res, next) {
                 for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
                     productChunks.push(results.slice(i, i + chunkSize))
                 }
-                meanlogger.log('search','Searched for  ' + q,req.user);
+                meanlogger.log('search', 'Searched for  ' + q, req.user);
 
                 res.render(shopPage, {
                     layout: shopLayout,
@@ -1026,18 +1059,41 @@ router.get('/product/:id/', function(req, res, next) {
             // replace with err handling
             return res.redirect('/');
         }
-        recommendations.GetRecommendations(product, function(err, recommendations) {
-            if (err) {
-                console.log("error: " + err);
-                req.flash('error', "An error has occurred - " + err.message);
-                return res.redirect('/');
+        event = new Event({
+            namespace: 'products',
+            person: {
+                id: req.user._id,
+                first_name: req.user.first_name,
+                last_name: req.user.last_name,
+                email: req.user.email,
+            },
+            action: 'view',
+            thing: {
+                type: "product",
+                id: product._id,
+                name: product.name,
+                category: product.category,
+                Product_Group: product.Product_Group
             }
-            res.render('shop/product', {
-                layout: 'fullpage.hbs',
-                recommendations: recommendations,
-                product: product,
-                errorMsg: "Product not found.",
-                noErrorMsg: 0
+        });
+        event.save(function(err,eventId) {
+            if (err) {
+                console.log("Error: " + err.message);
+                return -1;
+            }
+            recommendations.GetRecommendations(product, function(err, recommendations) {
+                if (err) {
+                    console.log("error: " + err);
+                    req.flash('error', "An error has occurred - " + err.message);
+                    return res.redirect('/');
+                }
+                res.render('shop/product', {
+                    layout: 'fullpage.hbs',
+                    recommendations: recommendations,
+                    product: product,
+                    errorMsg: "Product not found.",
+                    noErrorMsg: 0
+                });
             });
         });
     });

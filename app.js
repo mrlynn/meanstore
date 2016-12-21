@@ -39,6 +39,7 @@ var winston = require("winston");
 var mongoSanitize = require('express-mongo-sanitize');
 var docs = require("express-mongoose-docs");
 var csrf = require('csurf');
+var getIP = require('ipware')().get_ip;
 
 var logger = new (winston.Logger)({
     transports: [
@@ -177,7 +178,7 @@ app.use(function(req,res,next) {
     res.locals.pageName = pageName.toLowerCase();
     res.locals.req = req;
     // res.locals._csrf = req.csrfToken();
-
+    var ipInfo = getIP(req);
     next();
 });
 app.use(fileUpload());

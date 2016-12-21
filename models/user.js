@@ -103,6 +103,7 @@ var userSchema = new Schema({
 	}],
 	facebook: String,
 	twitter: String,
+	google: String,
 	profile: {
 	    name: String,
 	    gender: String,

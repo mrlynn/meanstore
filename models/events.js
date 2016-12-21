@@ -2,17 +2,14 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var eventSchema = new Schema({
-	namespace: String, 
-    person: {
-    	id: {
-    		type: Schema.Types.ObjectId, ref: 'User'
-    	},
-    	first_name: String,
-    	last_name: String,
-    	email: String
-    },
+	when: {
+		type: Date,
+		default: Date.now()
+	},
+	namespace: String,
+    person: Object,
     action: String,
-    thing: String,
+    thing: Object,
 	expires_at: Date
 });
 
