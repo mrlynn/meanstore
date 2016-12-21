@@ -29,7 +29,7 @@ dotenv.load({
     path: '.env.hackathon'
 });
 
-var title = Config.title;
+var title = process.env.title;
 
 var fs = require('fs');
 
@@ -1054,10 +1054,14 @@ router.post('/search', function(req, res, next) {
 router.get('/product/:id/', function(req, res, next) {
     var productId = req.params.id;
     // if we have a cart, pass it - otherwise, pass an empty object
+
     Product.findById(productId, function(err, product) {
         if (err) {
             // replace with err handling
             return res.redirect('/');
+        }
+        if (!req.user || req.user==='undefined' || req.user==null) {
+            req.user = {};
         }
         event = new Event({
             namespace: 'products',

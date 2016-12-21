@@ -136,8 +136,10 @@ function generate_data() {
 	node data/fake-refrigerators.js
 	node data/fake-televisions.js
 	node data/fake-cameras.js
+	node data/fake-printers.js
 	node data/fake-apparel.js
 	node data/fake-users.js
+	node data/fake-events.js
 	node data/category-seeder.js
 	pm2 start startup.json
 	echo "DONE: Generating data"
