@@ -78,7 +78,7 @@ router.get('/overview', function(req, res, next) {
                         "title": "Lumix Practical plum Generic Granite Keyboard Camera",
                         "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
                         "taxable": true,
-                        "shipable": true,
+                        "shippable": true,
                         "price": 10200,
                         "Product_Group": "Camera",
                         "category": "Camera",
@@ -125,7 +125,7 @@ router.get('/overview', function(req, res, next) {
                     "size": 0,
                     "taxAmount": 0,
                     "taxable": "Yes",
-                    "shipable": "Yes",
+                    "shippable": "Yes",
                     "itemTotal": "102.00"
                 }
             },
@@ -177,7 +177,7 @@ router.get('/overview', function(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-   
+
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
 
@@ -207,6 +207,12 @@ router.get('/', function(req, res, next) {
                 categCondition = {};
             }
             Product.find(categCondition, function(err, docs) {
+            // Product.aggregate([{
+            //     $sample: {
+            //         size: 1000
+            //     }
+            // }],
+            // function(err, docs) {
                 productChunks = [];
                 productJSON = [];
                 chunkSize = 4;
@@ -323,11 +329,11 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     var ticket_email = req.body.ticket_email || null;
     var errorMsg = req.flash('error')[0];
     var price = req.body.price || null;
-    var type = req.body.type || null;
+    var type = req.body.Product_Group || null;
 
     /* new product to be added to cart */
-
     var productId = req.body.productId || null;
+    console.log("Product: " + productId);
     /* tickets need to have name and email recorded */
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
@@ -354,29 +360,21 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
         return res.redirect('/');
     }
 
-    // var errors = req.validationErrors();
-    // if (errors) {
-    //  errorMsg=req.flash('error','There have been validation errors: ' + util.inspect(errors), 400);
-    //  return res.redirect('/');
-    // }
-
     var size = req.body.option || null;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
-    console.log("Product ID: " + productId);
     Product.findById(productId, function(err, product) {
-        if (err) {
+        if (err || product==='undefined' || product==null) {
             // replace with err handling
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-
         if (product.Product_Group == 'VARPRICE') {
             theprice = price;
         } else {
             theprice = product.price;
         }
-        added = cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shipable, req.user._id);
+        added = cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shippable, req.user._id);
         // cart.totalTax = 0;
         meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
 
@@ -414,7 +412,7 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
             } else {
                 taxAmount = taxInfo.taxAmount;
             }
-            cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shipable, req.user._id);
+            cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shippable, req.user._id);
             req.session.cart = cart;
             meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
             // store cart in session
@@ -456,7 +454,8 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
     });
 });
 
-router.get('/shopping-cart', function(req, res, next) {
+router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
+
     if (res.locals.needsAddress||req.user.addr1==='undefined'||req.user.addr1==null) {
         req.flash('error', 'Please complete your profile with your address information');
     }
@@ -557,6 +556,8 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
 
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
+    var shipping_flag = req.body.shipping_flag;
+
     var cart = new Cart(req.session.cart);
     var errorMsg = req.flash('error')[0];
     meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
@@ -565,6 +566,9 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
         products: cart.generateArray(),
         totalPrice: cart.totalPrice.toFixed(2),
         user: req.user,
+        shipping_flag: shipping_flag,
+        enableShipping: process.env.enableShipping,
+        enableTax: process.env.enableTax,
         successMsg: successMsg,
         noMessage: !successMsg,
         errorMsg,
@@ -579,6 +583,8 @@ router.post('/checkout', function(req, res, next) {
     var shipping_city = req.body.shipping_city;
     var shipping_state = req.body.shipping_state;
     var shipping_zip = req.body.shipping_zip;
+    var shipping_flag = req.body.shipping_flag;
+    var shipping_flags = req.body.shipping_flags;
     var cart = new Cart(req.session.cart);
     req.checkBody("shipping_addr1", "Enter a valid shipping address.");
     req.checkBody("shipping_city", "Enter a valid shipping city.");
@@ -586,7 +592,7 @@ router.post('/checkout', function(req, res, next) {
     req.checkBody("shipping_zip", "Enter a valid shipping address.");
     meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
     var errors = req.validationErrors();
-    if (errors) {
+    if (errors && shipping_flag && process.env.enableShipping) {
         returnObject = {
             errorMsg: errors,
             noErrorMsg: false,
@@ -596,7 +602,7 @@ router.post('/checkout', function(req, res, next) {
         return res.redirect('/checkout');
     }
     taxDesc = "";
-    var subtotal = parseFloat(req.body.amount);
+    var subtotal = parseFloat(req.body.amount).toFixed(2);
     var shippingtotal = 0;
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
@@ -607,8 +613,12 @@ router.post('/checkout', function(req, res, next) {
             errorMsg = req.flash('error', err.message);
             return res.redirect('/');
         }
-        shippingtotal = result.totalShipping;
-        if (shipping_state == taxConfig.ourStateCode) {
+        if (!shipping_flag||shipping_flag==null) {
+            shippingtotal = 0;
+        } else {
+            shippingtotal = result.totalShipping;
+        }
+        if ((shipping_state == taxConfig.ourStateCode) && process.env.enableTax==true) {
             taxDesc = "PA and Philadelphia Sales Tax Applies";
             products = cart.generateArray();
             taxCalc.calculateTaxAll(products, req.user._id, function(err, results) {
@@ -620,7 +630,7 @@ router.post('/checkout', function(req, res, next) {
                     return res.redirect('/shopping-cart');
                 }
                 var totalTax = results.taxAmount.toFixed(2);
-                var grandtotal = (parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal));
+                var grandtotal = ((parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal))).toFixed(2);
                 var errorMsg = req.flash('error')[0];
 
                 res.render('shop/checkout', {
@@ -629,9 +639,12 @@ router.post('/checkout', function(req, res, next) {
                     shipping_city: shipping_city,
                     shipping_state: shipping_state,
                     shipping_zip: shipping_zip,
+                    shipping_flag: shipping_flag,
                     taxDesc: taxDesc,
                     products: cart.generateArray(),
                     subtotal: subtotal,
+                    enableTax: process.env.enableTax,
+                    enableShipping: process.env.enableShipping,
                     totalTax: totalTax,
                     shippingtotal: shippingtotal,
                     grandtotal: grandtotal,
@@ -654,6 +667,8 @@ router.post('/checkout', function(req, res, next) {
                 products: cart.generateArray(),
                 subtotal: subtotal,
                 totalTax: totalTax,
+                enableTax: process.env.enableTax,
+                enableShipping: process.env.enableShipping,
                 shippingtotal: shippingtotal,
                 grandtotal: grandtotal,
                 successMsg: successMsg,
@@ -677,6 +692,7 @@ router.post('/create', function(req, res, next) {
     }
     var cart = new Cart(req.session.cart);
     products = cart.generateArray();
+
     //11-17-2016
     tax = taxCalc.calculateTaxReturn(products, req.user._id);
     var create_payment = {
@@ -926,31 +942,59 @@ router.get('/execute', function(req, res, next) {
                                 req.flash('error', 'Unable to update user record');
                                 return res.redirect('/');
                             }
-                            var mailOptions = {
-                                to: newUser.email,
-                                from: 'techadmin@sepennaa.org',
-                                subject: 'SEPIA Roundup Purchase',
-                                text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
-                                    'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
-                            };
-                            meanlogger.log('dollar', 'Completed Purchase', req.user);
-                            transporter.sendMail(mailOptions, function(err) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                            });
+                            if(!process.env.fromEmail===null) {
+                                var mailOptions = {
+                                    to: newUser.email,
+                                    from: process.env.fromEmail,
+                                    subject: process.env.mailSubject,
+                                    text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
+                                        'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+                                };
+                                meanlogger.log('dollar', 'Completed Purchase', req.user);
+                                transporter.sendMail(mailOptions, function(err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                });
+                            }
                         });
                     });
                 });
                 var cart = new Cart(req.session.cart);
                 products = cart.generateArray();
+                for (var i=0; i > products.length; i++) {
+                                    console.log("PRODUCTS PURCHASED: " + JSON.stringify(products[i]));
+
+                    event = new Event({
+                        namespace: 'products',
+                        person: {
+                            id: req.user._id,
+                            first_name: req.user.first_name,
+                            last_name: req.user.last_name,
+                            email: req.user.email,
+                        },
+                        action: 'purchase',
+                        thing: {
+                            type: "product",
+                            id: product[i].item._id,
+                            name: product[i].item.name,
+                            category: product[i].category,
+                            Product_Group: product[i].Product_Group
+                        }
+                    });
+                    event.save(function(err,eventId) {
+                        if (err) {
+                            console.log("Error: " + err.message);
+                            return -1;
+                        }
+                    })
+                }
                 req.flash('success', "Successfully processed payment!");
                 var transporter = nodemailer.createTransport(smtpConfig.connectString);
                 tickets = cart.ticketSale(products, req.user);
                 req.cart = null;
                 var cart = new Cart({});
                 req.session.cart = cart;
-
                 res.redirect('/');
             });
         }; // res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });

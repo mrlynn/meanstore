@@ -3,6 +3,7 @@ var taxConfig = require('../../config/tax-config');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var Product = require('../../models/product');
+var Event = require('../../models/events');
 var Order = require('../../models/order');
 var User = require('../../models/user');
 var Cart = require('../../models/cart');
@@ -77,5 +78,40 @@ module.exports = {
             callback(null, stats);
         })
     }
-    
+    getData: function(callback){
+      //use the find() API and pass an empty query object to retrieve all records
+      Event.find({}).toArray(function(err, docs){
+        if ( err ) throw err;
+        var monthArray = [];
+        var petrolPrices = [];
+        var dieselPrices = [];
+        for ( index in docs){
+          var doc = docs[index];
+          //category array
+          var month = doc['month'];
+          //series 1 values array
+          var petrol = doc['petrol'];
+          //series 2 values array
+          var diesel = doc['diesel'];
+          monthArray.push({"label": month});
+          petrolPrices.push({"value" : petrol});
+          dieselPrices.push({"value" : diesel});
+        }
+
+        var dataset = [
+          {
+            "seriesname" : "Petrol Price",
+            "data" : petrolPrices
+          },
+          {
+            "seriesname" : "Diesel Price",
+            "data": dieselPrices
+          }
+        ];
+        var response = {
+          "dataset" : dataset,
+          "categories" : monthArray
+        };
+      });
+    }
 }

@@ -39,7 +39,7 @@ for (var i=0; i < 100; i++) {
 	name = faker.commerce.productName() + ' Refrigerator';
 	price = faker.commerce.price();
 	cost = Math.floor(Math.random() * price) + (price / 2)  
-	
+
 	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
 	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
@@ -49,14 +49,22 @@ for (var i=0; i < 100; i++) {
 		for(user in usersArray) {
 			items.push(usersArray[user]._id);
 		};
-
+		typeNum = Math.floor((Math.random() * categories.length-1) + 1);
+		brandNum = Math.floor((Math.random() * brands.length-1) + 1);
+		fopt = Math.floor((Math.random() * freezer_options.length-1) + 1);
+		option = freezer_options[fopt];
+		brand = brands[brandNum];
+		imagePath = '/img/' + brand.toLowerCase() + '-refrigerator.jpg'
+		name = faker.commerce.productName() + ' Refrigerator';
+		price = faker.commerce.price();
+		cost = Math.floor(Math.random() * price) + (price / 2)  
 		product = new Product({
 			code: 'ref' + code,
 			name: name,
 			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
-			shipable: 'Yes',
+			shippable: 'Yes',
 			cost: cost,
 			price: price,
 			'Product_Group': 'Refrigerator',

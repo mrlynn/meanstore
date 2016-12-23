@@ -26,9 +26,12 @@
                         <div class="product_wrapper">
                             <div class="panel-body">
                                 <div class="vertical-center thumbnail-image-container">
+                                <span id="ex1" class="zoom" style="position: relative; overflow: hidden;">
                                     <a href='/product/{{this._id}}'>
-                                        <img class="img-responsive" src="{{ this.imagePath }}" alt="...">
+                                        <img class="zoomImg img-responsive" src="{{ this.imagePath }}" alt="...">
+                                        <script>$('a.photo').zoom({magnify: 4, url: '{{this.imagePath}}'});</script>
                                     </a>
+                                    </span>
                                 </div>
                                 <div class="text-left">
                                     <h3 class="product-title product-title-home top-pad-10">
@@ -79,7 +82,7 @@
 
                                 {{else}} <!-- if this.isVariable -->
                                     {{#if this.isApparel}}
-                                        <form action='add-to-cart' method='POST'>
+                                        <form action='/add-to-cart' method='POST'>
                                             <div class="form-group">
                                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                                 <input type='hidden' id='price' name='price' value='{{ this.price }}'>
@@ -105,7 +108,7 @@
                                         </form>
                                     {{else}} <!--if this.isApparel -->
                                         {{#if this.isTicket}}
-                                            <form action='add-to-cart' method='POST'>
+                                            <form action='/add-to-cart' method='POST'>
                                             <div class="form-group">
                                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                                 <input type='hidden' id='price' name='price' value='{{ this.price }}'>
@@ -131,7 +134,7 @@
                                             </div>
                                             </form>
                                         {{else}} <!-- if this.isTicket -->
-                                            <form action='add-to-cart' method='POST'>
+                                            <form action='/add-to-cart' method='POST'>
                                             <div class="form-group">
                                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                             <input type='hidden' id='price' name='price' value='{{ this.price }}'>

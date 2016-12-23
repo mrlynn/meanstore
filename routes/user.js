@@ -15,6 +15,12 @@ var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var meanlogger = require('../local_modules/meanlogger');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+
+dotenv.load({
+    path: '.env.hackathon'
+});
 
 var smtpConfig = require('../config/smtp-config.js');
 
@@ -251,6 +257,16 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', function(req, res, next) {
+    if (process.env.FACEBOOK_ID) {
+        var authFacebook = true
+    } else {
+        var authFacebook = false;
+    }
+    if (process.env.GOOGLE_ID) {
+        var authGoogle = true;
+    } else {
+        var authGoogle = false;
+    }
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     req.session.oldUrl = req.get('referer');
@@ -258,6 +274,8 @@ router.get('/signin', function(req, res, next) {
     res.render('user/signin', {
         layout: 'fullpage.hbs',
         csrfToken: req.csrfToken(),
+        authFacebook: authFacebook,
+        authGoogle: authGoogle,
         message: messages,
         noErrorMsg: !errorMsg,
         successMsg: successMsg,

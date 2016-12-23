@@ -19,7 +19,7 @@ var books = [
         "code": "B0",
         "title": "AA Big Book-75th Anniv. Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1200,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -29,7 +29,7 @@ var books = [
         "code": "B1",
         "title": "AA Big Book - Hard Cover",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 950,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -39,7 +39,7 @@ var books = [
         "code": "B30",
         "title": "AA Big Book - Soft Cover",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 910,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -49,7 +49,7 @@ var books = [
         "code": "B35",
         "title": "Mini Big Book - first 164 pages",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -59,7 +59,7 @@ var books = [
         "code": "B16",
         "title": "AA Big Book - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1030,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -69,7 +69,7 @@ var books = [
         "code": "B24",
         "title": "LG Print Big Book - first 164 pages",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -79,7 +79,7 @@ var books = [
         "code": "M34",
         "title": "AA Big Book - Braille",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 800,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -89,7 +89,7 @@ var books = [
         "code": "B2  ",
         "title": "12 Steps & 12 Traditions",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 890,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -99,7 +99,7 @@ var books = [
         "code": "B15",
         "title": "12 & 12 - Soft Cover Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 825,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -109,7 +109,7 @@ var books = [
         "code": "B17",
         "title": "12 & 12 - Mini Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 850,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -119,7 +119,7 @@ var books = [
         "code": "B4",
         "title": "12 & 12 - Gift Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 825,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -129,7 +129,7 @@ var books = [
         "code": "B14",
         "title": "12 & 12 - Large Print Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 825,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -139,7 +139,7 @@ var books = [
         "code": "M35",
         "title": "12 & 12 - Braille Edition",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 740,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -149,7 +149,7 @@ var books = [
         "code": "B6",
         "title": "Came to Believe",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -159,7 +159,7 @@ var books = [
         "code": "B26",
         "title": "Came to Believe - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 525,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -169,7 +169,7 @@ var books = [
         "code": "B7",
         "title": "Living Sober",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -179,7 +179,7 @@ var books = [
         "code": "B25",
         "title": "Living Sober - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 525,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -189,7 +189,7 @@ var books = [
         "code": "B5",
         "title": "As Bill Sees It - Hard Cover",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 900,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -199,7 +199,7 @@ var books = [
         "code": "B18",
         "title": "As Bill Sees It - Soft Cover",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 860,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -209,7 +209,7 @@ var books = [
         "code": "B27",
         "title": "As Bill Sees It - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 950,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -219,7 +219,7 @@ var books = [
         "code": "B12",
         "title": "Daily Reflections",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1025,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -229,7 +229,7 @@ var books = [
         "code": "B19",
         "title": "Daily Reflections - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1075,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -239,7 +239,7 @@ var books = [
         "code": "M50",
         "title": "Daily Reflections - Braille",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 825,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -249,7 +249,7 @@ var books = [
         "code": "B3",
         "title": "AA Comes of Age",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 950,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -259,7 +259,7 @@ var books = [
         "code": "B59",
         "title": "AA Comes of Age - 75th Anniv. Ed.",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 700,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -269,7 +269,7 @@ var books = [
         "code": "B8",
         "title": "Dr. Bob & The Good Old-Timers",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1050,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -279,7 +279,7 @@ var books = [
         "code": "B9",
         "title": "Pass It On",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1100,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -289,7 +289,7 @@ var books = [
         "code": "B10",
         "title": "Boxed Set - Dr. Bob & Pass It On",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2150,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -299,7 +299,7 @@ var books = [
         "code": "B11",
         "title": "Boxed Set - Big Book & B20",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -309,7 +309,7 @@ var books = [
         "code": "B13",
         "title": "AA in Prison/Inmate to Inmate",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 250,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -319,7 +319,7 @@ var books = [
         "code": "B20",
         "title": "Experience, Strength & Hope",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 550,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -329,7 +329,7 @@ var books = [
         "code": "BM31",
         "title": "AA Service Manual",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 355,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -339,7 +339,7 @@ var books = [
         "code": "BM33",
         "title": "AA Service Manual - Large Print",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 830,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -349,7 +349,7 @@ var books = [
         "code": "MD1",
         "title": "International AA Directory",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 180,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -359,7 +359,7 @@ var books = [
         "code": "MD4",
         "title": "AA Directory Eastern (Western 3, Canada 2)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 360,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -369,7 +369,7 @@ var books = [
         "code": "M217",
         "title": "Public Information Workbook",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 200,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -379,7 +379,7 @@ var books = [
         "code": "ML1",
         "title": "5-County Meeting Directory",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 100,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -389,7 +389,7 @@ var books = [
         "code": "BG01",
         "title": "Beginner Packet",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 200,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -399,7 +399,7 @@ var books = [
         "code": "GC1",
         "title": "Green Card",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -409,7 +409,7 @@ var books = [
         "code": "YC1",
         "title": "Yellow Card (Steps/Rewards)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -419,7 +419,7 @@ var books = [
         "code": "DI1",
         "title": "Daily Inventory Guide",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -429,7 +429,7 @@ var books = [
         "code": "DM1",
         "title": "Daily Meditation Guide",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -439,7 +439,7 @@ var books = [
         "code": "TQ20",
         "title": "20 Questions",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -449,7 +449,7 @@ var books = [
         "code": "OC1",
         "title": "Guide for Beginner",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -459,7 +459,7 @@ var books = [
         "code": "IG01",
         "title": "Intergroup - Carrying the Message",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -469,7 +469,7 @@ var books = [
         "code": "M2",
         "title": "Wallet Card (Serenity Prayer)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -479,7 +479,7 @@ var books = [
         "code": "M21",
         "title": "Responsibility Wallet Card",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -489,7 +489,7 @@ var books = [
         "code": "M22",
         "title": "Anonymity Wallet Card",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 75,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -499,7 +499,7 @@ var books = [
         "code": "M1",
         "title": "Guide to Leading Beginners Mtg",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 275,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -509,7 +509,7 @@ var books = [
         "code": "M36",
         "title": "The Group Handbook",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1100,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -519,7 +519,7 @@ var books = [
         "code": "M8",
         "title": "Display Rack",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -529,7 +529,7 @@ var books = [
         "code": "M82",
         "title": "Set of Display Rack & Extension",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 3500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -539,7 +539,7 @@ var books = [
         "code": "M3",
         "title": "Twelve Steps (12\" x 17\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 340,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -549,7 +549,7 @@ var books = [
         "code": "M4",
         "title": "Twelve Traditions (12\" x 17\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 340,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -559,7 +559,7 @@ var books = [
         "code": "M5",
         "title": "Serenity Prayer (12\" x 17\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 340,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -569,7 +569,7 @@ var books = [
         "code": "M6",
         "title": "Set of 3 (12\" x 17\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 715,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -579,7 +579,7 @@ var books = [
         "code": "M9",
         "title": "Responsibility Placard (19\"x 29\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 86500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -589,7 +589,7 @@ var books = [
         "code": "M10",
         "title": "Preamble Placard (19\"x 29\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 86500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -599,7 +599,7 @@ var books = [
         "code": "M14",
         "title": "12 Steps Window Shade",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2900,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -609,7 +609,7 @@ var books = [
         "code": "M18",
         "title": "12 Traditions Window Shade",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2900,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -619,7 +619,7 @@ var books = [
         "code": "M19",
         "title": "Set/12 & 12 Window Shades",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 4800,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -629,7 +629,7 @@ var books = [
         "code": "M20",
         "title": "12 Concepts Window Shade",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2900,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -639,7 +639,7 @@ var books = [
         "code": "M12",
         "title": "Bill's Last Message",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 300,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -649,7 +649,7 @@ var books = [
         "code": "M16",
         "title": "Dr. Bob's Farewell Talk",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 300,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -659,7 +659,7 @@ var books = [
         "code": "M17",
         "title": "Set-Bill & Bob-Last Message/Farewell Talk",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -669,7 +669,7 @@ var books = [
         "code": "M30",
         "title": "Round AA Meeting Sign (8 1/2 \" dia)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 700,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -679,7 +679,7 @@ var books = [
         "code": "M33",
         "title": "12 & 12 Tabletop Display",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -689,7 +689,7 @@ var books = [
         "code": "M56",
         "title": "Unity Placard (19x 29)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 86500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -699,7 +699,7 @@ var books = [
         "code": "M61",
         "title": "Anonymity Display Card",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -709,7 +709,7 @@ var books = [
         "code": "MP1",
         "title": "A.A. Meeting in a Pocket **",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 100,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -719,7 +719,7 @@ var books = [
         "code": "TP1",
         "title": "$35.00 Literature Assortment",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 3500,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -729,7 +729,7 @@ var books = [
         "code": "TP2",
         "title": "$20.00 Literature Assortment",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "Books"
@@ -739,7 +739,7 @@ var books = [
         "code": "P1",
         "title": "This is AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -749,7 +749,7 @@ var books = [
         "code": "P2",
         "title": "Frequently Asked Questions",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -759,7 +759,7 @@ var books = [
         "code": "P3",
         "title": "Is AA For You?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -769,7 +769,7 @@ var books = [
         "code": "P4",
         "title": "Young People and AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -779,7 +779,7 @@ var books = [
         "code": "P5",
         "title": "AA For The Woman",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -789,7 +789,7 @@ var books = [
         "code": "P6",
         "title": "3 Talks to the Medical Society",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 45,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -799,7 +799,7 @@ var books = [
         "code": "P8",
         "title": "The 12 Concepts Illustrated",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 45,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -809,7 +809,7 @@ var books = [
         "code": "P9",
         "title": "Memo to Inmate Alcoholic",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 20,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -819,7 +819,7 @@ var books = [
         "code": "P10",
         "title": "How it Works",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -829,7 +829,7 @@ var books = [
         "code": "P11",
         "title": "AA Medications & Other Drugs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -839,7 +839,7 @@ var books = [
         "code": "P12",
         "title": "Jack Alexander Article",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -849,7 +849,7 @@ var books = [
         "code": "P13",
         "title": "Do You Think You're Different?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -859,7 +859,7 @@ var books = [
         "code": "P15",
         "title": "Q & A on Sponsorship",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -869,7 +869,7 @@ var books = [
         "code": "P16",
         "title": "The AA Group",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -879,7 +879,7 @@ var books = [
         "code": "P17",
         "title": "AA Tradition-How It Developed",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -889,7 +889,7 @@ var books = [
         "code": "P18",
         "title": "Inside AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 8,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -899,7 +899,7 @@ var books = [
         "code": "P19",
         "title": "G.S.R. may be most important job",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 8,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -909,7 +909,7 @@ var books = [
         "code": "P21",
         "title": "AA for Native North American",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 40,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -919,7 +919,7 @@ var books = [
         "code": "P22",
         "title": "AA for the Older Alcoholic",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 40,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -929,7 +929,7 @@ var books = [
         "code": "P23",
         "title": "AA Resource Health Care Prof",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -939,7 +939,7 @@ var books = [
         "code": "P24",
         "title": "A Newcomer Asks",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 10,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -949,7 +949,7 @@ var books = [
         "code": "P25",
         "title": "Clergy Asks About AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -959,7 +959,7 @@ var books = [
         "code": "P26",
         "title": "AA in Correctional Facilities",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -969,7 +969,7 @@ var books = [
         "code": "P27",
         "title": "AA in Treatment Facilities",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -979,7 +979,7 @@ var books = [
         "code": "P28",
         "title": "Twelve Traditions Flyer",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -989,7 +989,7 @@ var books = [
         "code": "P29",
         "title": "How AA Members Cooperate",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 45,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -999,7 +999,7 @@ var books = [
         "code": "P30",
         "title": "Is There Alcoholic in Your Life?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1009,7 +1009,7 @@ var books = [
         "code": "P31",
         "title": "AA In Your Community",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1019,7 +1019,7 @@ var books = [
         "code": "P32",
         "title": "AA & the Gay/Lesbian Alcoholic",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 40,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1029,7 +1029,7 @@ var books = [
         "code": "P33",
         "title": "It Sure Beats Sitting in a Cell",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1039,7 +1039,7 @@ var books = [
         "code": "P34",
         "title": "Let's Be Friendly w/Our Friends",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1049,7 +1049,7 @@ var books = [
         "code": "P35",
         "title": "Problems Other Than Alcohol",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1059,7 +1059,7 @@ var books = [
         "code": "P36",
         "title": "Is AA For Me?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1069,7 +1069,7 @@ var books = [
         "code": "P37",
         "title": "Too Young?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1079,7 +1079,7 @@ var books = [
         "code": "P38",
         "title": "What Happened to Joe?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1089,7 +1089,7 @@ var books = [
         "code": "P39",
         "title": "It Happened to Alice",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1099,7 +1099,7 @@ var books = [
         "code": "P40",
         "title": "Speaking at Non-AA Meetings",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1109,7 +1109,7 @@ var books = [
         "code": "P41",
         "title": "A Member's Eye View of AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1119,7 +1119,7 @@ var books = [
         "code": "P42",
         "title": "Brief Guide to AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1129,7 +1129,7 @@ var books = [
         "code": "P43",
         "title": "Twelve Traditions Illustrated",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 45,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1139,7 +1139,7 @@ var books = [
         "code": "P44",
         "title": "AA's Legacy of Service",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1149,7 +1149,7 @@ var books = [
         "code": "P45",
         "title": "Circles of Love & Service",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 8,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1159,7 +1159,7 @@ var books = [
         "code": "P46",
         "title": "If You Are A Professional…",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1169,7 +1169,7 @@ var books = [
         "code": "P47",
         "title": "Understanding Anonymity",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1179,7 +1179,7 @@ var books = [
         "code": "P48",
         "title": "2011 Membership Survey",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 15,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1189,7 +1189,7 @@ var books = [
         "code": "P49",
         "title": "Bridging the Gap: Temp Contact",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 25,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1199,7 +1199,7 @@ var books = [
         "code": "P50",
         "title": "AA & the Armed Services",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 45,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1209,7 +1209,7 @@ var books = [
         "code": "P51",
         "title": "AA for the Black/African American",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 40,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1219,7 +1219,7 @@ var books = [
         "code": "P53",
         "title": "Co-Founders of AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1229,7 +1229,7 @@ var books = [
         "code": "P54",
         "title": "Is There Alcoholic in Workplace?",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 8,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1239,7 +1239,7 @@ var books = [
         "code": "P55",
         "title": "Twelve Steps Illustrated",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1249,7 +1249,7 @@ var books = [
         "code": "P83",
         "title": "AA for Alcoholic w/Special Needs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 40,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1259,7 +1259,7 @@ var books = [
         "code": "P84",
         "title": "Many Paths to Spirituality **",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 30,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1269,7 +1269,7 @@ var books = [
         "code": "MS20",
         "title": "Traditions Checklist - Group Inv.",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 11,
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1279,7 +1279,7 @@ var books = [
         "code": "F91",
         "title": "Concepts Checklist",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": "-",
         "Product_Group": "LITERATURE",
         "category": "Pamphlets"
@@ -1289,7 +1289,7 @@ var books = [
         "code": "MB1",
         "title": "AA Big Book - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1299,7 +1299,7 @@ var books = [
         "code": "MB2",
         "title": "12 & 12 - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1309,7 +1309,7 @@ var books = [
         "code": "MB3",
         "title": "AA Comes of Age - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1319,7 +1319,7 @@ var books = [
         "code": "MB4",
         "title": "Pioneers of AA - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1329,7 +1329,7 @@ var books = [
         "code": "MB7",
         "title": "Living Sober - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1339,7 +1339,7 @@ var books = [
         "code": "M15",
         "title": "Three Legacies, By Bill - Cassettes",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1349,7 +1349,7 @@ var books = [
         "code": "M37",
         "title": "Voices of our Co-Founders - Cass.",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1359,7 +1359,7 @@ var books = [
         "code": "M38",
         "title": "Bill Discusses the Twelve Traditions",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Audio Cassettes"
@@ -1369,7 +1369,7 @@ var books = [
         "code": "DV03",
         "title": "Young People & AA - DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1379,7 +1379,7 @@ var books = [
         "code": "DV04",
         "title": "Bill's Own Story - DVD - 60 min",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1389,7 +1389,7 @@ var books = [
         "code": "DV05",
         "title": "Bill Discusses 12 Traditions - DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1399,7 +1399,7 @@ var books = [
         "code": "DV06",
         "title": "Carrying Message Behind Walls - DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1409,7 +1409,7 @@ var books = [
         "code": "DV07",
         "title": "AA GSO, GV & Service Structure DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1419,7 +1419,7 @@ var books = [
         "code": "DV08",
         "title": "It Sure Beats Sitting in a Cell -DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1429,7 +1429,7 @@ var books = [
         "code": "DV09",
         "title": "Hope: Alcoholics Anonymous -DVD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1439,7 +1439,7 @@ var books = [
         "code": "M70",
         "title": "Big Book -Text only-not audio",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 3000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1449,7 +1449,7 @@ var books = [
         "code": "M81A",
         "title": "Big Book - 6 CDs - first 164 pages",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1459,7 +1459,7 @@ var books = [
         "code": "M81A",
         "title": "Big Book - 16 CDs - Audio",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 5500,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1469,7 +1469,7 @@ var books = [
         "code": "M83",
         "title": "12 & 12 - 6 CDs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1479,7 +1479,7 @@ var books = [
         "code": "M84",
         "title": "AA Comes of Age - 10 CDs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1489,7 +1489,7 @@ var books = [
         "code": "M85",
         "title": "Living Sober - CD - 4 hours",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1499,7 +1499,7 @@ var books = [
         "code": "M87",
         "title": "Three Legacies by Bill - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1509,7 +1509,7 @@ var books = [
         "code": "M88",
         "title": "Voices of Our Co-Founders - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1519,7 +1519,7 @@ var books = [
         "code": "M89",
         "title": "Bill Discusses the 12 Traditions - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1529,7 +1529,7 @@ var books = [
         "code": "M90",
         "title": "Pioneers of AA - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1800,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1539,7 +1539,7 @@ var books = [
         "code": "M91",
         "title": "A Brief Guide to AA - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 300,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1549,7 +1549,7 @@ var books = [
         "code": "CD17",
         "title": "Emotional Sobriety - 2 CDs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1559,7 +1559,7 @@ var books = [
         "code": "CD19",
         "title": "Spiritual Awakenings - 2 CDs",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 2000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1569,7 +1569,7 @@ var books = [
         "code": "CD01",
         "title": "Pathways to Spirituality - CD",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1578,7 +1578,7 @@ var books = [
         "name": "The Story of AA - CD - 60 min",
         "title": "The Story of AA - CD - 60 min",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1000,
         "Product_Group": "LITERATURE",
         "category": "CDs and DVDs"
@@ -1588,7 +1588,7 @@ var books = [
         "code": "BB05",
         "title": "Best of Bill - Hardcover Gift",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 695,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1598,7 +1598,7 @@ var books = [
         "code": "BB06",
         "title": "Best of Bill - Soft",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 495,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1608,7 +1608,7 @@ var books = [
         "code": "BB07",
         "title": "Best of Bill - Large print Soft cover",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 595,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1618,7 +1618,7 @@ var books = [
         "code": "GV06",
         "title": "Language of the Heart - Hard",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1395,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1628,7 +1628,7 @@ var books = [
         "code": "GV10",
         "title": "AA Around the World",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1638,7 +1638,7 @@ var books = [
         "code": "GV10",
         "title": "Language of the Heart - Soft",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1295,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1648,7 +1648,7 @@ var books = [
         "code": "GV13",
         "title": "Thank You For Sharing",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1095,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1658,7 +1658,7 @@ var books = [
         "code": "GV14",
         "title": "Spiritual Awakenings",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1095,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1668,7 +1668,7 @@ var books = [
         "code": "GV15",
         "title": "The Home Group: Heartbeat of AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 895,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1678,7 +1678,7 @@ var books = [
         "code": "GV16",
         "title": "I Am Responsible: Hand of AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1688,7 +1688,7 @@ var books = [
         "code": "GV17",
         "title": "Emotional Sobriety",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1698,7 +1698,7 @@ var books = [
         "code": "GV18",
         "title": "Language of the Heart -Large",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1495,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1708,7 +1708,7 @@ var books = [
         "code": "GV19",
         "title": "In Our Own Words: Stories of Young AA",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1718,7 +1718,7 @@ var books = [
         "code": "GV20",
         "title": "Beginners' Book",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 895,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1728,7 +1728,7 @@ var books = [
         "code": "GV21",
         "title": "Voices of Long-Term Sobriety",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1738,7 +1738,7 @@ var books = [
         "code": "GV22",
         "title": "A Rabbit Walks Into a Bar",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1748,7 +1748,7 @@ var books = [
         "code": "GV23",
         "title": "Spiritual Awakenings II",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1095,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1758,7 +1758,7 @@ var books = [
         "code": "GV24",
         "title": "75th Anniv Edition Grapevine",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 400,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1768,7 +1768,7 @@ var books = [
         "code": "GV25",
         "title": "Step by Step: Real AA, Real Recovery",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1095,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1778,7 +1778,7 @@ var books = [
         "code": "GV26",
         "title": "Emotional Sobriety II: Next Frontier",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 995,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1788,7 +1788,7 @@ var books = [
         "code": "GV27",
         "title": "Young & Sober",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1095,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1798,7 +1798,7 @@ var books = [
         "code": "GV28",
         "title": "Into Action",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1808,7 +1808,7 @@ var books = [
         "code": "GV29",
         "title": "Happy, Joyous & Free",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1818,7 +1818,7 @@ var books = [
         "code": "GV30",
         "title": "One on One: AA Sponsorship in Action",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1828,7 +1828,7 @@ var books = [
         "code": "GV31",
         "title": "No Matter What (Dealing with Adversity)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1838,7 +1838,7 @@ var books = [
         "code": "GV32",
         "title": "Grapevine Daily Quote Book",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1848,7 +1848,7 @@ var books = [
         "code": "GV33",
         "title": "Sober & Out **",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 1099,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1858,7 +1858,7 @@ var books = [
         "code": "MS01",
         "title": "AA Preamble (5 1/2\" x 7 1/2\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 200,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1868,7 +1868,7 @@ var books = [
         "code": "MS03",
         "title": "Man on the Bed Poster",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 300,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1878,7 +1878,7 @@ var books = [
         "code": "MS04",
         "title": "Slogans - Set of Five",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 450,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1888,7 +1888,7 @@ var books = [
         "code": "MS05",
         "title": "Serenity Prayer (5 1/2\" x 7 1/2\")",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 200,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1898,7 +1898,7 @@ var books = [
         "code": "MS08",
         "title": "2015 Wall Calendar (SOLD OUT)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 900,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1908,7 +1908,7 @@ var books = [
         "code": "MS09",
         "title": "GV 2015 Pocket Planner (SOLD OUT)",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 500,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"
@@ -1918,7 +1918,7 @@ var books = [
         "code": "MS15",
         "title": "Co-Founders Memorial Issue",
         "taxable": "Yes",
-        "shipable": "Yes",
+        "shippable": "Yes",
         "price": 600,
         "Product_Group": "LITERATURE",
         "category": "Grapevine Items"

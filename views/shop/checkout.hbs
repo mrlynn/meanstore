@@ -11,7 +11,7 @@
 				{{errorMsg}}
 			</div>
 			<div class="row">
-				<div class="col-md-8 col-sm-offset-2">
+				<div class="col-lg-12 col-md-12">
 					<h1>Provide Purchaser Details</h1>
 					<div class="panel-body">
 						<div class="table-responsive">
@@ -48,46 +48,56 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
-										<span class="col-md-12 help-block" ng-show="shipping_name.$invalid || shipping_city.$invalid"> Shipping details are required.</span>
-										<h3>Shipping Address</h3>
-										
+									{{#if ../enableShipping}}
 										<div class="form-group">
-										<label class="control-label">Address</label>
-										<div class="inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input ng-model="shipping_addr1" name="shipping_addr1" placeholder="Address1" class="form-control" value="{{shipping_addr1}}" type="text" required>
+											<li class="list-group-item">
+												<label for='shipping_flag'>Ship Items?</label>
+												<div class="material-switch pull-right">
+													No <input id="shipping_flag" name="shipping_flag" {{#if shipping_flag }} checked="checked" {{/if}} type="checkbox"/>
+													<label for="shipping_flag" class="label-success"></label> Yes
+												</div>
+											</li>
+										</div>
+										<div class="form-group">
+											<span class="col-md-12 help-block" ng-show="shipping_name.$invalid || shipping_city.$invalid"> Shipping details are required.</span>
+										<h3>Shipping Address</h3>
+										<div class="form-group">
+											<label class="control-label">Address</label>
+											<div class="inputGroupContainer">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+													<input ng-model="shipping_addr1" name="shipping_addr1" placeholder="Address1" class="form-control" value="{{shipping_addr1}}" type="text" required>
+												</div>
 											</div>
 										</div>
-									</div>
-									<!-- Text input-->
-									<div class="form-group">
-										<label class="control-label">City</label>
-										<div class="inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input ng-model="shipping_city" name="shipping_city" placeholder="city" class="form-control" value="{{shipping_city}}"  type="text" required>
+										<!-- Text input-->
+										<div class="form-group">
+											<label class="control-label">City</label>
+											<div class="inputGroupContainer">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+													<input ng-model="shipping_city" name="shipping_city" placeholder="city" class="form-control" value="{{shipping_city}}"  type="text" required>
+												</div>
 											</div>
 										</div>
-									</div>
-									<!-- Text input-->
-									<div class="form-group">
-										<label class="control-label">State</label>
-										<div class="inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input ng-model="shipping_state" name="shipping_state" placeholder="PA" class="form-control" value="{{shipping_state}}" type="text" required>
+										<!-- Text input-->
+										<div class="form-group">
+											<label class="control-label">State</label>
+											<div class="inputGroupContainer">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+													<input ng-model="shipping_state" name="shipping_state" placeholder="PA" class="form-control" value="{{shipping_state}}" type="text" required>
+												</div>
+											</div>
+											<label class="control-label">Zip</label>
+											<div class="inputGroupContainer">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+													<input ng-model="shipping_zip" name="shipping_zip" placeholder="xxxxxx" class="form-control" value="{{shipping_zip}}" type="text" required>
+												</div>
 											</div>
 										</div>
-										<label class="control-label">Zip</label>
-										<div class="inputGroupContainer">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-												<input ng-model="shipping_zip" name="shipping_zip" placeholder="xxxxxx" class="form-control" value="{{shipping_zip}}" type="text" required>
-											</div>
-										</div>
-									</div>
+									{{/if}}
 									</div>
 									<input type="hidden" name="cmd" value="_cart">
 									<input type="hidden" name="business" value="assistant@sepennaa.org">
@@ -131,9 +141,6 @@
 										<input type="hidden" name="item_tax_amount[{{ @index }}]" value="{{this.totalTax}}" />
 										<input type="hidden" name="ticket_name_{{@index}}" value="{{this.ticket_name}}" />
 										<input type="hidden" name="ticket_email_{{@index}}" value="{{this.ticket_email}}" />
-
-
-
 										<tr>
 											<td>{{this.item.title}}</td>
 											<td class="text-right">{{this.qty}}</td>
@@ -187,22 +194,26 @@
 									</tr>
 								</tbody>
 							</table>
+							<li class="list-group-item">
 							<div class="text-right">
-								<input type='submit' value='Pay with Paypal >' class='btn btn-primary text-right'><br><a href='/whypaypal'>Why PayPal?</a>
+								<input id='checkout' name='checkout' type='submit' value='Pay with Paypal >' class='btn btn-primary text-right'><br><a href='/whypaypal'>Why PayPal?</a>
+								<div class="text-left">
+								{{#if ../enableShipping}}
+									<input id='update' name='update' type='submit' value='Update Shipping' class='btn btn-warning text-right'>
+								{{/if}}
+							</div>
 							</div>
 							<input type="hidden" name="amount" value="{{grandtotal}}">
 							<input type="hidden" name="subtotal" value="{{subtotal}}">
 							<input type="hidden" name="totalTax" value="{{totalTax}}">
 							<input type="hidden" name="shippingtotal" value="{{shippingtotal}}">
 							<input type="hidden" name="method" value="paypal">
+							</li>
 						</form>
 					</div>
 				</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-					</div>
-				</div>
+				
 				{{else}}
 				<div class="row">
 					<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
@@ -210,10 +221,49 @@
 					</div>
 				</div>
 				{{/if}}
+				{{#if ../enableShipping}}
 				{{>shipping}}
-
-
+				{{/if}}
 <script>
+  $("input[name='update']").hide();
+  $("input[name='shipping_flag']").click(function() {
+  		$("update").data('value')='UPDATE SHIPPING INFO';
+  		$("input[name='checkout']").show(300);
+        if ($(this).is(':checked')) {
+        	if ($("input[name='shipping_addr1]").attr('value')=='') {
+        		$("input[name='checkout']").attr('disabled', true);
+        		var ok = confirm('Please complete shipping information to proceed.');
+        	}
+            $("input[name='shipping_addr1']").attr("disabled", false);
+            $("input[name='shipping_city']").attr('disabled', false);
+            $("input[name='shipping_state']").attr('disabled', false);
+            $("input[name='shipping_zip']").attr('disabled', false);
+            $("input[name='shipping_addr1']").attr('required', true);
+            $("input[name='shipping_city']").attr('required', true);
+            $("input[name='shipping_state']").attr('required', true);
+            $("input[name='shipping_zip']").attr('required', true);
+        } else if ($(this).not(':checked')) {
+        	  		$("input[name='update']").hide(200);
+
+            var ok = confirm('Are you sure you want to remove all data?');
+            if (ok) {
+                var remove = '';
+                $("input[name='shipping_addr1']").attr('value', remove);
+                $("input[name='shipping_city']").attr('value', remove);
+                $("input[name='shipping_state']").attr('value', remove);
+                $("input[name='shipping_zip']").attr('value', remove);
+
+                $("input[name='shipping_addr1']").attr('disabled', true);
+                $("input[name='shipping_city']").attr('disabled', true);
+                $("input[name='shipping_state']").attr('disabled', true);
+                $("input[name='shipping_zip']").attr('disabled', true);
+                $("input[name='shipping_addr1']").attr('required', false);
+                $("input[name='shipping_city']").attr('required', false);
+                $("input[name='shipping_state']").attr('required', false);
+                $("input[name='shipping_zip']").attr('required', false);
+            }
+        }
+    });
   $("#same_as_billing").on("change", function(){
     if (this.checked) {
       $("[name='shipping_name']").val($("[name='billing_name']").val());

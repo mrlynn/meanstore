@@ -17,7 +17,7 @@ module.exports = {
 	calculateTax: function(productId, userId, callback) {
 
 		Product.findById(productId,function(err,product) {
-			if (err) {
+			if (err||!product || product==null) {
 				return {
 					error: 500,
 					message: 'Problem retrieving product.'

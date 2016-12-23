@@ -98,7 +98,7 @@ var hbs = expressHbs.create({
           return timeago(date);
         },
         JSON: function(obj) {
-          return JSON.stringify(obj);
+          return JSON.stringify(obj,null,2);
         }
     },
     defaultLayout: 'layout',
@@ -183,9 +183,9 @@ app.use(function(req,res,next) {
 });
 app.use(fileUpload());
 
-app.use('/facet', facetRoutes);
+// app.use('/facet', facetRoutes);
 app.use('/api', api);
-app.use('/books', bookRoutes);
+// app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/category', routes);
