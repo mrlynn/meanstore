@@ -28,6 +28,7 @@ Product.find().distinct('category', function(err,categories) {
 		var cslug = slug(cname)
 		category = new Category({
 			name: cname,
+			layout: 'gallery',
 			slug :cslug
 		})
 		category.save(function(){

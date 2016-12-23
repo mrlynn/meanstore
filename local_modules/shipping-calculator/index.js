@@ -1,9 +1,14 @@
-	var Config = require('../../config/config');
+var Config = require('../../config/config');
 var taxConfig = require('../../config/tax-config');
 var Product = require('../../models/product');
 var Order = require('../../models/order');
 var User = require('../../models/user');
 var Cart = require('../../models/cart');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+dotenv.load({
+    path: '.env.hackathon'
+});
 
 /* 
 	Shipping Charges 
@@ -14,6 +19,13 @@ var Cart = require('../../models/cart');
 
 module.exports = {
 	calculateShipping: function(items, callback) {
+		if (!process.env.enableShipping) {
+			result = {
+				totalShipping: parseFloat(0),
+				totalShipable: parseFloat(0)
+			};
+			callback(null,result); 
+		}
 		var products = [];
 		for (var id in items) {
 			products.push(items[id]);

@@ -140,6 +140,7 @@
                                 <th><h2>Price</h2></th>
                                 <th><h2>Edit</h2></th>
                                 <th><h2>Delete</h2></th>
+                                <th><h2>View</h2></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,6 +167,29 @@
                                             <button class="btn btn-danger btn-xs" onClick="submit();"><span class="glyphicon glyphicon-trash"></span></button>
                                         </p>
                                         </form>
+                                    </td>
+                                    <td width=5%>
+                                        <p data-placement="top" class='text-left' data-toggle="tooltip" title="View Product ">
+                                            <button class="ui right floated btn btn-success btn-xs" data-title="view" data-toggle="modal" data-target="#view_{{this._id}}"><span class="glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </p>
+                                        <div class="modal fade" id="view_{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                                    <h4 class="modal-title custom_align" id="Heading">View Product</h4>
+                                                </div>
+                                                <div class="pre">{{JSON this}}</div>
+                                                <div class="modal-footer">
+                                                    <button type="button" onClick="submit();" data-dismiss="modal" class="btn btn-warning btn-xs" style="width: 100%;"><span class="glyphicon glyphicon-plus"></span>View</button>
+                                                </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
                                     </td>
                                </tr>
                             {{/each}}

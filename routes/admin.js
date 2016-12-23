@@ -634,25 +634,7 @@ router.post('/add-product',isAdmin, function(req, res, next) {
     });
 });
 
-router.post('/product/:id', isAdmin,function(req, res, next) {
-    productID = req.params.id;
-    Product.findById(req.params.id, function(err, product) {
-        product.title = req.body.title;
-        product.description = req.body.description;
-        product.price = req.body.price;
-        product.type = req.body.price;
-        product.updated = Date.now();
-        product.imagePath = req.body.imagePath;
-    });
-    product.save(function(err) {
-        if (!err) {
-            console.log("updated");
-        } else {
-            console.log(err);
-        }
-        res.redirect('/admin/products');
-    })
-});
+
 
 router.get('/categories:filter?', isAdmin,function(req, res, next) {
     successMsg = req.flash('success')[0];

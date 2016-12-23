@@ -1,23 +1,54 @@
 $(document).ready(function() {
 
 var tour = new Tour({
-        steps: [{
-            element: "#add-to-cart",
-            title: "Click here to add item to cart",
-            content: "The first step is to put something in your cart.  Once you do this, you'll see a '1' appear next to the Shopping Cart link.  This indicates that you have one item in your cart."
-        }, {
-            element: "#products-display",
-            title: "Title of my step",
-            content: "Content of my step"
-        },
-        {
-            element: "#view-code",
-            title: "Click Here to View Code",
-            content: "We've enabled you to see what the product catalog looks like as a MongoDB Collection"
-        }]
-    });
+    steps: [{
+        element: "#add-to-cart",
+        title: "Click here to add item to cart",
+        content: "The first step is to put something in your cart.  Once you do this, you'll see a '1' appear next to the Shopping Cart link.  This indicates that you have one item in your cart."
+    }, {
+        element: "#products-display",
+        title: "Title of my step",
+        content: "Content of my step"
+    },
+    {
+        element: "#view-code",
+        title: "Click Here to View Code",
+        content: "We've enabled you to see what the product catalog looks like as a MongoDB Collection"
+    }]
+});
+
     tour.init();
-    tour.start();    
+    tour.start();
+
+    $('div.thumbnail img')
+    .wrap('<span style="display:inline-block"></span>')
+    .css('display', 'block')
+    .parent()
+    .zoom();
+
+    $("input[name='shipping_flag']").click(function() {
+        if ($(this).is(':checked')) {
+            var ok = confirm('Are you sure you want to ship these items?');
+            $("input[name='shipping_addr1']").attr("disabled", false);
+            $("input[name='shipping_city']").attr('disabled', false);
+            $("input[name='shipping_state']").attr('disabled', false);
+            $("input[name='shipping_zip']").attr('disabled', false);
+        } else if ($(this).not(':checked')) {
+            var ok = confirm('Are you sure you want to remove all data?');
+            if (ok) {
+                var remove = '';
+                $("input[name='shipping_addr1']").attr('value', remove);
+                $("input[name='shipping_city']").attr('value', remove);
+                $("input[name='shipping_state']").attr('value', remove);
+                $("input[name='shipping_zip']").attr('value', remove);
+                $("input[name='shipping_addr1']").attr('disabled', true);
+                $("input[name='shipping_city']").attr('disabled', true);
+                $("input[name='shipping_state']").attr('disabled', true);
+                $("input[name='shipping_zip']").attr('disabled', true);
+            }
+        }
+    });
+
     // add the table class to all tables
     $('table').each(function() {
         $(this).addClass("table table-hover")

@@ -20,7 +20,7 @@ mongoose.connection.on('error', () => {
 var products = [
     new Product({
         code: 'RU201701',
-        shipable: 'No',
+        shippable: 'No',
         taxable: 'No',
         category: 'Round-up',
         order: 0,
@@ -33,7 +33,7 @@ var products = [
     }),
     new Product({
         code: 'RU201702',
-        shipable: 'No',
+        shippable: 'No',
         taxable: 'No',
         category: 'Round-up',
         order: 1,
@@ -46,8 +46,8 @@ var products = [
     }),
     new Product({
         code: 'RU201703',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         category: 'Round-up',
         order: 1,
         imagePath: '/images/test.png',
@@ -59,8 +59,8 @@ var products = [
     }),
     new Product({
         code: 'RU201704',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         category: 'Round-up',
         order: 99,
         imagePath: '/images/ticket.jpg',
@@ -72,7 +72,7 @@ var products = [
     }),
     new Product({
         code: 'RU201705',
-        shipable: 'No',
+        shippable: 'No',
         taxable: 'No',
         category: 'Round-up',
         order: 99,
@@ -85,8 +85,8 @@ var products = [
     }),
     new Product({
         code: 'RU201706',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         category: 'Round-up',
         order: 2,
         imagePath: '/images/tee-shirt.jpg',
@@ -114,8 +114,8 @@ var products = [
     }),
     new Product({
         code: 'RU201707',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         category: 'Round-up',
         order: 3,
         imagePath: '/images/tee-shirt.jpg',
@@ -137,8 +137,8 @@ var products = [
     }),
     new Product({
         code: 'RU201708',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         category: 'Round-up',
         order: 4,
         imagePath: '/images/hoodie.jpg',
@@ -167,8 +167,8 @@ var products = [
     new Product({
         order: 5,
         code: 'RU201709',
-        shipable: 'No',
-        taxable: 'Yes',
+        shippable: 'No',
+        taxable: 'No',
         imagePath: '/images/hoodie.jpg',
         name: 'Hoodie-large',
         title: 'Hooded Sweatshirt XL Sizes',

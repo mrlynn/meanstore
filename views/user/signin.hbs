@@ -26,12 +26,15 @@
 			<p class="pull-right">Forgot? <a href="/user/forgot">Reset</a></p>
 		</div>
 	</div>
-	<p>
+	<p>{{#if authFacebook}}
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
 			<a href="/user/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i> Sign in with Facebook</a>		
 		</div>
-	</div><p>
+	</div>
+	<p>
+	{{/if}}
+	{{#if authGoogle}}
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
 			<a href="/user/google" class="btn btn-block btn-social btn-google-plus">
@@ -39,4 +42,6 @@
 	      	</a>
 		</div>
 	</div>
+	</p>
+	{{/if}}
 </div>

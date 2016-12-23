@@ -141,7 +141,7 @@ db.products.aggregate([
     {$match: {"Attribute.Name": "Price"}},
     {$bucket: {  
                 groupBy: "$Attribute.Value",
-               boundaries: [0, 200, 300, 500, 600, 700, 800, Infinity],                                          
+               boundaries: [0, 200, 300, 500, 600, 700, 800, Infinity],
               }
     }
 ])
@@ -209,4 +209,26 @@ db.products.aggregate([
           }
   }
 ])
+
+var mapFunction1 = function() {
+   emit(this.cust_id, this.price);
+};
+var reduceFunction1 = function(keyCustId, valuesPrices) {
+  return Array.sum(valuesPrices);
+};
+
+# Charting aggregations
+
+
+db.events.aggregate(
+  [
+    { $match: { action: "like" } },
+    { $project : { month_liked : { $month : "$when" } } } ,
+    { $group : { _id : {month_liked:"$month_liked"} , number : { $sum : 1 } } },
+    { $sort : { "_id.month_liked" : 1 } }
+  ]
+)
+
+
+
 

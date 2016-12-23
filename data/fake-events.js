@@ -61,6 +61,7 @@ for (var i = 0; i < 100; i++) {
             action = actions[randInterval(0,actions.length)];
             event = new Event({
                 namespace: 'products',
+                when: faker.date.past(),
                 person: {
                     id: user[0]._id,
                     first_name: user[0].first_name,

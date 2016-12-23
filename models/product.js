@@ -30,11 +30,12 @@ var schema = new Schema({
 	price: {
         type: Number,
         required: true,
-        get: getPrice
+        get: getCurrency
 	},
 	cost: {
         type: Number,
-        required: false
+        required: false,
+        get: getCurrency
 	},
 	likes: [String],
 	Product_Group: {
@@ -83,7 +84,7 @@ var schema = new Schema({
 			type: String
 		}
 	}],
-	shipable: {
+	shippable: {
 		type: Boolean
 	},
 	taxable: {
@@ -122,8 +123,8 @@ var schema = new Schema({
 		}
 	}]
 });
-// shipable Getter
-schema.path('shipable').get(function(txt) {
+// shippable Getter
+schema.path('shippable').get(function(txt) {
   if (txt) {
   	return 'Yes';
   } else {
@@ -132,7 +133,7 @@ schema.path('shipable').get(function(txt) {
 });
 
 // Setter
-schema.path('shipable').set(function(txt) {
+schema.path('shippable').set(function(txt) {
   if (txt=='Yes') {
   	return true;
   } else {
@@ -157,14 +158,14 @@ schema.path('taxable').set(function(txt) {
   }
 });
 // Getter
-schema.path('price').get(function(num) {
-  return (num / 100).toFixed(2);
-});
+// schema.path('price').get(function(num) {
+//   return (num / 100).toFixed(2);
+// });
 
-// Setter
-schema.path('price').set(function(num) {
-  return num * 100;
-});
+// // Setter
+// schema.path('price').set(function(num) {
+//   return num * 100;
+// });
 
 schema.virtual('isVariable')
 	.get(function() {
@@ -189,16 +190,20 @@ schema.virtual('isApparel')
 		}
 	return false;
 });	
-schema.methods.setPrice = function(price) {
-	this.price = price;
-};
-function getPrice(price) {
-	return (price / 100).toFixed(2);
+// schema.methods.setPrice = function(price) {
+// 	this.price = price;
+// };
+function getCurrency(amt) {
+	return (amt / 100).toFixed(2);
 
 }
-schema.methods.getPrice = function(price) {
-	return (num / 100).toFixed(2);
-}
+// function setPrice(price) {
+// 	return (price * 100).toFixed(2);
+
+// }
+// schema.methods.getPrice = function(price) {
+// 	return (num / 100).toFixed(2);
+// }
 schema.plugin(random);
 
 schema.index({name: 'text',title:'text',description:'text',category:'text'});

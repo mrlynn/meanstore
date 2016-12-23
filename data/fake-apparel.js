@@ -63,7 +63,7 @@ for (var i = 0; i < 100; i++) {
             title: brand + ' ' + faker.commerce.productAdjective() + ' ' + color + ' ' + name,
             description: faker.lorem.sentence(),
             taxable: 'Yes',
-            shipable: 'Yes',
+            shippable: 'Yes',
             price: price,
             cost: cost,
             'Product_Group': 'Apparel',
