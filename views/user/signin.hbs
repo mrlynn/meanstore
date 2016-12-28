@@ -1,15 +1,17 @@
-
 <div class="container signin-page">
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
 			<h1>Sign In</h1>
-			{{#if hasErrors }}
-			<div class="alert alert-danger">
-				{{# each message }}
-				<p>{{this}}</p>
-				{{/each}}
-			</div>
-			{{/if}}
+			<div class="row">
+	            <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+	                <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+	                {{successMsg}}
+	            	</div>
+	            	<div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+	           		{{errorMsg}}
+	       			</div>
+	       		</div>
+	       	</div>
 			<form action="/user/signin" method="POST">
 				<div class="form-group">
 					<label for="email">Email</label>
@@ -44,4 +46,5 @@
 	</div>
 	</p>
 	{{/if}}
+	<o><o>
 </div>

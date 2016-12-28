@@ -3,6 +3,8 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var Event = require('../models/events');
+var async = require('async');
 var Order = require('../models/order');
 var User = require('../models/user');
 var Payment = require('../models/payment');
@@ -359,6 +361,54 @@ router.post('/order', function(req, res, next) {
 		res.send(category);
 	})
 })
+router.get('/donut-chart', function(req, res, next) {
+	Event.aggregate([
+	{
+		$group: { "_id": "$thing.category", "value": { $sum: 1 } }
+	},{
+		$project: { "_id": -1, "value": 1}
+	}], function(err,donuts) {
+		var data = [];
+		async.each(donuts, function(donut, next) {
+			data.push({
+				label: donut._id,
+				value: donut.value
+			})
+		})
+		res.json(data);
+	});
+})
+router.get('/purchases-by-yearmo', function(req,res,next) {
+	Event.aggregate([{
+		$match: {
+			'action': 'purchase'
+		}
+	},
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    },
+  ], function(err,yearmos){
+	    var data = [];
+
+	    if (err) {
+	        console.log("error: " + err.message);
+	    } else {
+	        var i = 0;
+	        async.each(yearmos,function(yearmo,next) {
+	            data.push({
+	                x: yearmo._id.year + '-' + yearmo._id.month,
+	                purchases: yearmo.count
+	            })
+	        })
+	    }
+    res.json(data);
+    });
+});
 module.exports = router;
 
 

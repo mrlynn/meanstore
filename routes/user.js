@@ -29,31 +29,37 @@ var csrfProtection = csrf();
 router.use(csrfProtection);
 
 router.get('/profile', isLoggedIn, function(req, res, next) {
-    payments = {};
-    console.log(req.user._id);
-    Payment.find({}, function(err, payments) {
-        if (err) {
-            console.log('err:' + err);
-            return res.write('Error');
-        }
+
+    res.render('user/profile', {
+        layout: 'eshop/blank',
+        user: req.user,
     });
+
+});
+router.get('/orders', isLoggedIn, function(req, res, next) {
+
     // console.log(payments);
     // res.render('user/profile', {layout:'fullpage.hbs',user: req.user, payments: payments,hasPayments:0});
 
-    Order.find({$and: [{user: req.user}, {status: "approved"}]}, function(err, orders) {
+    Order.find({$or: [{user: req.user._id}, { "user.email": req.user.email}]},null,{sort: {created: -1}}, function(err, orders) {
         if (err) {
             return res.write('Error');
         }
-        var cart;
-        orders.forEach(function(order) {
-            cart = new Cart(order.cart);
-            order.items = cart.generateArray();
-        });
-        res.render('user/profile', {
-            layout: 'fullpage.hbs',
+        var arr = [];
+        for (var order in orders) {
+            console.log("Cart Item: " + orders[order]);
+            console.log("------------");
+            for (var item in orders[order].cart.items) {
+                console.log("Item " + item);
+                console.log(orders[order].cart.items[item].item.name);
+
+            }
+        }
+        // return arr;
+        res.render('user/orders', {
+            layout: 'eshop/blank',
             user: req.user,
             orders: orders,
-            hasPayments: 1
         });
     });
 });
@@ -69,7 +75,7 @@ router.get('/forgot', function(req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	res.render('user/forgot', {
-		layout:'fullpage.hbs',
+		layout:'eshop/blank',
 		user: req.user, 
 		errorMsg: errorMsg,
 		noErrorMsg:!errorMsg,
@@ -234,7 +240,7 @@ router.use('/', notLoggedIn, function(req, res, next) {
 router.get('/signup', function(req, res, next) {
     var messages = req.flash('error');
     res.render('user/signup', {
-        layout: 'fullpage.hbs',
+        layout: 'eshop/blank',
         csrfToken: req.csrfToken(),
         message: messages,
         hasErrors: messages.length > 0
@@ -257,6 +263,8 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', function(req, res, next) {
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
     if (process.env.FACEBOOK_ID) {
         var authFacebook = true
     } else {
@@ -272,10 +280,13 @@ router.get('/signin', function(req, res, next) {
     req.session.oldUrl = req.get('referer');
     var messages = req.flash('error');
     res.render('user/signin', {
-        layout: 'fullpage.hbs',
+        layout: 'eshop/blank',
         csrfToken: req.csrfToken(),
         authFacebook: authFacebook,
         authGoogle: authGoogle,
+        successMsg: successMsg,
+        noMessage: !successMsg,
+        noErrorMessage: !errorMsg,
         message: messages,
         noErrorMsg: !errorMsg,
         successMsg: successMsg,
@@ -312,10 +323,12 @@ router.post('/signin', passport.authenticate('local.signin', {
 });
 
 router.get('/facebook', passport.authenticate('facebook', {
-    scope: ['email', 'user_location']
+    scope: ['email', 'user_location'],
+    failureFlash: true
 }));
 
-router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/user/signin' }), (req, res) => {
+// router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/user/signin' }), (req, res) => {
+router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), (req, res) => {
     res.redirect(req.session.returnTo || '/');
 });
 

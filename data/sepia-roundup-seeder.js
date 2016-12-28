@@ -41,21 +41,21 @@ var products = [
         name: 'Banquet',
         title: 'Banquet Registration',
         description: 'Attendance Ticket for 2017 Round-up',
-        price: 2500,
-        Product_Group: 'TICKET'
-    }),
-    new Product({
-        code: 'RU201703',
-        shippable: 'No',
-        taxable: 'No',
-        category: 'Round-up',
-        order: 1,
-        imagePath: '/images/test.png',
-        name: 'test',
-        title: 'Test Item',
-        description: 'Test Attendance Ticket for 2017 Round-up',
-        price: 10,
-        Product_Group: 'TICKET'
+        price: 3500,
+        Product_Group: 'TICKET',
+        options: [{
+            name: 'Beef',
+            value: 'beef'
+        }, {
+            name: 'Chicken',
+            value: 'chicken'
+        }, {
+            name: 'Fish',
+            value: 'fish'
+        }, {
+            name: 'Vegetarian',
+            value: 'vegetarian'
+        }]
     }),
     new Product({
         code: 'RU201704',
@@ -81,7 +81,7 @@ var products = [
         title: 'Donation',
         description: 'Donate to help defray Round-up costs.',
         price: 0,
-        Product_Group: 'VARPRICE'
+        Product_Group: 'DONATION'
     }),
     new Product({
         code: 'RU201706',
@@ -186,7 +186,33 @@ var products = [
             name: '4XL',
             value: '4XL'
         }]
-    })
+    }),
+    new Product({
+        order: 5,
+        code: 'RU201710',
+        shippable: 'No',
+        taxable: 'No',
+        imagePath: '/images/ticket.png',
+        name: 'Attendee Scholarship',
+        title: 'Scholarship Donation',
+        description: 'Help another to attend the round-up by contributing to the scholarship fund.',
+        price: 2500,
+        Product_Group: 'DONATION',
+        category: 'Round-up'
+    }),
+    new Product({
+        code: 'RU201711',
+        shippable: 'No',
+        taxable: 'No',
+        category: 'Round-up',
+        order: 99,
+        imagePath: '/images/heart.png',
+        name: 'Literature Donation',
+        title: 'Donation for Literature for Prisoners',
+        description: 'Donate for Big Books and/or Literature for Prisoners',
+        price: 0,
+        Product_Group: 'DONATION'
+    }),
 ]
 var done = 0;
 for (var i = 0; i < products.length; i++) {

@@ -8,6 +8,7 @@ var User = require('../models/user');
 var Ticket = require('../models/ticket');
 var Activity = require('../models/activity');
 var Event = require('../models/events');
+var async = require('async');
 var Order = require('../models/order');
 var passport = require('passport');
 var moment = require('moment');
@@ -39,7 +40,6 @@ router.get('/',  isAdmin, function(req, res, next) {
      	console.log('back with total ', tot);
     });
     Order.find({}, function(err, docs) {
-        console.log("orders: " + docs);
         meanlogger.log("check","Viewed",req.user);
         Product.find(function(err, products) {
             productChunks = [];
@@ -66,8 +66,8 @@ router.get('/',  isAdmin, function(req, res, next) {
         });
     });
 });
-router.get('/orders:filter?', isAdmin, function(req, res, next) {
 
+router.get('/orders:filter?', isAdmin, function(req, res, next) {
     var filter = req.query.filter;
     console.log("Filter " + filter);
         meanlogger.log("check","Viewed orders",req.user);
@@ -97,7 +97,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
     var adminPageTitle = "Orders";
     var adminPageUrl = "/admin/orders";
 
-    Order.find(qryFilter, function(err, orders) {
+    Order.find(qryFilter).sort({"created": -1}).exec(function(err, orders) {
         Stats.getStats(function(err,stats){
             console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
@@ -124,7 +124,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
         })
 
     })
-})
+});
 
 router.post('/delete-order',  isAdmin, function(req, res, next) {
     successMsg = req.flash('success')[0];
@@ -407,6 +407,43 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
     errorMsg = req.flash('error')[0];
     var adminPageTitle = "Event Log";
     var adminPageUrl = "/admin/events";
+/* main admin stats chart is as follows 
+
+data: [
+    {x: '2016 Q1', tickets: 3, banquet: 7},
+    {x: '2016 Q2', tickets: 3, banquet: 4},
+    {x: '2016 Q3', tickets: null, banquet: 1},
+    {x: '2015 Q4', tickets: 2, banquet: 5},
+    {x: '2015 Q3', tickets: 8, banquet: 2},
+    {x: '2015 Q2', tickets: 4, banquet: 4}
+  ],
+
+  */
+Event.aggregate([
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    },
+  ], function(err,yearmos){
+    var data = [];
+
+    if (err) {
+        console.log("error: " + err.message);
+    } else {
+        var i = 0;
+        async.each(yearmos,function(yearmo,next) {
+            data.push({
+                x: yearmo._id.year + '-' + yearmo._id.month,
+                purchases: yearmo.count
+            })
+        })
+    }
+
+
 
     Event.find(qryFilter).sort({when: 'desc'}).exec( function(err, events) {
         Stats.getStats(function(err,stats){
@@ -420,6 +457,7 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
                 adminPageUrl: adminPageUrl,
                 layout: 'admin-page.hbs',
                 // csrfToken: req.csrfToken(),
+                yearmo: data,
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
                 allEvents: allEvents,
@@ -435,6 +473,7 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
             });
         });
     });
+});
 });
 
 router.post('/delete-event',  isAdmin, function(req, res, next) {

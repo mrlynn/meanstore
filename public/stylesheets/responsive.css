@@ -1,0 +1,279 @@
+/*------------------------------------------------------------------
+[RESPONSIVE CSS]
+-------------------------------------------------------------------*/
+/*------------------------------------------------------------------
+[Table of contents]
+/*1.======================== Large Layout: 1900px. ============================*/
+	/* ScrollUp */
+/*2. ======================= Medium Layout: 1280px. =============================*/
+	/*2.1 Header-Section */
+	/*2.2 Product-Section */
+	/*2.3 Choose-Section */
+	/*2.4 Features-Section */
+	/*2.5 Footer */
+/*3. ======================= Tablet Layout: 768px. =====================*/
+	/*3.1 Header */
+	/*3.2 Product-Section */
+	/*3.3 Choose-Section */
+	/*3.4 Review-Section */
+	/*3.5 Compare-Section */
+	/*3.6 Footer */
+	/*3.7 Contact-page */
+/*4. ================ Mobile Layout: 320px. =================== */
+	/*4.1 Header */
+	/*4.2 Slider-Section */
+	/*4.3 Product-Section */
+	/*4.5 Choose-Section */
+	/*4.6 Compare-Section */
+	/*4.7 Footer  */
+	/*4.8 Checkout-Page */
+	/*4.9 Contact-page */
+/*5. ========================= Wide Mobile Layout: 480px. ==========================*/
+	/*5.1 Compare  */
+/*-----------------------------------------------------------------*/
+/*1.======================== Large Layout: 1900px. ============================*/
+@media only screen and (min-width: 1282px) and (max-width: 1900px) {
+/* ScrollUp */
+#scrollUp {top: 83.6%;}
+}
+/*2. ======================= Medium Layout: 1280px. =============================*/
+@media only screen and (min-width: 992px) and (max-width: 1280px) {
+h1 {
+  font-size: 45px;
+  line-height: 52px;
+}
+/* ScrollUp */
+#scrollUp {top: 77.6%}
+/*2.2 Product-Section */
+.product_text_two h1 {
+  margin-bottom: 45px;
+}
+.product_img {padding: 50px 70px;}
+.product_text_two, .tre_shirt_2_text {
+  margin-left: -120px;
+  margin-top: -190px;
+}
+.shop_now_btn {margin-top: 30px;}
+/*2.3 Choose-Section */
+.choose_text {
+  margin-left: 9.37%;
+  width: 26.7%;
+}
+/*2.4 Features-Section */
+.features_text {margin-left: 28%;}
+/*2.5 Footer */
+.newsletter input {padding: 10px 8px;}
+}
+/*3. ======================= Tablet Layout: 768px. =====================*/
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+.section-padding {padding: 50px 0;}
+.section-padding-top {padding-top: 50px;}
+.page-section-padding{
+  padding-top:10px;
+  padding-bottom:50px;
+}
+h1 {
+  font-size: 40px;
+  line-height: 50px;
+}
+h2 {
+  font-size: 30px;
+  line-height: 34px;
+  margin-bottom: 30px;
+}
+h5 {
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 30px;
+}
+#scrollUp {top: 85.6%;}
+/*3.1 Header */
+.logo {padding: 20px 0;}
+.head_lo img {width: 110px;}
+.logo a {padding: 0;}
+.mainmenu a {
+  font-size: 13px;
+  margin-left: 3px;
+  padding: 6px 11px;
+}
+/*3.2 Product-Section */
+.product_text_two, .tre_shirt_2_text {
+  margin-left: -110px;
+  margin-top: -180px;
+}
+.product_text_two h1 {margin-bottom: 35px;}
+.shop_now_btn,.res_mar {margin-top: 25px;}
+.product_img,.product_img.tre_shirt_3 {padding:10px;}
+.product_text p {
+  font-size: 15px;
+  line-height: 17px;
+}
+.tre_shirt_2_text {left: 30px;}
+/*3.3 Choose-Section */
+.choose_text {
+  margin-left: 7.37%;
+  width: 27.7%;
+}
+/*3.4 Review-Section */
+.single_review img {margin: 25px 0;}
+/*3.5 Compare-Section */
+.compare_title p,.footer_link p {margin-bottom: 25px;}
+.features_text {margin-left: 28%;}
+/*3.6 Footer */
+.newsletter input {padding: 10px;}
+.news_input {width: 65%;}
+.subscribe_btn {width: 35%;}
+/*3.7 Contact-page */
+#googleMap {height: 400px;}
+}
+/*4. ================ Mobile Layout: 320px. =================== */
+@media only screen and (max-width: 767px) {
+.mobile-menu-area{display:block}
+.mainmenu{display:none}
+.section-padding {padding: 40px 0;}
+.section-padding-top {padding-top: 0;}
+h1 {
+  font-size: 30px;
+  line-height: 40px;
+}
+h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+h5 {
+  font-size: 16px;
+  line-height: 18px;
+  margin-bottom: 15px;
+}
+/*4.1 Header */
+.header_top_left.float-left {text-align: center;}
+.social_icon {margin-bottom: 10px !important;}
+.social_others li a {margin-left: 5px;}
+.social_others li {margin-left: 0;}
+.searchbox-open {
+  width: 100%;
+  margin-top: 10px;
+}
+.mainmenu, .logo {
+  padding: 15px 0;
+  text-align: center;
+}
+.social_others a, .header_top_right ul li a {font-size: 12px;}
+.container.mean-container {padding: 0;}
+.mean-nav h4 {
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+/*4.2 Slider-Section */
+.tparrows.preview3::after, .tparrows.preview3 {
+  height: 30px;
+  line-height: 32px;
+  width: 30px;
+}
+/*4.3 Product-Section */
+.main_single_product {
+  float: none;
+  width: 100%;
+}
+.padding_right {padding-right: 0;}
+.single_product {margin-bottom: 40px;}
+.main_single_product:last-child .single_product {margin-bottom: 0;}
+.product_img{padding: 10px;}
+.product_img.tre_shirt_3 {padding: 10px 0;}
+.product_text_two h1 {margin-bottom: 25px;}
+.product_text p {
+  font-size: 14px;
+  line-height: 16px;
+}
+.shop_now_btn {margin-top: 10px;}
+.product_text_two, .tre_shirt_2_text {
+  margin-left: -112px;
+  margin-top: -150px;
+}
+.tre_shirt_2_text {left: 85px;}
+.padding_left {padding-left: 0;}
+/*4.4 Review-Section */
+.single_review img {margin: 20px 0;}
+.single_review p {
+  padding-bottom: 10px;
+  font-size: 12px;
+  line-height: 22px;
+}
+/*4.5 Choose-Section */
+.choose_text {
+  margin-bottom: 30px;
+  width: 95%;
+  margin-left: 0;
+}
+/*4.6 Compare-Section */
+.compare_title p{margin-bottom:15px;}
+.compare_menu ul li a {
+  font-size: 10px;
+  padding: 10px 9.8px;
+}
+.single_features {
+  margin-bottom: 10px;
+  padding: 15px 5px;
+  width: 100%;
+}
+.single_features i, .single_features i.flaticon-lightbulbs, .single_features i.flaticon-tshirt17 {font-size: 40px;}
+.border_bot {border-bottom: 2px solid rgb(229, 229, 229);}
+.border_left {border-left: 2px solid rgb(229, 229, 229);}
+.guarantee_box {
+  margin-bottom: 15px;
+  padding: 10px;
+  text-align: center;
+}
+.guarantee_features img {
+  float: none;
+  margin-bottom: 15px;
+}
+.promo_p,.guarantee_text {margin-left: 0;}
+/*4.7 Footer  */
+.newsletter h4 {
+  font-size: 16px;
+  padding-bottom: 10px;
+  padding-top: 0;
+}
+.newsletter input {padding: 10px 5px;}
+.news_input {width: 65%;}
+.subscribe_btn {
+  font-size: 11px !important;
+  width: 35%;
+}
+.footer_link {margin-top: 40px;}
+.footer_link p {margin-bottom: 15px;}
+.col-md-3:first-child .footer_link {margin-top: 0;}
+.footer-padding {padding: 25px 0;}
+.copyright p {
+  font-size: 11px;
+  padding-top: 0;
+}
+.copyright_icon.text-right,.copyright p {text-align: center;}
+.copyright_icon.text-right img {width: 47px;}
+/*4.8 Checkout-Page */
+.page-section-padding{
+  padding-top:20px;
+  padding-bottom:40px;
+}
+button.checkPageBtn ,a.checkPageBtn {margin-bottom: 20px;}
+.form-control.plx {width: 100%;}
+/*4.9 Contact-page */
+#googleMap {height: 300px;}
+#mess_form .form-group {margin-bottom: 0;}
+#mess_form .form-group .form-control {margin-bottom: 8px;}
+#mess_form button.btn-default.shop_now_btn {
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+}
+/*5. ========================= Wide Mobile Layout: 480px. ==========================*/
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+.container{width:450px}
+/*5.1 Compare  */
+.compare_menu ul li a {
+  font-size: 15px;
+  padding: 10px 21.85px;
+}
+}

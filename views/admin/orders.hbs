@@ -57,7 +57,8 @@
                                 <th><h3>Date</h3></th>
                                 <th><h3>Purchaser</h3></th>
                                 <th><h3>Items</h3></th>
-                                <th><h3>Status</h3></th>
+                                <th><h3>Paypal Status</h3></th>
+                                <th><h3>Pickup Status</h3></th>
                                 <th><h3>Amount</h3></th>
                                 <th><h3>Edit</h3></th>
                                 <th><h3>Delete</h3></th>
@@ -86,8 +87,8 @@
                                                     {{#if this.ticket_name }}
                                                         Ticket Owner:<br>{{this.ticket_name}}<br>{{this.ticket_email}}
                                                     {{/if}}
-                                                    {{#if this.size }}
-                                                        Size: {{this.size}}
+                                                    {{#if this.option }}
+                                                        Option: {{this.option}}
                                                     {{/if}}
                                                 </td>
                                             </tr>
@@ -95,6 +96,7 @@
                                     </tbody>
                                 </table>
                             </td>
+                            <td class="text-left">{{this.status}}</td>
                             <td class="text-left">{{this.receipt_status}}</td>
                             <td class="text-right">${{this.cart.grandTotal}}</td>
                             <td>

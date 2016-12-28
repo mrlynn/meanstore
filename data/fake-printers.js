@@ -6,6 +6,8 @@ var faker = require('faker');
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+var async = require('async');
+
 dotenv.load({
     path: '.env.hackathon'
 });
@@ -16,13 +18,16 @@ mongoose.Promise = global.Promise;
 // Product.remove({},function(err,results) {});
 // Category.remove({},function(err,results) {});
 products = [];
+product_groups = ['Laser','Dot Matrix','Sheet Fed','Continuous Paper','Wax Dye Sublimation'];
+
 categories = ['Office','Home'];
 brands = ['HP','Epson','Lexmark','Xerox','Kyocera'];
 connectivities = ['WiFi','Apple Airprint','Bluetooth','USB','Ethernet'];
 var done = 0;
-for (var i=0; i < 100; i++) {
+async.times(100, function(i, next) {
 
-
+	pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
+	product_group = product_groups[pgroup];
 	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
 	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
 		if (err) {
@@ -53,9 +58,15 @@ for (var i=0; i < 100; i++) {
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',
-			price: price,
+			price: price * 100,
 			cost: cost,
-			'Product_Group': 'Printer',
+			sale_attributes: {
+                featured: Math.round(Math.random()) ? true : false,
+                new: Math.round(Math.random()) ? true : false,
+                trending: Math.round(Math.random()) ? true : false,
+                sale: Math.round(Math.random()) ? true : false
+            },
+			'Product_Group': product_group,
 			category: 'Printer',
 			usersBought: items,
 			attributes: [{
@@ -89,7 +100,7 @@ for (var i=0; i < 100; i++) {
 			exit();
 		}
 	});
-}
+});
 
 function exit() {
 	mongoose.disconnect()

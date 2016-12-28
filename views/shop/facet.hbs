@@ -1,4 +1,4 @@
-<!--shop/shop.hbs-->`
+<!--shop/facet.hbs-->`
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -20,14 +20,12 @@
             </div>
         </div>
     </div>
+</div>
 {{>search}}
-<div class="row">
-<div class="col-md-2">
-    {{>facet}}
-</div>
-</div>
-
-    {{# each products }}
+<div class="layout-wrapper">
+        {{>facet}}
+    <div class="right_container">
+         {{# each products }}
         <div class="row">
             {{# each this}}
                 <div class="col-md-3">
@@ -72,7 +70,7 @@
                                     {{#if ../../isLoggedIn}}
                                         <form action='/add-to-cart' method='POST'>
                                         <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                        <input type='hidden' id='type' name='type' value='VARPRICE'>
+                                        <input type='hidden' id='type' name='type' value='DONATION'>
                                         <h3 class="product-price text-center">
                                             <input type='text' class='text-right' name='price' value='{{this.price}}'>
                                         </h3>
@@ -168,5 +166,9 @@
                 </div> <!-- col md-3 -->
             {{/each}} <!--each this -->
         </div>
-    {{/each}} <!-- each products -->
+    {{/each}} <!-- e
+     </div>
+</div>
+
+    ach products -->
 </div>

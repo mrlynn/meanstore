@@ -46,7 +46,7 @@ module.exports = {
                         if (group == 'APPAREL') {
                             stats.apparelSold += 1
                         } else {
-                            if (group == 'VARPRICE') {
+                            if (group == 'DONATION') {
                                 stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].cart.items[item].itemTotal));
                                 stats.donationsCount += 1;
                             }
@@ -77,7 +77,7 @@ module.exports = {
             stats.itemCount = parseFloat(stats.itemCount).toFixed(0);
             callback(null, stats);
         })
-    }
+    },
     getData: function(callback){
       //use the find() API and pass an empty query object to retrieve all records
       Event.find({}).toArray(function(err, docs){

@@ -5,6 +5,7 @@ var faker = require('faker');
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+const async = require('async');
 dotenv.load({
     path: '.env.hackathon'
 });
@@ -21,10 +22,10 @@ products = [];
 brands = ['MongoDB', 'Fubu', 'Sean Jean'];
 fabrics = ['wool', 'fur', 'fleece', 'paper', 'acrylic pellets', 'hemp'];
 types = ['pullover', 'tee-shirt', 'pantsuit', 'jacket', 'vest'];
+
+
 var done = 0;
-for (var i = 0; i < 100; i++) {
-
-
+async.times(100, function(i, next) {
     var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
     User.aggregate([{
         $sample: {
@@ -42,13 +43,14 @@ for (var i = 0; i < 100; i++) {
         for (user in usersArray) {
             items.push(usersArray[user]._id);
         };
-        var code = 1000 + i;
+        var code = parseInt(1000 + i);
         var color = faker.commerce.color();
         var materialBrand = faker.commerce.productMaterial();
         typeNum = Math.floor((Math.random() * brands.length - 1) + 1);
         brandNum = Math.floor((Math.random() * brands.length - 1) + 1);
         fabricNum = Math.floor((Math.random() * fabrics.length - 1) + 1);
         type = types[typeNum];
+
         fabric = fabrics[fabricNum];
         brand = brands[brandNum];
         imagePath = '/img/' + type + '-clothes.jpg'
@@ -58,8 +60,14 @@ for (var i = 0; i < 100; i++) {
         cost = Math.floor(Math.random() * price) + (price / 2)
 
         product = new Product({
-            code: 'cam' + code,
+            code: 'app' + code,
             name: name,
+            sale_attributes: {
+                featured: Math.round(Math.random()) ? true : false,
+                new: Math.round(Math.random()) ? true : false,
+                trending: Math.round(Math.random()) ? true : false,
+                sale: Math.round(Math.random()) ? true : false
+            },
             title: brand + ' ' + faker.commerce.productAdjective() + ' ' + color + ' ' + name,
             description: faker.lorem.sentence(),
             taxable: 'Yes',
@@ -106,7 +114,7 @@ for (var i = 0; i < 100; i++) {
             exit();
         }
     });
-}
+});
 
 function exit() {
     mongoose.disconnect();

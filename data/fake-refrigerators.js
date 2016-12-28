@@ -2,6 +2,8 @@ var Product = require('../models/product');
 var User = require('../models/user');
 var Category = require('../models/category');
 var faker = require('faker');
+var async = require('async');
+
 
 var mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -23,8 +25,12 @@ products = [];
 categories = ['Office','Home'];
 brands = ['Kenmore','Whirlpool','Electrolux','Samsung','Hitachi','Frigidare'];
 freezer_options = ['Ice Maker','Counter Depth','EnergyStar Certified'];
+product_groups = ['French Door','Bottom Freezer','Side by Side','Top Freezer']
+    
 var done = 0;
-for (var i=0; i < 100; i++) {
+async.times(100, function(i, next) {
+	pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
+    product_group = product_groups[pgroup];
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	color = color.toUpperCase();
@@ -65,9 +71,15 @@ for (var i=0; i < 100; i++) {
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',
-			cost: cost,
-			price: price,
-			'Product_Group': 'Refrigerator',
+			cost: cost * 100,
+			sale_attributes: {
+                featured: Math.round(Math.random()) ? true : false,
+                new: Math.round(Math.random()) ? true : false,
+                trending: Math.round(Math.random()) ? true : false,
+                sale: Math.round(Math.random()) ? true : false
+            },
+			price: price * 100,
+			'Product_Group': product_group,
 			category: 'Refrigerator',
 			usersBought: items,
 			attributes: [{
@@ -107,7 +119,7 @@ for (var i=0; i < 100; i++) {
 		});
 	});
 
-}
+});
 
 function exit() {
 	mongoose.disconnect()

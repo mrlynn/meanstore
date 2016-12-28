@@ -33,6 +33,7 @@ var api = require('./routes/api');
 var taxCalc = require('./local_modules/tax-calculator');
 var Config = require('./config/config');
 var Category = require('./models/category');
+var Product = require('./models/product');
 var url = require("url");
 var path = require("path");
 var winston = require("winston");
@@ -99,6 +100,15 @@ var hbs = expressHbs.create({
         },
         JSON: function(obj) {
           return JSON.stringify(obj,null,2);
+        },
+        Upper: function(str) {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        },
+        money: function(num) {
+          var p = num.toFixed(2).split(".");
+          return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
+              return  num=="-" ? acc : num + (i && !(i % 3) ? "," : "") + acc;
+          }, "") + "." + p[1];
         }
     },
     defaultLayout: 'layout',
@@ -154,32 +164,63 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next) {
     // if (typeof res.locals.allcats == 'undefined') {
 
-      Category.find({}, function(err, navcats) {
-          if (err || !navcats) {
-            res.send('500','Error retrieving categories.');
+    Product.aggregate([{
+        $sortByCount: "$category"
+        }], function(err, navcats) {
+        if (err || !navcats) {
+          res.send('500','Error retrieving categories.');
+        }
+        app.set('navcats',navcats);
+        console.log("Navcats in app.js " + JSON.stringify(navcats));
+        res.locals.navcats = navcats;
+        res.locals.login = req.isAuthenticated();
+        if (res.locals.login) {
+          res.locals.admin = (req.user.role == 'admin');
+        }
+        Product.aggregate([{
+          $sortByCount: "$Product_Group"
+        }], function (err,navgroups) {
+          app.set('navgroups',navgroups);
+          Product.aggregate(
+        [{
+            $match: {
+              "sale_attributes.sale": true
+            }
+        },{
+            $group: {
+                _id: "$Product_Group",
+                count: {
+                    $sum: 1
+                }
+            }
+        }, {
+            $sort: {
+                _id: 1
+            }
+        }],
+        function(err, salegroups) {
+          if (err) {
+            console.log("Err fetching salegroups");
+
           }
-          res.locals.navcats = navcats;
-          app.set('navcats', navcats);
-          app.locals.navcats = navcats;
-      });
-    // }
-    res.locals.login = req.isAuthenticated();
-    if (res.locals.login) {
-      res.locals.admin = (req.user.role == 'admin');
-    }
-    res.locals.session = req.session;
-    res.locals.copyright = process.env.copyright;
-    res.locals.showRecommendations = (process.env.showRecommendations===true);
-    res.locals.viewDocuments = (process.env.viewDocuments===true);
-    res.locals.title = process.env.title;
-    res.locals.pageNotes = process.env.pageNotes;
-    var parsed = url.parse(req.url);
-    var pageName = path.basename(parsed.pathname);
-    res.locals.pageName = pageName.toLowerCase();
-    res.locals.req = req;
-    // res.locals._csrf = req.csrfToken();
-    var ipInfo = getIP(req);
-    next();
+            console.log('Sale Groups: ' + JSON.stringify(salegroups));
+            app.set('salegroups',salegroups);
+            res.locals.session = req.session;
+            res.locals.copyright = process.env.copyright;
+            res.locals.showRecommendations = (process.env.showRecommendations===true);
+            res.locals.viewDocuments = (process.env.viewDocuments===true);
+            res.locals.title = process.env.title;
+            res.locals.pageNotes = process.env.pageNotes;
+            var parsed = url.parse(req.url);
+            var pageName = path.basename(parsed.pathname);
+            res.locals.pageName = pageName.toLowerCase();
+            res.locals.req = req;
+            // res.locals._csrf = req.csrfToken();
+            var ipInfo = getIP(req);
+            next();
+          });
+        });
+    });
 });
 app.use(fileUpload());
 
@@ -194,6 +235,7 @@ app.use('/', routes);
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
+    res.render()
     next(err);
 });
 

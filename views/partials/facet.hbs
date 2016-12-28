@@ -1,26 +1,59 @@
-
-<div class="row">
-  <p class="lead">Search Tools</p>
-  <ul>
-    <li><a href="/">All</a></li>
-    {{#each allcats}}
-    <li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} ({{this.count}})</a></li>
-  {{/each}}
-  {{#each allcategories}}
-    <li><a href="/category/{{this._id}}?q={{../q}}">{{this.name}} ({{this.count}})</a></li>
-  {{/each}}
-  <li>
-  <p data-placement="top" data-toggle="tooltip" title="View MongoDB Document ">
-    <button id="view-aggregation" class="btn btn-warning btn-xs" data-title="Aggregation" data-toggle="modal" data-target="#agg">View Aggregation <span class="glyphicon glyphicon-search"></span>
-    </button>
-  </p>
-  <!-- Add Dialog -->
-  </li>
-  </ul>
+{{!--  <div class="left-container">
+    Search Tools
+    <ul>
+      <li><a href="/">All</a></li>
+      {{#each allcats}}
+      <li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} ({{this.count}})</a></li>
+      {{/each}}
+      {{#each allcategories}}
+      <li><a href="/category/{{this._id}}?q={{../q}}">{{this.name}} ({{this.count}})</a></li>
+      {{/each}}
+      <li>
+      <p data-placement="top" data-toggle="tooltip" title="View MongoDB Document ">
+      <button id="view-aggregation" class="btn btn-warning btn-xs" data-title="Aggregation" data-toggle="modal" data-target="#agg">View Aggregation <span class="glyphicon glyphicon-search"></span>
+      </button>
+      </p>
+    <!-- Add Dialog -->
+      </li>
+    </ul>
+Product Groups
+    <ul class="navbar">
+    {{#each Product_Group}}
+      <li class="list-group-item">{{this._id}} ({{this.count}})</li>
+    </ul>
+    {{/each}}
 </div>
-{{#each categoryAttributes}}
-<div class="row">
-  <h4>{{this.name}}</h4>
-</div>
-{{/each}}
+ --}}
 
+<div class="container">
+<div class="row">
+  <div class="col-sm-3">
+    <div class="sidebar-nav">
+      <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <span class="visible-xs navbar-brand">Search Tools</span>
+        </div>
+        <div class="navbar-collapse collapse sidebar-navbar-collapse">
+          <ul class="nav navbar-nav">
+            {{#each allcats}}
+            <li><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} <span class="badge">{{this.count}}</span></a></li>
+            {{/each}}
+          </ul>
+        </div><!--/.nav-collapse -->
+        <h3>Product Groups</h3>
+        <div class="navbar-collapse collapse sidebar-navbar-collapse">
+          <ul class="list-group nav navbar-nav">
+            {{#each Product_Group}}
+            <li class="list-group-item"><a href="/category/{{this._id}}?q={{../q}}">{{this._id}} <span class="badge">{{this.count}}</span></a></li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

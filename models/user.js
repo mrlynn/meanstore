@@ -22,6 +22,7 @@ var userSchema = new Schema({
 		type: String,
 		required: false
 	},
+
 	addr1: {
 		type: String,
 		required: false

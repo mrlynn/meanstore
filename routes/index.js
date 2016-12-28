@@ -56,131 +56,12 @@ var config = {};
 router.get('/whypaypal', function(req, res, next) {
     res.render('shop/whypaypal');
 });
-router.get('/overview', function(req, res, next) {
-    categoryrecord = {
-        "_id": "ObjectId('58485813edf44d95fb117223')",
-        "name": "Television",
-        "slug": "Television",
-        "attributes": [],
-        "ancestors": [],
-        "__v": 0
-    };
-    orderrecord = {
-        "_id": "ObjectId('5825f1bce3c20070202ee287')",
-        "user": "ObjectId('5825d55ba32a1c41e7ce321c')",
-        "cart": {
-            "items": {
-                "5825d1870ec3cd4d15d0d9c8": {
-                    "item": {
-                        "_id": "5825d1870ec3cd4d15d0d9c8",
-                        "code": "cam1002",
-                        "name": "Generic Granite Keyboard Camera",
-                        "title": "Lumix Practical plum Generic Granite Keyboard Camera",
-                        "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
-                        "taxable": true,
-                        "shippable": true,
-                        "price": 10200,
-                        "Product_Group": "Camera",
-                        "category": "Camera",
-                        "imagePath": "/img/lumix-camera.jpg",
-                        "__v": 0,
-                        "salesYearMonth": [],
-                        "salesYTD": [],
-                        "categories": [],
-                        "update": "2016-11-11T14:11:18.773Z",
-                        "created": "2016-11-11T14:11:18.773Z",
-                        "options": [],
-                        "Attributes": [{
-                            "Name": "color",
-                            "Value": "plum",
-                            "_id": "5825d1870ec3cd4d15d0d9cf"
-                        }, {
-                            "Name": "brand",
-                            "Value": "Lumix",
-                            "_id": "5825d1870ec3cd4d15d0d9ce"
-                        }, {
-                            "Name": "Memory Card Type",
-                            "Value": "SD",
-                            "_id": "5825d1870ec3cd4d15d0d9cd"
-                        }, {
-                            "Name": "Image Resolution",
-                            "Value": "29 Megapixels",
-                            "_id": "5825d1870ec3cd4d15d0d9cc"
-                        }, {
-                            "Name": "Video Resolution",
-                            "Value": "8k",
-                            "_id": "5825d1870ec3cd4d15d0d9cb"
-                        }, {
-                            "Name": "Optical Zoom",
-                            "Value": "23mm",
-                            "_id": "5825d1870ec3cd4d15d0d9ca"
-                        }, {
-                            "Name": "Price",
-                            "Value": "102.00",
-                            "_id": "5825d1870ec3cd4d15d0d9c9"
-                        }]
-                    },
-                    "qty": 1,
-                    "price": 102,
-                    "size": 0,
-                    "taxAmount": 0,
-                    "taxable": "Yes",
-                    "shippable": "Yes",
-                    "itemTotal": "102.00"
-                }
-            },
-            "totalQty": 1,
-            "totalTax": 0,
-            "totalShipping": 0,
-            "totalPrice": 102,
-            "grandTotal": 102,
-            "totalPriceWithTax": 0
-        },
-        "address": "123 Main St.",
-        "city": "Anywhere",
-        "state": "PA",
-        "paymentId": "PAY-8E858244005728329LAS7DPA",
-        "status": "approved",
-        "created": "ISODate('2016-11-11T16:28:44.943Z')",
-        "__v": 0
-    };
-    userrecord = {
-        _id: '5829d84b9304197fdc58a918',
-        role: 'visitor',
-        zipcode: '19147',
-        state: 'PA',
-        city: 'Philadelphia',
-        addr1: '123 S. Main St.',
-        last_name: 'Smith',
-        first_name: 'Samantha',
-        password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
-        email: 'blahblahblah@gmail.com',
-        __v: 0,
-        orders: [],
-        purchased: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
-        likes: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
-        created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)'
-    };
-    Product.findOne({}, function(err, doc) {
-        if (err) {
-            console.log("Problem fetching one random record.");
-        }
-        console.log("doc " + doc);
-        res.render('overview', {
-            layout: 'overview.hbs',
-            user: JSON.stringify(userrecord),
-            product: doc,
-            order: JSON.stringify(orderrecord)
-        });
-    });
-})
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-
     var tutorial = req.params.tutorial;
     if (tutorial == 1) {
         req.session.tutorial = true;
@@ -195,10 +76,21 @@ router.get('/', function(req, res, next) {
         "ancestors": [],
         "__v": 0
     };
-    Category.find({}, function(err, navcats) {
-        Product.aggregate([{
-            $sortByCount: "$category"
-        }], function(err, allcats) {
+    Product.aggregate(
+        [{
+            $group: {
+                _id: "$Product_Group",
+                count: {
+                    $sum: 1
+                }
+            }
+        }, {
+            $sort: {
+                _id: 1
+            }
+        }],
+        function(err, Product_Group) {
+
             if (frontPageCategory) {
                 categCondition = {
                     category: frontPageCategory
@@ -207,28 +99,102 @@ router.get('/', function(req, res, next) {
                 categCondition = {};
             }
             Product.find(categCondition, function(err, docs) {
-            // Product.aggregate([{
-            //     $sample: {
-            //         size: 1000
-            //     }
-            // }],
-            // function(err, docs) {
                 productChunks = [];
                 productJSON = [];
                 chunkSize = 4;
                 for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
                     productChunks.push(docs.slice(i, i + chunkSize));
                 }
-                res.render(shopPage, {
-                    layout: shopLayout,
+
+                res.render('shop/eshop', {
+                    layout: 'eshop/eshop',
                     title: title,
+                    navcats: req.app.get('navcats'),
+                    navgroups: req.app.get('navgroups'),
+                    salegroups: req.app.get('salegroups'),
                     categoryrecord: JSON.stringify(categoryrecord),
                     showRecommendations: eval(res.locals.showRecommendations),
                     allcategories: res.locals.allcategories,
                     keywords: Config.keywords,
                     products: productChunks,
+                    recommended: docs,
+                    Product_Group: Product_Group,
                     user: req.user,
-                    allcats: allcats,
+                    errorMsg: errorMsg,
+                    noErrorMsg: !errorMsg,
+                    successMsg: successMsg,
+                    viewDocuments: viewDocuments,
+                    tutorial: tutorial,
+                    noMessage: !successMsg,
+                    viewTour: viewTour,
+                    isLoggedIn: req.isAuthenticated()
+                });
+            });
+        });
+    });
+
+/* Get sale items */
+router.get('/sale', function(req, res, next) {
+
+var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    var navcats = req.app.get('navcats');
+    var navgroups = req.app.get('navgroups');
+
+    // console.log("Local navcats " + res.locals.navcats);
+
+    var tutorial = req.params.tutorial;
+    if (tutorial == 1) {
+        req.session.tutorial = true;
+    } else {
+        req.session.tutorial = false;
+    }
+    Product.aggregate(
+        [{
+            $match: {
+            "$sale_attributes.sale": true
+            }
+        },{
+            $group: {
+                _id: "$Product_Group",
+                count: {
+                    $sum: 1
+                }
+            }
+        }, {
+            $sort: {
+                _id: 1
+            }
+        }],
+        function(err, Product_Group) {
+
+            if (frontPageCategory) {
+                categCondition = {
+                    category: frontPageCategory
+                };
+            } else {
+                categCondition = {};
+            }
+            Product.find(categCondition, function(err, docs) {
+                productChunks = [];
+                productJSON = [];
+                chunkSize = 4;
+                for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
+                    productChunks.push(docs.slice(i, i + chunkSize));
+                }
+
+                res.render('shop/eshop', {
+                    layout: 'eshop/eshop',
+                    title: title,
+                    navcats: req.app.get('navcats'),
+                    navgroups: req.app.get('navgroups'),
+                    salegroups: req.app.get('salegroups'),
+                    showRecommendations: eval(res.locals.showRecommendations),
+                    keywords: Config.keywords,
+                    products: productChunks,
+                    recommended: docs,
+                    Product_Group: Product_Group,
+                    user: req.user,
                     navcats: navcats,
                     errorMsg: errorMsg,
                     noErrorMsg: !errorMsg,
@@ -242,6 +208,59 @@ router.get('/', function(req, res, next) {
             });
         });
     });
+
+
+/* GET home page. */
+router.get('/group/:slug?', function(req, res, next) {
+    var group_slug = req.params.slug;
+    console.log("Slug " + group_slug);
+    var q = req.query.q;
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    if (group_slug=='' || !group_slug) {
+        var group_search = {}
+    } else {
+        var group_search = {
+            Product_Group: group_slug
+        }
+    }
+    console.log("Product_Group Search " + JSON.stringify(group_search));
+    Product.find(
+        group_search
+    , function(err, products) {
+        if (err) {
+            console.log("Error finding group " + group_slug);
+            req.flash('error', 'Cannot find group');
+            return res.redirect('/');
+        }
+        if (!products) {
+            console.log("Error finding group " + group_slug);
+            req.flash('error', 'Cannot find group');
+            return res.redirect('/');
+        }
+        productChunks = [];
+        chunkSize = 4;
+        for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+            productChunks.push(products.slice(i, i + chunkSize))
+        };
+        products = productChunks;
+        res.render('shop/eshop', {
+            layout: 'eshop/eshop',
+            navcats: req.app.get('navcats'),
+            navgroups: req.app.get('navgroups'),
+            group: group_slug,
+            viewDocuments: viewDocuments,
+            products: productChunks,
+            productChunks: productChunks,
+            user: req.user,
+            q: q,
+            errorMsg: errorMsg,
+            noErrorMsg: !errorMsg,
+            successMsg: successMsg,
+            noMessage: !successMsg,
+            isLoggedIn: req.isAuthenticated()
+        });
+    });
 });
 
 /* GET home page. */
@@ -250,76 +269,104 @@ router.get('/category/:slug', function(req, res, next) {
     var q = req.query.q;
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
-    Product.aggregate([{
-        $match: {
-            $text: {
-                $search: q
+    if (req.params.q) {
+        search = {
+            $match: {
+                $text: {
+                    $search: q
+                }
             }
         }
-    }, {
+    } else {
+        search = {
+            $ne: { 
+                name: null
+            }
+        }
+    }
+    Product.aggregate([{
         $sortByCount: "$category"
     }], function(err, allcats) {
-        Product.aggregate([{
-            $match: {
-                "category": category_slug
-            }
-        }, {
-            $unwind: "$Attributes"
-        }, {
-            $bucketAuto: {
-                groupBy: "$Attributes.Value",
-                buckets: 6
-            }
-        }], function(err, aggout) {
-            if (err) {
-                req.flash('error', 'Problem ' + err.message);
-                return res.redirect('/');
-            }
+        Product.aggregate([
+            search
+        , {
+            $sortByCount: "$category"
+        }], function(err, navcats) {
             Category.findOne({
-                slug: new RegExp(category_slug, 'i')
-            }, function(err, category) {
+                // slug: new RegExp(category_slug, 'i')
+                    $or: [{
+                        'slug': new RegExp(category_slug, 'i')
+                    }, {
+                        'name': new RegExp(category_slug, 'i')
+                    }],
+
+                }, function(err, category) {
                 if (err) {
+                    console.log("Error finding category " + category_slug);
                     req.flash('error', 'Cannot find category');
                     return res.redirect('/');
                 }
                 if (!category) {
+                    console.log("Error finding category " + category_slug);
                     req.flash('error', 'Cannot find category');
                     return res.redirect('/');
                 }
-                Product.find({
-                    $or: [{
-                        'category': new RegExp(category.slug, 'i')
-                    }, {
-                        'category': new RegExp(category.name, 'i')
-                    }]
-                }, function(err, products) {
-                    if (category.format != 'table') {
-                        productChunks = [];
-                        chunkSize = 4;
-                        for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
-                            productChunks.push(products.slice(i, i + chunkSize))
-                        };
-                        products = productChunks
+                Product.aggregate([search, {
+                    $sortByCount: "$Product_Group"
+                }], function (err,navgroups) {
+                    if (q) {
+                        srch = {
+                            $text: {
+                                search: q
+                            }
+                        }
+                    } else {
+                        srch = {
+                        }
                     }
-                    res.render('shop/category', {
-                        layout: 'books',
-                        allcats: allcats,
-                        viewDocuments: viewDocuments,
-                        category: category,
-                        products: products,
-                        productChunks: productChunks,
-                        user: req.user,
-                        q: q,
-                        errorMsg: errorMsg,
-                        noErrorMsg: !errorMsg,
-                        successMsg: successMsg,
-                        noMessage: !successMsg,
-                        aggout: aggout,
-                        isLoggedIn: req.isAuthenticated()
+                    Product.aggregate({
+                        $match: {
+                            $and: [{
+                                $or: [{
+                                    'category': new RegExp(category.slug, 'i')
+                                }, {
+                                    'category': new RegExp(category.name, 'i')
+                                }]
+                            }, srch]
+                        }
+                    }, function(err, products) {
+                        if (err) {
+                            console.log("Error: " + err.message);
+                            res.send(500,"System Error");
+                        }
+                        if (category.format != 'table') {
+                            productChunks = [];
+                            chunkSize = 4;
+                            for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+                                productChunks.push(products.slice(i, i + chunkSize))
+                            };
+                            // products = productChunks
+                        }
+                        res.render('shop/eshop', {
+                            layout: 'eshop/eshop',
+                            navcats: navcats,
+                            navgroups: navgroups,
+                            viewDocuments: viewDocuments,
+                            category: category,
+                            products: productChunks,
+                            productChunks: productChunks,
+                            user: req.user,
+                            q: q,
+                            errorMsg: errorMsg,
+                            noErrorMsg: !errorMsg,
+                            successMsg: successMsg,
+                            noMessage: !successMsg,
+                            isLoggedIn: req.isAuthenticated()
+                        });
                     });
                 });
             });
-        });
+        })
     })
 });
 
@@ -338,7 +385,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
     if (type == 'TICKET') {
         req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
     }
-    if (type == 'VARPRICE') {
+    if (type == 'DONATION') {
         if (price >= 1000) {
             errors = 1;
             req.flash('error', 'Unable to accept donations greater than $1000.00');
@@ -360,21 +407,21 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
         return res.redirect('/');
     }
 
-    var size = req.body.option || null;
+    var option = req.body.option || null;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     Product.findById(productId, function(err, product) {
-        if (err || product==='undefined' || product==null) {
+        if (err || product === 'undefined' || product == null) {
             // replace with err handling
             var errorMsg = req.flash('error', 'unable to find product');
             return res.redirect('/');
         }
-        if (product.Product_Group == 'VARPRICE') {
+        if (product.Product_Group == 'DONATION') {
             theprice = price;
         } else {
             theprice = product.price;
         }
-        added = cart.add(product, product.id, theprice, size, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shippable, req.user._id);
+        added = cart.add(product, product.id, theprice, option, ticket_name, ticket_email, product.Product_Group, product.taxable, product.shippable, req.user._id);
         // cart.totalTax = 0;
         meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
 
@@ -395,7 +442,7 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 router.get('/add-to-cart/:id/', function(req, res, next) {
     var ticket_name = req.body.ticket_name || "";
     var ticket_email = req.body.ticket_email || "";
-    var size = req.body.option || "";
+    var option = req.body.option || "";
     var productId = req.params.id;
     // if we have a cart, pass it - otherwise, pass an empty object
     var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -456,13 +503,14 @@ router.get('/reduce-qty/:id/', function(req, res, next) {
 
 router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 
-    if (res.locals.needsAddress||req.user.addr1==='undefined'||req.user.addr1==null) {
+    if (res.locals.needsAddress || req.user.addr1 === 'undefined' || req.user.addr1 == null) {
         req.flash('error', 'Please complete your profile with your address information');
     }
     errorMsg = req.flash('error')[0];
     successMsg = req.flash('success')[0];
     if (!req.session.cart) {
         return res.render('shop/shopping-cart', {
+            layout: 'eshop/blank',
             products: null,
             user: req.user
         });
@@ -496,6 +544,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
                 }]
             }
             res.render('shop/shopping-cart', {
+                layout: 'eshop/blank',
                 products: cart.generateArray(),
                 items: cart.generateObject(),
                 allcats: req.session.allcats,
@@ -539,6 +588,7 @@ router.post('/update_shipping', isLoggedIn, function(req, res, next) {
     var errorMsg = req.flash('error')[0];
 
     res.render('shop/checkout', {
+        layout: 'eshop/blank',
         products: cart.generateArray(),
         totalPrice: cart.totalPrice.toFixed(2),
         user: req.user,
@@ -563,6 +613,7 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
 
     res.render('shop/checkout', {
+        layout: 'eshop/blank',
         products: cart.generateArray(),
         totalPrice: cart.totalPrice.toFixed(2),
         user: req.user,
@@ -613,12 +664,12 @@ router.post('/checkout', function(req, res, next) {
             errorMsg = req.flash('error', err.message);
             return res.redirect('/');
         }
-        if (!shipping_flag||shipping_flag==null) {
+        if (!shipping_flag || shipping_flag == null) {
             shippingtotal = 0;
         } else {
             shippingtotal = result.totalShipping;
         }
-        if ((shipping_state == taxConfig.ourStateCode) && process.env.enableTax==true) {
+        if ((shipping_state == taxConfig.ourStateCode) && process.env.enableTax == true) {
             taxDesc = "PA and Philadelphia Sales Tax Applies";
             products = cart.generateArray();
             taxCalc.calculateTaxAll(products, req.user._id, function(err, results) {
@@ -635,6 +686,7 @@ router.post('/checkout', function(req, res, next) {
 
                 res.render('shop/checkout', {
                     user: req.user,
+                    layout: 'eshop/blank',
                     shipping_addr1: shipping_addr1,
                     shipping_city: shipping_city,
                     shipping_state: shipping_state,
@@ -659,6 +711,7 @@ router.post('/checkout', function(req, res, next) {
             var grandtotal = (parseFloat(subtotal) + parseFloat(shippingtotal));
             res.render('shop/checkout', {
                 user: req.user,
+                layout: 'eshop/blank',
                 shipping_addr1: shipping_addr1,
                 shipping_city: shipping_city,
                 shipping_state: shipping_state,
@@ -866,7 +919,7 @@ router.get('/like/:id', isLoggedIn, function(req, res, next) {
             }
         });
         console.log("Event: " + JSON.stringify(event));
-        event.save(function(err,eventId) {
+        event.save(function(err, eventId) {
             if (err) {
                 console.log("Error: " + err.message);
                 return -1;
@@ -942,7 +995,7 @@ router.get('/execute', function(req, res, next) {
                                 req.flash('error', 'Unable to update user record');
                                 return res.redirect('/');
                             }
-                            if(!process.env.fromEmail===null) {
+                            if (!process.env.fromEmail === null) {
                                 var mailOptions = {
                                     to: newUser.email,
                                     from: process.env.fromEmail,
@@ -962,8 +1015,8 @@ router.get('/execute', function(req, res, next) {
                 });
                 var cart = new Cart(req.session.cart);
                 products = cart.generateArray();
-                for (var i=0; i > products.length; i++) {
-                                    console.log("PRODUCTS PURCHASED: " + JSON.stringify(products[i]));
+                for (var i = 0; i > products.length; i++) {
+                    console.log("PRODUCTS PURCHASED: " + JSON.stringify(products[i]));
 
                     event = new Event({
                         namespace: 'products',
@@ -982,7 +1035,7 @@ router.get('/execute', function(req, res, next) {
                             Product_Group: product[i].Product_Group
                         }
                     });
-                    event.save(function(err,eventId) {
+                    event.save(function(err, eventId) {
                         if (err) {
                             console.log("Error: " + err.message);
                             return -1;
@@ -1043,53 +1096,115 @@ router.post('/search', function(req, res, next) {
         }
     }, {
         $sortByCount: "$category"
-    }], function(err, allcats) {
+    }], function(err, navcats) {
         if (err) {
             req.flash('error', 'An error has occurred - ' + err.message);
             return res.redirect('/');
         }
-        Product.find({
-                $text: {
-                    $search: q
+        Product.aggregate(
+            [{
+                $group: {
+                    _id: "$Product_Group",
+                    count: {
+                        $sum: 1
+                    }
                 }
             }, {
-                score: {
-                    $meta: "textScore"
+                $sort: {
+                    _id: 1
                 }
-            })
-            .sort({
-                score: {
-                    $meta: 'textScore'
-                }
-            })
-            .exec(function(err, results) {
-                // count of all matching objects
-                if (err) {
-                    req.flash('error', "An error has occurred - " + err.message);
-                    return res.redirect('/');
-                }
-                if (!results || !results.length) {
-                    req.flash('error', "No products found for search string.");
-                    return res.redirect('/');
-                }
-                productChunks = [];
-                chunkSize = 4;
-                for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
-                    productChunks.push(results.slice(i, i + chunkSize))
-                }
-                meanlogger.log('search', 'Searched for  ' + q, req.user);
+            }],
+            function(err, Product_Group) {
+                Product.aggregate([{
+                    $match: {
+                        $text: {
+                            $search: q
+                        }
+                    }
+                }, {
+                    $sortByCount: "$Product_Group"
+                }], function(err, Product_Group) {
+                    if (err) {
+                        console.log("Error fetching categories");
+                        res.send(500, 'Error');
+                    }
+                    if (frontPageCategory) {
+                        categCondition = {
+                            category: frontPageCategory
+                        };
+                    } else {
+                        categCondition = {};
+                    }
+                    Product.find({
+                            $text: {
+                                $search: q
+                            }
+                        }, {
+                            score: {
+                                $meta: "textScore"
+                            }
+                        })
+                        .sort({
+                            score: {
+                                $meta: 'textScore'
+                            }
+                        })
+                        .exec(function(err, results) {
+                            // count of all matching objects
+                            if (err) {
+                                req.flash('error', "An error has occurred - " + err.message);
+                                return res.redirect('/');
+                            }
+                            if (!results || !results.length) {
+                                req.flash('error', "No products found for search string.");
+                                return res.redirect('/');
+                            }
+                            productChunks = [];
+                            chunkSize = 4;
+                            for (var i = (4 - chunkSize); i < results.length; i += chunkSize) {
+                                productChunks.push(results.slice(i, i + chunkSize))
+                            }
+                            if (req.user) {
+                                meanlogger.log('search', 'Searched for  ' + q, req.user);
+                            }
 
-                res.render(shopPage, {
-                    layout: shopLayout,
-                    products: productChunks,
-                    allcats: allcats,
-                    user: req.user,
-                    q: q,
-                    errorMsg: errorMsg,
-                    noErrorMsg: !errorMsg,
-                    successMsg: successMsg,
-                    noMessage: !successMsg,
-                    isLoggedIn: req.isAuthenticated()
+
+                            res.render('shop/eshop', {
+                                layout: 'eshop/eshop',
+                                title: title,
+                                showRecommendations: eval(res.locals.showRecommendations),
+                                keywords: Config.keywords,
+                                products: productChunks,
+                                q: q,
+                                // recommended: docs,
+                                Product_Group: Product_Group,
+                                user: req.user,
+                                navcats: navcats,
+                                allcats: navcats,
+                                errorMsg: errorMsg,
+                                noErrorMsg: !errorMsg,
+                                successMsg: successMsg,
+                                noMessage: !successMsg,
+                                viewTour: viewTour,
+                                isLoggedIn: req.isAuthenticated()
+                            });
+                        });
+
+
+
+
+                    // res.render('shop', {
+                    //     layout: 'eshop/eshop',
+                    //     products: productChunks,
+                    //     allcats: allcats,
+                    //     user: req.user,
+                    //     q: q,
+                    //     errorMsg: errorMsg,
+                    //     noErrorMsg: !errorMsg,
+                    //     successMsg: successMsg,
+                    //     noMessage: !successMsg,
+                    //     isLoggedIn: req.isAuthenticated()
+                    // });
                 });
             });
     });
@@ -1104,7 +1219,7 @@ router.get('/product/:id/', function(req, res, next) {
             // replace with err handling
             return res.redirect('/');
         }
-        if (!req.user || req.user==='undefined' || req.user==null) {
+        if (!req.user || req.user === 'undefined' || req.user == null) {
             req.user = {};
         }
         event = new Event({
@@ -1124,7 +1239,7 @@ router.get('/product/:id/', function(req, res, next) {
                 Product_Group: product.Product_Group
             }
         });
-        event.save(function(err,eventId) {
+        event.save(function(err, eventId) {
             if (err) {
                 console.log("Error: " + err.message);
                 return -1;
@@ -1146,6 +1261,125 @@ router.get('/product/:id/', function(req, res, next) {
         });
     });
 });
+
+router.get('/overview', function(req, res, next) {
+    categoryrecord = {
+        "_id": "ObjectId('58485813edf44d95fb117223')",
+        "name": "Television",
+        "slug": "Television",
+        "attributes": [],
+        "ancestors": [],
+        "__v": 0
+    };
+    orderrecord = {
+        "_id": "ObjectId('5825f1bce3c20070202ee287')",
+        "user": "ObjectId('5825d55ba32a1c41e7ce321c')",
+        "cart": {
+            "items": {
+                "5825d1870ec3cd4d15d0d9c8": {
+                    "item": {
+                        "_id": "5825d1870ec3cd4d15d0d9c8",
+                        "code": "cam1002",
+                        "name": "Generic Granite Keyboard Camera",
+                        "title": "Lumix Practical plum Generic Granite Keyboard Camera",
+                        "description": "Maxime aspernatur vitae officia alias rerum provident et voluptas.",
+                        "taxable": true,
+                        "shippable": true,
+                        "price": 10200,
+                        "Product_Group": "Camera",
+                        "category": "Camera",
+                        "imagePath": "/img/lumix-camera.jpg",
+                        "__v": 0,
+                        "salesYearMonth": [],
+                        "salesYTD": [],
+                        "categories": [],
+                        "update": "2016-11-11T14:11:18.773Z",
+                        "created": "2016-11-11T14:11:18.773Z",
+                        "options": [],
+                        "Attributes": [{
+                            "Name": "color",
+                            "Value": "plum",
+                            "_id": "5825d1870ec3cd4d15d0d9cf"
+                        }, {
+                            "Name": "brand",
+                            "Value": "Lumix",
+                            "_id": "5825d1870ec3cd4d15d0d9ce"
+                        }, {
+                            "Name": "Memory Card Type",
+                            "Value": "SD",
+                            "_id": "5825d1870ec3cd4d15d0d9cd"
+                        }, {
+                            "Name": "Image Resolution",
+                            "Value": "29 Megapixels",
+                            "_id": "5825d1870ec3cd4d15d0d9cc"
+                        }, {
+                            "Name": "Video Resolution",
+                            "Value": "8k",
+                            "_id": "5825d1870ec3cd4d15d0d9cb"
+                        }, {
+                            "Name": "Optical Zoom",
+                            "Value": "23mm",
+                            "_id": "5825d1870ec3cd4d15d0d9ca"
+                        }, {
+                            "Name": "Price",
+                            "Value": "102.00",
+                            "_id": "5825d1870ec3cd4d15d0d9c9"
+                        }]
+                    },
+                    "qty": 1,
+                    "price": 102,
+                    "size": 0,
+                    "taxAmount": 0,
+                    "taxable": "Yes",
+                    "shippable": "Yes",
+                    "itemTotal": "102.00"
+                }
+            },
+            "totalQty": 1,
+            "totalTax": 0,
+            "totalShipping": 0,
+            "totalPrice": 102,
+            "grandTotal": 102,
+            "totalPriceWithTax": 0
+        },
+        "address": "123 Main St.",
+        "city": "Anywhere",
+        "state": "PA",
+        "paymentId": "PAY-8E858244005728329LAS7DPA",
+        "status": "approved",
+        "created": "ISODate('2016-11-11T16:28:44.943Z')",
+        "__v": 0
+    };
+    userrecord = {
+        _id: '5829d84b9304197fdc58a918',
+        role: 'visitor',
+        zipcode: '19147',
+        state: 'PA',
+        city: 'Philadelphia',
+        addr1: '123 S. Main St.',
+        last_name: 'Smith',
+        first_name: 'Samantha',
+        password: '$2a$05$oiamsitnqzD6wG.nghAbceS0eQL3YMccqTq6AVxh7XGJijp5Jm5Zy',
+        email: 'blahblahblah@gmail.com',
+        __v: 0,
+        orders: [],
+        purchased: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+        likes: ['5829d84b9304197fdc58a918', '6829d84b4309197fdc58a3jk'],
+        created: 'Mon Nov 14 2016 10:28:37 GMT-0500 (EST)'
+    };
+    Product.findOne({}, function(err, doc) {
+        if (err) {
+            console.log("Problem fetching one random record.");
+        }
+        console.log("doc " + doc);
+        res.render('overview', {
+            layout: 'overview.hbs',
+            user: JSON.stringify(userrecord),
+            product: doc,
+            order: JSON.stringify(orderrecord)
+        });
+    });
+})
 
 router.init = function(c) {
     config = c;

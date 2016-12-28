@@ -42,6 +42,9 @@ var schema = new Schema({
 		type: String,
 		required: false
 	},
+	sale_attributes: {
+		type: Object, required: false
+	},
 	Attributes: [{
 		Name: {
 			type: String,
@@ -169,7 +172,7 @@ schema.path('taxable').set(function(txt) {
 
 schema.virtual('isVariable')
 	.get(function() {
-		if (this.Product_Group=='VARPRICE') {
+		if (this.Product_Group=='DONATION') {
 			return true;
 		}
 	return false;
@@ -181,6 +184,14 @@ schema.virtual('isTicket')
 			return true;
 		}
 	return false;
+});
+
+schema.virtual('hasOptions')
+	.get(function() {
+		if (this.options.length < 0) {
+			return false;
+		}
+	return true;
 });
 
 schema.virtual('isApparel')

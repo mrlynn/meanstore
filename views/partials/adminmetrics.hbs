@@ -133,28 +133,119 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12 col-md-6">
+    <div class="col-lg-6 col-md-6">
         <div class="panel panel-primary">
             <div id="chart001">
+            </div>
+        </div>
+        <div class="panel panel-footer">
+
+            <button data-toggle="collapse" data-target="#query">Show Aggregation Query</button>
+            <div id="query" class="collapse">
+                <pre>
+db.events.aggregate([
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    }
+])
+                </pre>
+            </div>
+            <button data-toggle="collapse" data-target="#data">Show Aggregation Data</button>
+            <div id="data" class="collapse">
+                <pre>
+[ { x: '2016-8', purchases: 69 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 },
+  { x: '2016-7', purchases: 60 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 },
+  { x: '2016-7', purchases: 60 },
+  { x: '2016-3', purchases: 74 } ]
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-primary">
+            <div id="donut-chart">
+            </div>
+        </div>
+        <div class="panel panel-footer">
+
+            <button data-toggle="collapse" data-target="#query">Show Aggregation Query</button>
+            <div id="query" class="collapse">
+                <pre>
+db.events.aggregate([
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    }
+])
+                </pre>
+            </div>
+            <button data-toggle="collapse" data-target="#data">Show Aggregation Data</button>
+            <div id="data" class="collapse">
+                <pre>
+[ { x: '2016-8', purchases: 69 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 },
+  { x: '2016-7', purchases: 60 } ]
+[ { x: '2016-8', purchases: 69 },
+  { x: '2015-12', purchases: 10 },
+  { x: '2016-7', purchases: 60 },
+  { x: '2016-3', purchases: 74 } ]
+                </pre>
             </div>
         </div>
     </div>
 </div>
 <script>
-Morris.Area({
-  element: 'chart001',
-  data: [
-    {x: '2016 Q1', tickets: 3, banquet: 7},
-    {x: '2016 Q2', tickets: 3, banquet: 4},
-    {x: '2016 Q3', tickets: null, banquet: 1},
-    {x: '2015 Q4', tickets: 2, banquet: 5},
-    {x: '2015 Q3', tickets: 8, banquet: 2},
-    {x: '2015 Q2', tickets: 4, banquet: 4}
-  ],
-  xkey: 'x',
-  ykeys: ['tickets', 'banquet'],
-  labels: ['Tickets', 'Banquet']
-}).on('click', function(i, row){
-  console.log(i, row);
-});
+$( document ).ready(function() {
+        var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': 'http://localhost:3000/api/purchases-by-yearmo',
+            'dataType': "json",
+            'success': function (data) {
+                json = data;
+                Morris.Area({
+                  element: 'chart001',
+                  data: json,
+                  xkey: 'x',
+                  ykeys: ['purchases'],
+                  labels: ['Purchases']
+                }).on('click', function(i, row){
+                  console.log(i, row);
+                });
+            }
+        });
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': 'http://localhost:3000/api/donut-chart',
+            'dataType': 'json',
+            'success': function(data) {
+                json = data;
+                Morris.Donut({
+                  element: 'donut-chart',
+                  data: json
+                });
+            }
+        })
+    });
 </script>
