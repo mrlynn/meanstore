@@ -162,7 +162,11 @@
 							<div class="inputGroupContainer">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+									{{#if user.telephone}}
+									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" >
+									{{else}}
 									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" required>
+									{{/if}}
 								</div>
 							</div>
 						</div>

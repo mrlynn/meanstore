@@ -360,7 +360,7 @@ router.post('/order', function(req, res, next) {
 		}
 		res.send(category);
 	})
-})
+});
 router.get('/donut-chart', function(req, res, next) {
 	Event.aggregate([
 	{

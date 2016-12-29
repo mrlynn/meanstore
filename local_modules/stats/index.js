@@ -30,15 +30,19 @@ module.exports = {
                 console.log("error " + err.message);
             }
             for (var i = 0; i < orders.length; i++) {
-                var items = orders[i].cart.items;
-                for (item in orders[i].cart.items) {
-                    var group = orders[i].cart.items[item].item.Product_Group
+                if (isNaN(parseFloat(orders[i].total))) {
+                    orders[i].total = 0;
+                }
+                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].total));
+                var items = orders[i].cart;
+                for (item in items) {
+                    var group = item.Product_Group
                     stats.itemCount += 1
                     if (group == 'TICKET') {
-                        if (orders[i].cart.items[item].item.code=='RU201701') {
+                        if (items[item].code=='RU201701') {
                             stats.ticketsSold += 1
                         } else {
-                            if (orders[i].cart.items[item].item.code=='RU201702') {
+                            if (items[item].code=='RU201702') {
                                 stats.banquetTickets +=1;
                             }
                         }
@@ -47,7 +51,7 @@ module.exports = {
                             stats.apparelSold += 1
                         } else {
                             if (group == 'DONATION') {
-                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].cart.items[item].itemTotal));
+                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].total));
                                 stats.donationsCount += 1;
                             }
                         }
@@ -64,7 +68,6 @@ module.exports = {
                 } else {
                     stats.totalUnApprovedOrders += 1;
                 }
-                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].cart.grandTotal));
             }
             stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived).toFixed(2));
             stats.totalApprovedOrders = parseFloat(stats.totalApprovedOrders).toFixed(0);

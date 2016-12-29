@@ -180,23 +180,20 @@ db.events.aggregate([
         </div>
         <div class="panel panel-footer">
 
-            <button data-toggle="collapse" data-target="#query">Show Aggregation Query</button>
-            <div id="query" class="collapse">
+            <button data-toggle="collapse" data-target="#query2">Show Aggregation Query</button>
+            <div id="query2" class="collapse">
                 <pre>
 db.events.aggregate([
-    { "$group": {
-        "_id": {
-            "year": {"$year": "$when" },
-            "month": {"$month": "$when" }
-            },
-          "count": { "$sum": 1 }
-        }
+    {
+        $group: { "_id": "$action", "value": { $sum: 1 } }
+    },{
+        $project: { "_id": -1, "value": 1}
     }
 ])
                 </pre>
             </div>
-            <button data-toggle="collapse" data-target="#data">Show Aggregation Data</button>
-            <div id="data" class="collapse">
+            <button data-toggle="collapse" data-target="#data2">Show Aggregation Data</button>
+            <div id="data2" class="collapse">
                 <pre>
 [ { x: '2016-8', purchases: 69 } ]
 [ { x: '2016-8', purchases: 69 },

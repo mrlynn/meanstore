@@ -65,7 +65,7 @@ module.exports = function Cart(oldCart) {
 	    }
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, option: option, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
+			storedItem = this.items[id + option] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, option: option, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);

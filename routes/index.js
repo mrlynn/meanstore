@@ -22,6 +22,7 @@ var taxConfig = require('../config/tax-config.js');
 var recommendations = require('../local_modules/recommendations');
 var Config = require('../config/config.js');
 const dotenv = require('dotenv');
+const async = require('async');
 const chalk = require('chalk');
 var meanlogger = require('../local_modules/meanlogger');
 
@@ -459,7 +460,7 @@ router.get('/add-to-cart/:id/', function(req, res, next) {
             } else {
                 taxAmount = taxInfo.taxAmount;
             }
-            cart.add(product, product.id, product.price, taxAmount, size, ticket_name, ticket_email, product.type, product.taxable, product.shippable, req.user._id);
+            cart.add(product, product.id, product.price, taxAmount, option, ticket_name, ticket_email, product.type, product.taxable, product.shippable, req.user._id);
             req.session.cart = cart;
             meanlogger.log('plus', 'Added ' + product.name + ' to cart', req.user);
             // store cart in session
@@ -600,16 +601,17 @@ router.post('/update_shipping', isLoggedIn, function(req, res, next) {
 });
 
 router.get('/checkout', isLoggedIn, function(req, res, next) {
+
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
     }
-
-    errorMsg = req.flash('error')[0];
-    successMsg = req.flash('success')[0];
+    console.log("Error Message! " + errorMsg);
     var shipping_flag = req.body.shipping_flag;
 
     var cart = new Cart(req.session.cart);
-    var errorMsg = req.flash('error')[0];
     meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
 
     res.render('shop/checkout', {
@@ -622,17 +624,22 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
         enableTax: process.env.enableTax,
         successMsg: successMsg,
         noMessage: !successMsg,
-        errorMsg,
+        errorMsg: errorMsg,
         noErrorMsg: !errorMsg
     });
 });
 
 router.post('/checkout', function(req, res, next) {
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    var email = req.body.email;
+    var telephone = req.body.telephone;
     var method = req.body.method;
     var item_name = req.body.item_name;
     var shipping_addr1 = req.body.shipping_addr1;
     var shipping_city = req.body.shipping_city;
     var shipping_state = req.body.shipping_state;
+    var telephone = req.body.telephone;
     var shipping_zip = req.body.shipping_zip;
     var shipping_flag = req.body.shipping_flag;
     var shipping_flags = req.body.shipping_flags;
@@ -641,15 +648,22 @@ router.post('/checkout', function(req, res, next) {
     req.checkBody("shipping_city", "Enter a valid shipping city.");
     req.checkBody("shipping_state", "Enter a valid shipping state.");
     req.checkBody("shipping_zip", "Enter a valid shipping address.");
+    req.checkBody("email", "Enter a valid email address.").isEmail();
+    req.checkBody("telephone", "Enter a valid telephone number.").isMobilePhone('en-US');
     meanlogger.log('shopping-cart', 'Viewed checkout', req.user);
     var errors = req.validationErrors();
-    if (errors && shipping_flag && process.env.enableShipping) {
+    console.log("Validation Errors: " + errors);
+    if (errors ) {
+        if (shipping_flag && process.env.enableShipping) {
+            req.flash('error', 'Invalid shipping information.');
+            return res.redirect('/checkout');
+        } 
         returnObject = {
             errorMsg: errors,
             noErrorMsg: false,
             noMessage: true
         };
-        req.flash('error', 'Invalid shipping information.');
+        req.flash('error', 'Invalid contact information.  Please ensure that you have an email and telephone number.');
         return res.redirect('/checkout');
     }
     taxDesc = "";
@@ -692,6 +706,8 @@ router.post('/checkout', function(req, res, next) {
                     shipping_state: shipping_state,
                     shipping_zip: shipping_zip,
                     shipping_flag: shipping_flag,
+                    email: email,
+                    telephone: telephone,
                     taxDesc: taxDesc,
                     products: cart.generateArray(),
                     subtotal: subtotal,
@@ -736,10 +752,29 @@ router.post('/checkout', function(req, res, next) {
 router.post('/create', function(req, res, next) {
     // reference: https://github.com/paypal/PayPal-node-SDK/search?p=2&q=tax&utf8=%E2%9C%93
     var method = req.body.method;
+    var telephone = req.body.telephone;
+    var email = req.body.email;
+    var successMsg = req.flash('success')[0];
+    var errorMsg = req.flash('error')[0];
+    var first_name = req.body.first_name;
+    var last_name = req.body.last_name;
     var amount = parseFloat(req.body.amount);
     var shippingtotal = parseFloat(req.body.shippingtotal);
     var subtotal = parseFloat(req.body.subtotal);
     var taxAmount = parseFloat(req.body.totalTax);
+    req.checkBody("email", "Enter a valid email address.").isEmail();
+    req.checkBody("telephone", "Enter a valid telephone number.").isMobilePhone('en-US');
+    var errors = req.validationErrors();
+    console.log("Error messages in /create " + errors);
+    if (errors) {
+        returnObject = {
+            errorMsg: errors,
+            noErrorMsg: false,
+            noMessage: true
+        };
+        req.flash('error', 'Invalid contact or shipping information.  Please ensure that you have an email and telephone number.');
+        return res.redirect('/checkout');
+    }
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
     }
@@ -773,17 +808,20 @@ router.post('/create', function(req, res, next) {
     };
     var custom = {}
     var item_list = [];
+    var orders = [];
     for (var i = 0, len = products.length; i < len; i++) {
         var price = parseFloat(products[i].price);
         price = String(price.toFixed(2));
         qty = Number(products[i].qty);
         tname = 'ticket_name_' + i;
+        oname = 'option_' + i;
         var ticket_name = req.body['ticket_name_' + i];
         var ticket_email = req.body['ticket_email_' + i];
-        var size = req.body['size_' + i];
+        var option = req.body['option_' + i];
         custom[i] = {
             "ticket_name": ticket_name,
-            "ticket_email": ticket_email
+            "ticket_email": ticket_email,
+            "option": option
         };
         item = {
                 "name": products[i].item.title,
@@ -798,8 +836,21 @@ router.post('/create', function(req, res, next) {
             //     console.log("TICKET_NAME: " + item.ticket_name);
             // }
         create_payment.transactions[0].item_list.items.push(item)
+        order = {
+            productId: products[i]._id,
+            product_name: products[i].item.title,
+            Product_Group: products[i].Product_Group,
+            product_price: price,
+            product_qty: qty,
+            paidBy: 'Paypal',
+            ticket_name: ticket_name,
+            ticket_email: ticket_email,
+            option: option,
+            category: products[i].category,
+            code: products[i].item.code
+        }
+        orders.push(order);
     }
-
     if (method === 'paypal') {
         create_payment.payer.payment_method = 'paypal';
         return_url = "http://" + req.headers.host + "/execute";
@@ -829,6 +880,7 @@ router.post('/create', function(req, res, next) {
     // We'll store the payment in a document and then redirect the user
     // When the user authorizes, paypal will callback our /execute route and we'll complete the transaction
     //
+
     paypal.payment.create(create_payment, function(err, payment) {
         if (err) {
             errorMsg = req.flash('error', err.message);
@@ -850,9 +902,10 @@ router.post('/create', function(req, res, next) {
                         id: req.user._id,
                         first_name: req.user.first_name,
                         last_name: req.user.last_name,
-                        email: req.user.email
+                        email: email,
+                        telephone: telephone
                     },
-                    cart: cart,
+                    cart: orders,
                     shipping_address: req.body.shipping_addr1,
                     shipping_city: req.body.shipping_city,
                     shipping_state: req.body.shipping_state,
@@ -862,11 +915,14 @@ router.post('/create', function(req, res, next) {
                     billing_state: req.body.shipping_state,
                     billing_zipcode: req.body.shipping_zipcode,
                     paymentId: payment.id,
-                    status: 'pending'
+                    status: 'pending',
+                    total: cart.grandTotal
                 });
+                console.log("Save Order: " + JSON.stringify(order));
                 order.save(function(err) {
                     if (err) {
-                        req.flash('error', 'Unable to save order.');
+                        console.log("Error: " + err.message)
+                        req.flash('error', 'Unable to save order... ' + err.message);
                         res.redirect('/');
                     }
                 })
@@ -938,7 +994,8 @@ router.get('/execute', function(req, res, next) {
     var details = {
         "payer_id": PayerID
     };
-
+    var cart = new Cart(req.session.cart);
+    products = cart.generateArray();
     var payment = paypal.payment.execute(paymentId, details, function(error, payment) {
         if (error) {
             console.log(error);
@@ -973,83 +1030,94 @@ router.get('/execute', function(req, res, next) {
                     }, {
                         status: payment.state
                     }, {
-                        new: true
+                        new: true,
+                        safe: true,
+                        upsert: true
                     }, function(err, newOrder) {
                         if (err) {
                             req.flash('error', 'Unable to save order.');
                             return res.redirect('/');
                         }
                         /* Update Users Bought Array */
-                        User.findOneAndUpdate({
-                            _id: req.user._id
-                        }, {
-                            $push: {
-                                "orders": newOrder
-                            }
-                        }, {
-                            new: true,
-                            safe: true,
-                            upsert: true
-                        }, function(err, newUser) {
-                            if (err) {
-                                req.flash('error', 'Unable to update user record');
-                                return res.redirect('/');
-                            }
-                            if (!process.env.fromEmail === null) {
-                                var mailOptions = {
-                                    to: newUser.email,
-                                    from: process.env.fromEmail,
-                                    subject: process.env.mailSubject,
-                                    text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
-                                        'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
-                                };
-                                meanlogger.log('dollar', 'Completed Purchase', req.user);
-                                transporter.sendMail(mailOptions, function(err) {
-                                    if (err) {
-                                        console.log(err);
+                            async.each(products, function(product, next) {
+                                event = new Event({
+                                    namespace: 'products',
+                                    person: {
+                                        id: req.user._id,
+                                        first_name: req.user.first_name,
+                                        last_name: req.user.last_name,
+                                        email: req.user.email,
+                                        telephone: req.user.telephone
+                                    },
+                                    action: 'purchase',
+                                    thing: {
+                                        type: "product",
+                                        id: product.item._id,
+                                        name: product.item.name,
+                                        category: product.category,
+                                        Product_Group: product.Product_Group
                                     }
                                 });
-                            }
-                        });
+                                event.save(function(err, eventId) {
+                                    if (err) {
+                                        console.log("Error: " + err.message);
+                                        return -1;
+                                    }
+                                })
+                                User.findOneAndUpdate({
+                                    _id: req.user._id
+                                }, {
+                                    $push: {
+                                        "orders": {
+                                            paymentId: payment.id,
+                                            status: payment.state,
+                                            productId: product.item._id,
+                                            sku: product.sku,
+                                            name: product.item.name,
+                                            category: product.category,
+                                            Product_Group: product.Product_Group
+                                        }
+                                    }
+                                }, {
+                                    new: true,
+                                    safe: true,
+                                    upsert: false
+                                }, function(err, newUser) {
+                                    if (err) {
+                                        console.log("Unable to update user - " + err.message);
+                                        return -1;
+                                    }
+                                    if (!process.env.fromEmail === null) {
+                                        var mailOptions = {
+                                            to: newUser.email,
+                                            from: process.env.fromEmail,
+                                            subject: process.env.mailSubject,
+                                            text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
+                                                'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+                                        };
+                                        meanlogger.log('dollar', 'Completed Purchase', req.user);
+                                        transporter.sendMail(mailOptions, function(err) {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                        });
+                                    }
+                                });
+                            })
+                            req.flash('success', "Successfully processed payment!");
+                            var transporter = nodemailer.createTransport(smtpConfig.connectString);
+                            var cart = new Cart(req.session.cart);
+                            products = cart.generateArray();
+                            tickets = cart.ticketSale(products, req.user);
+                            req.cart = null;
+                            var cart = new Cart({});
+                            req.session.cart = cart;
+                            res.redirect('/');
                     });
                 });
-                var cart = new Cart(req.session.cart);
-                products = cart.generateArray();
-                for (var i = 0; i > products.length; i++) {
-                    console.log("PRODUCTS PURCHASED: " + JSON.stringify(products[i]));
 
-                    event = new Event({
-                        namespace: 'products',
-                        person: {
-                            id: req.user._id,
-                            first_name: req.user.first_name,
-                            last_name: req.user.last_name,
-                            email: req.user.email,
-                        },
-                        action: 'purchase',
-                        thing: {
-                            type: "product",
-                            id: product[i].item._id,
-                            name: product[i].item.name,
-                            category: product[i].category,
-                            Product_Group: product[i].Product_Group
-                        }
-                    });
-                    event.save(function(err, eventId) {
-                        if (err) {
-                            console.log("Error: " + err.message);
-                            return -1;
-                        }
-                    })
-                }
-                req.flash('success', "Successfully processed payment!");
-                var transporter = nodemailer.createTransport(smtpConfig.connectString);
-                tickets = cart.ticketSale(products, req.user);
-                req.cart = null;
-                var cart = new Cart({});
-                req.session.cart = cart;
-                res.redirect('/');
             });
+
         }; // res.render('shop/complete', { 'payment': payment, message: 'Problem Occurred' });
     });
 });
@@ -1328,7 +1396,7 @@ router.get('/overview', function(req, res, next) {
                     },
                     "qty": 1,
                     "price": 102,
-                    "size": 0,
+                    "option": 0,
                     "taxAmount": 0,
                     "taxable": "Yes",
                     "shippable": "Yes",

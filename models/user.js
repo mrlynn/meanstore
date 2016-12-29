@@ -69,38 +69,16 @@ var userSchema = new Schema({
 		}
 	}],
 	orders:[{
-		order: {
-			type: String,
-		},
-		paymentId: {
-			type: String
-		},
-		status: {
-			type: String
-		},
-        items: [{
-            "name": {
-              type: String
-            },
-            "sku": {
-              type: String
-            },
-            "price": {
-              type: String
-            },
-            "currency": {
-              type: String
-            },
-            "quantity": {
-              type: Number
-            },
-            "description": {
-              type: String
-            },
-            "tax": {
-              type: String
-            }
-        }]
+        paymentId: String,
+        status: String,
+		productId: {type: Schema.Types.ObjectId, ref: 'Product', required: false},
+        sku: String,
+        name: String,
+        category: String,
+        Product_Group: String,
+        ordered: {
+        	type: Date, default: Date.now()
+        }
 	}],
 	facebook: String,
 	twitter: String,

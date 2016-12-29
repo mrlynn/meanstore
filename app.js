@@ -30,6 +30,7 @@ var strongAgent = require('strong-agent');
 var breadcrumbs = require('express-breadcrumbs');
 var fileUpload = require('express-fileupload');
 var api = require('./routes/api');
+var exporter = require('./routes/exporter');
 var taxCalc = require('./local_modules/tax-calculator');
 var Config = require('./config/config');
 var Category = require('./models/category');
@@ -105,7 +106,7 @@ var hbs = expressHbs.create({
           return str.charAt(0).toUpperCase() + str.slice(1);
         },
         money: function(num) {
-          var p = num.toFixed(2).split(".");
+          var p = parseInt(num).toFixed(2).split(".");
           return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
               return  num=="-" ? acc : num + (i && !(i % 3) ? "," : "") + acc;
           }, "") + "." + p[1];
@@ -225,6 +226,8 @@ app.use(function(req,res,next) {
 app.use(fileUpload());
 
 // app.use('/facet', facetRoutes);
+app.use('/exporter', exporter);
+
 app.use('/api', api);
 // app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);

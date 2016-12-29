@@ -214,7 +214,7 @@ router.get('/users:filter?', isAdmin, function(req, res, next) {
                 adminUsers: adminUsers,
                 nonAdminUsers: nonAdminUsers,
                 errorMsg: errorMsg,
-                user: req.user, 
+                user: req.user,
                 stats: stats,
                 users: users,
                 isLoggedIn:req.isAuthenticated(),
@@ -613,26 +613,39 @@ router.post('/delete-product',  isAdmin, function(req, res, next) {
     })
 })
 
-router.get('/edit-product/:id',  isAdmin,function(req, res, next) {
-	productId = req.params.id;
-	errorMsg = req.flash('error')[0];
-	successMsg = req.flash('success')[0];
-	Product.findById(req.params.id, function(err, product) {
-    	if (err) {
-    		req.flash('error','Error: ' + err.message);
-    		return res.redirect('/admin');
-    	}
-    	console.log("product: " + product);
-    	res.render('admin/editProduct',{
-    		product: product,
-    		layout: 'fullpage.hbs',
-    		product: product,
-    		errorMsg: errorMsg,
-    		successMsg: successMsg,
-    		noErrorMsg: !errorMsg,
-    		noMessage: !successMsg
+router.post('/edit-product',isAdmin, function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    var imageFile;
+    var updated = {
+        name: req.body.name,
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category,
+        Product_Group: req.body.Product_Group,
+        taxable: req.body.taxable,
+        shippable: req.body.shippable
+    }
+    if (req.files) {
+        imageFile = req.files.imageFile;
+        imageFile.mv(process.env.imagePath + '/' + req.body.name + '.png' , function(err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        })
+        updated.imagePath = '/images/' + req.body.name + '.png'
 
-    	})
+    }
+    Product.findOneAndUpdate({_id: req.body._id}, { $set: updated }, function(err,product) {
+            if (err) {
+                console.log("Unable to update product - " + err.message);
+                req.flash('error',"Unable to update product - " + err.message);
+                return res.redirect('/admin/products');
+            };
+            console.log("Product " + req.body.name + " Updated");
+            req.flash('success','Product ' + req.body.name + ' Updated!');
+            return res.redirect('/admin/products');
     });
 });
 
@@ -655,6 +668,7 @@ router.post('/add-product',isAdmin, function(req, res, next) {
             name: req.body.name,
             code: req.body.code,
             title: req.body.title,
+            Product_Group: req.body.Product_Group,
             price: parseFloat((req.body.price * 100).toFixed(2)),
             description: req.body.description,
             shippable: req.body.shippable,
@@ -672,8 +686,6 @@ router.post('/add-product',isAdmin, function(req, res, next) {
         });
     });
 });
-
-
 
 router.get('/categories:filter?', isAdmin,function(req, res, next) {
     successMsg = req.flash('success')[0];

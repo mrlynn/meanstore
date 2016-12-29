@@ -34,6 +34,13 @@ var orderSchema = new Schema({
 	status: {type: String, required: false},
 	receipt_status: {type: String, required: false, default: 'New'},
 	receiver: {type: String, required: false},
+	total: String,
+	paidBy: {
+		type: String,
+		default: 'Paypal',
+		enum: ['Paypal','Cash','Check'],
+		required: false
+	},
 	note: {
 		type: String
 	},

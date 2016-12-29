@@ -60,6 +60,7 @@
                                 <th><h3>Paypal Status</h3></th>
                                 <th><h3>Pickup Status</h3></th>
                                 <th><h3>Amount</h3></th>
+                                <th><h3>Note</h3></th>
                                 <th><h3>Edit</h3></th>
                                 <th><h3>Delete</h3></th>
                                 <th><h3>View</h3></th>
@@ -78,11 +79,12 @@
                                             <th>Name</th>
                                             <th>Type</th>
                                             <th>Info</th>
+                                            <th>Price</th>
                                         </thead>
                                         <tbody>
-                                            {{#each this.cart.items}}
+                                            {{#each this.cart}}
                                             <tr>
-                                                <td>{{this.item.code}}</td><td> {{this.item.name}}</td><td> {{this.item.Product_Group}}</td>
+                                                <td>{{this.code}}</td><td> {{this.product_name}}</td><td> {{this.Product_Group}}</td>
                                                 <td>
                                                     {{#if this.ticket_name }}
                                                         Ticket Owner:<br>{{this.ticket_name}}<br>{{this.ticket_email}}
@@ -91,6 +93,7 @@
                                                         Option: {{this.option}}
                                                     {{/if}}
                                                 </td>
+                                                <td>{{money this.product_price}}
                                             </tr>
                                         {{/each}}
                                     </tbody>
@@ -98,7 +101,8 @@
                             </td>
                             <td class="text-left">{{this.status}}</td>
                             <td class="text-left">{{this.receipt_status}}</td>
-                            <td class="text-right">${{this.cart.grandTotal}}</td>
+                            <td class="text-right">${{this.total}}</td>
+                            <td class="text-right">{{this.note}}</td>
                             <td>
                             <p data-placement="top" data-toggle="tooltip" title="Update Order ">
         <button class="ui right floated btn btn-success btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit"> <span class="glyphicon glyphicon-pencil"></span>
@@ -352,3 +356,22 @@
 </div>
 <!-- /.container-fluid -->
 </div>
+
+<script>
+$( document ).ready(function() {
+        var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': 'http://localhost:3000/api/products',
+            'dataType': "json",
+            'success': function (data) {
+                json = data;
+                console.log(json);
+                $.each(data,function(i,product){
+                    $('#product').append($('<option>').text(product.name).attr('value', product.sku));
+                });
+            }
+        });
+    });
+</script>

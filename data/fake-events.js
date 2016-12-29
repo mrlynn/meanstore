@@ -58,7 +58,7 @@ for (var i = 0; i < 100; i++) {
                 console.log(err);
                 return -1;
             }
-            action = actions[randInterval(0,actions.length)];
+            action = actions[randInterval(0,actions.length-1)];
             event = new Event({
                 namespace: 'products',
                 when: faker.date.past(),

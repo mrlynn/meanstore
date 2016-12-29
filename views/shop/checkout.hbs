@@ -6,10 +6,14 @@
 				<li><a href="shopping-cart">Shopping Cart</a></li>
 				<li class="active">Checkout</li>
 			</ol>
-			{{#if products}}
 			<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
 				{{errorMsg}}
 			</div>
+			<div id="charge-success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
+				{{successMsg}}
+			</div>
+			{{#if products}}
+			
 			<div class="row">
 				<div class="col-lg-12 col-md-12">
 					<h1>Provide Purchaser Details</h1>
@@ -34,7 +38,11 @@
 										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-												<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+												{{#if user.email}}
+												<input disabled name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+												{{else }}
+												<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text" required>
+												{{/if}}
 											</div>
 										</div>
 									</div>
@@ -44,7 +52,11 @@
 										<div class="inputGroupContainer">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-												<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
+												{{#if user.telephone}}
+												<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" >
+												{{else}}
+												<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" required>
+												{{/if}}
 											</div>
 										</div>
 									</div>
@@ -128,7 +140,7 @@
 										<input type="hidden" name="item_number_{{inc @index }}" value="{{this.item._id}}">
 										<input type="hidden" name="amount_{{inc @index }}" value="{{this.price}}">
 										<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
-										<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
+										<input type="hidden" name="option[{{ @index}}]" value="{{this.option}}">
 
 
 										<input type="hidden" name="item_name[null]" value="" />
@@ -139,6 +151,7 @@
 										<input type="hidden" name="item_ticket_email[{{ @index }}]" value="{{this.ticket_email}}" />
 										<input type="hidden" name="item_amount[{{ @index }}]" value="{{this.price}}" />
 										<input type="hidden" name="item_tax_amount[{{ @index }}]" value="{{this.totalTax}}" />
+										<input type="hidden" name="option_{{@index}}" value="{{this.option}}" />
 										<input type="hidden" name="ticket_name_{{@index}}" value="{{this.ticket_name}}" />
 										<input type="hidden" name="ticket_email_{{@index}}" value="{{this.ticket_email}}" />
 										<tr>
