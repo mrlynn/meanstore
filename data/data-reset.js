@@ -11,10 +11,11 @@ dotenv.load({
 });
 var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;
 mongoose.connect(connectionstring);
-console.log("Removing data from " + Config.dbname + '/products');
+const error = chalk.bold.red;
+console.log(chalk.blue.underline('Removing data from %s'),Config.dbname + '/products');
 Product.remove({},function(err,results) {
 	if (err) {
-		console.log('error: ', err.message);
+		console.log(error('error: ', err.message));
 		process.exit(-1);
 	}
 	console.log('Results: ' + JSON.stringify(results));
