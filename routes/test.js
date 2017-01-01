@@ -1,32 +1,43 @@
-{
-    "intent": "sale",
-    "payer": {
-        "payment_method": "paypal"
-    },
-    "redirect_urls": {
-        "return_url": "http://return.url",
-        "cancel_url": "http://cancel.url"
-    },
-    "transactions": [{
-        "item_list": {
-            "items": [{
-                "name": "item",
-                "sku": "item",
-                "price": "1.00",
-                "currency": "USD",
-                "quantity": 1
+var Product = require('../models/product');
+var dotenv = require('dotenv');
+var mongoose = require('mongoose');
+const chalk = require('chalk');
+
+dotenv.load({ path: '.env.hackathon' });
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connection.on('error', () => {
+  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  process.exit();
+});
+    Product.aggregate([{
+        $match: {
+            $and: [{
+                $or: [{
+                    'category': "Television"
+                }, {
+                    'category': "television"
+                }]
             }, {
-                "name": "item2",
-                "sku": "item2",
-                "price": "2.00",
-                "currency": "USD",
-                "quantity": 1
+                status: {
+                    $ne: 'deleted'
+                }
+            }, {
+                $or: [{
+                    "inventory.onHand": {
+                        $gt: 0
+                    }
+                }, {
+                    "inventory.disableOnZero": false
+                }]
             }]
-        },
-        "amount": {
-            "currency": "USD",
-            "total": "3.00"
-        },
-        "description": "This is the payment description."
-    }]
-}
+        }
+    }], function(err, products) {
+        console.log(JSON.stringify(products))
+    });
+console.log("-----------------------------------")
+    // Product.find({}, function(err, products) {
+        
+    //     console.log(JSON.stringify(products))
+    // });

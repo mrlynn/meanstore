@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+require('mongoose-currency').loadType(mongoose);
+var Currency = mongoose.Types.Currency;
 var random = require('mongoose-simple-random');
 
 var Schema = mongoose.Schema;
@@ -8,6 +10,13 @@ var schema = new Schema({
 		type: Number,
 		required: false
 	},
+	inventory: {
+		onHand: Number,
+		disableAtZero: Boolean
+	},
+	tags: [{
+		type: String
+	}],
 	status: {
 		type: String
 	},
@@ -28,14 +37,12 @@ var schema = new Schema({
 		required: false
 	},
 	price: {
-        type: Number,
-        required: true,
-        get: getCurrency
+        type: Currency,
+        required: true
 	},
 	cost: {
-        type: Number,
-        required: false,
-        get: getCurrency
+        type: Currency,
+        required: false
 	},
 	likes: [String],
 	Product_Group: {
@@ -125,6 +132,11 @@ var schema = new Schema({
 			Type: Number
 		}
 	}]
+},
+{
+	toJSON: {
+		getters: true
+	}
 });
 // shippable Getter
 schema.path('shippable').get(function(txt) {
@@ -217,7 +229,7 @@ function getCurrency(amt) {
 // }
 schema.plugin(random);
 
-schema.index({name: 'text',title:'text',description:'text',category:'text'});
+schema.index({name: 'text',title:'text',description:'text',category:'text', code: 'text', Product_Group: 'text'});
 
 module.exports = mongoose.model('Product',schema);
 

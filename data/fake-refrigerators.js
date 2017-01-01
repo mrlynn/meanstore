@@ -29,8 +29,7 @@ product_groups = ['French Door','Bottom Freezer','Side by Side','Top Freezer']
     
 var done = 0;
 async.times(100, function(i, next) {
-	pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
-    product_group = product_groups[pgroup];
+	
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	color = color.toUpperCase();
@@ -62,8 +61,10 @@ async.times(100, function(i, next) {
 		brand = brands[brandNum];
 		imagePath = '/img/' + brand.toLowerCase() + '-refrigerator.jpg'
 		name = faker.commerce.productName() + ' Refrigerator';
-		price = faker.commerce.price();
-		cost = Math.floor(Math.random() * price) + (price / 2)  
+		price = Math.floor((Math.random() * 100000 - 1) + 1);
+		cost = Math.floor((Math.random() * price) + (price / 2));
+		pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
+    	product_group = product_groups[pgroup];
 		product = new Product({
 			code: 'ref' + code,
 			name: name,
@@ -71,18 +72,22 @@ async.times(100, function(i, next) {
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',
-			cost: cost * 100,
+            inventory: {
+                onHand: 10,
+                disableAtZero: Math.round(Math.random()) ? true : false,
+            },
 			sale_attributes: {
                 featured: Math.round(Math.random()) ? true : false,
                 new: Math.round(Math.random()) ? true : false,
                 trending: Math.round(Math.random()) ? true : false,
                 sale: Math.round(Math.random()) ? true : false
             },
-			price: price * 100,
+            price: price,
+            cost: cost,
 			'Product_Group': product_group,
 			category: 'Refrigerator',
 			usersBought: items,
-			attributes: [{
+			Attributes: [{
 				Name: 'color',
 				Value: color
 			},{

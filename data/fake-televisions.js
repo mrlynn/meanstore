@@ -53,19 +53,25 @@ async.times(100, function(i, next) {
 		imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
 		name = brand;
 		name = name.toUpperCase();
-		price = faker.commerce.price();
-		cost = Math.floor(Math.random() * price) + (price / 2);
+		price = Math.floor((Math.random() * 100000 - 1) + 1);
+		cost = Math.floor((Math.random() * price) + (price / 2));
+		console.log("Price: " + price);
+		console.log("Cost: " + cost);
 		pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
 	    product_group = product_groups[pgroup];
 		product = new Product({
 			code: 'tel' + code,
 			name: name,
+            inventory: {
+                onHand: 10,
+                disableAtZero: Math.round(Math.random()) ? true : false,
+            },
 			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name + ' ' + 'Television',
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',
-			price: price * 100,
-			cost: cost * 100,
+            price: price,
+            cost: cost,
 			sale_attributes: {
                 featured: Math.round(Math.random()) ? true : false,
                 new: Math.round(Math.random()) ? true : false,
@@ -92,7 +98,7 @@ async.times(100, function(i, next) {
 				Value: Math.floor((Math.random() * 5-1) + 1)
 			},{
 				Name: 'Price',
-				Value: price
+				Value: 	price
 			}],
 			imagePath: imagePath
 		});

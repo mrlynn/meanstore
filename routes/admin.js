@@ -99,7 +99,6 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
 
     Order.find(qryFilter).sort({"created": -1}).exec(function(err, orders) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -198,7 +197,6 @@ router.get('/users:filter?', isAdmin, function(req, res, next) {
     console.log("Stats in route " + JSON.stringify(res.locals.stats));
     User.find(qryFilter, function(err, users) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -328,7 +326,6 @@ router.get('/activities:filter?', isAdmin, function(req, res, next) {
 
     Activity.find(qryFilter).sort({time: 'desc'}).exec( function(err, activities) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -447,7 +444,6 @@ Event.aggregate([
 
     Event.find(qryFilter).sort({when: 'desc'}).exec( function(err, events) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -554,12 +550,14 @@ router.get('/products:filter?', isAdmin,function(req, res, next) {
     if (!filter || filter=='allProducts') {
         var allProducts = true;
         var deletedProducts = false;
-        qryFilter = {status: { $ne: 'deleted'}};
+        // qryFilter = {status: { $ne: 'deleted'}};
+        qryFilter = {};
     } else {
         if (filter=='deletedProducts') {
             var allOrders = false;
             var deletedProducts = true;
-            qryFilter = { status: 'deleted'};
+            // qryFilter = { status: 'deleted'};
+            qryFilter = { };
         }
     }
     Product.find(qryFilter,function(err, products) {
@@ -822,6 +820,33 @@ router.get('/setup', isAdmin, function(req, res, next) {
 		config: Config
 	})
 })
+
+/* display logger activities */
+router.get('/dashboard', isAdmin, function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Dashboard";
+    var adminPageUrl = "/admin/dashboard";
+    Stats.getStats(function(err,stats){
+        if (err) {
+            console.log(error.message);
+            res.send(500,"error fetching orders");
+        }
+        res.render('admin/dashboard', {
+            adminPageTitle: adminPageTitle,
+            adminPageUrl: adminPageUrl,
+            layout: 'admin-page.hbs',
+            // csrfToken: req.csrfToken(),
+            noMessage: !successMsg,
+            noErrorMsg: !errorMsg,
+            errorMsg: errorMsg,
+            user: req.user,
+            stats: stats,
+            isLoggedIn:req.isAuthenticated(),
+            successMsg: successMsg
+        });
+    });
+});
 
 module.exports = router;
 function isAdmin(req, res, next) {

@@ -100,6 +100,7 @@ This will expose the entire product catalog collection.
 ## History
 
 - Version 0.1 - 11/20/2016 - Michael Lynn
+- Version 1.0 - 01/01/2017 - Michael Lynn - Updated theme, new category, group and search mechanisms
 
 ## Credits / Contributors
 

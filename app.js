@@ -106,8 +106,8 @@ var hbs = expressHbs.create({
           return str.charAt(0).toUpperCase() + str.slice(1);
         },
         money: function(num) {
-          var p = parseInt(num).toFixed(2).split(".");
-          return "$" + p[0].split("").reverse().reduce(function(acc, num, i, orig) {
+          var p = parseFloat(num/100).toFixed(2).split(".");
+          return p[0].split("").reverse().reduce(function(acc, num, i, orig) {
               return  num=="-" ? acc : num + (i && !(i % 3) ? "," : "") + acc;
           }, "") + "." + p[1];
         }
@@ -164,7 +164,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req,res,next) {
     // if (typeof res.locals.allcats == 'undefined') {
-
     Product.aggregate([{
         $sortByCount: "$category"
         }], function(err, navcats) {
@@ -172,7 +171,7 @@ app.use(function(req,res,next) {
           res.send('500','Error retrieving categories.');
         }
         app.set('navcats',navcats);
-        console.log("Navcats in app.js " + JSON.stringify(navcats));
+        // console.log("Navcats in app.js " + JSON.stringify(navcats));
         res.locals.navcats = navcats;
         res.locals.login = req.isAuthenticated();
         if (res.locals.login) {
@@ -204,7 +203,6 @@ app.use(function(req,res,next) {
             console.log("Err fetching salegroups");
 
           }
-            console.log('Sale Groups: ' + JSON.stringify(salegroups));
             app.set('salegroups',salegroups);
             res.locals.session = req.session;
             res.locals.copyright = process.env.copyright;

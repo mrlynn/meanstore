@@ -46,15 +46,15 @@ router.get('/orders', isLoggedIn, function(req, res, next) {
             return res.write('Error');
         }
         var arr = [];
-        for (var order in orders) {
-            console.log("Cart Item: " + orders[order]);
-            console.log("------------");
-            for (var item in orders[order].cart.items) {
-                console.log("Item " + item);
-                console.log(orders[order].cart.items[item].item.name);
-
-            }
-        }
+        // for (var order in orders) {
+        //     console.log("Cart Item: " + orders[order]);
+        //     console.log("------------");
+        //     for (var item in orders[order].cart.items) {
+        //         console.log("Item " + item);
+        //         console.log(orders[order].cart.items[item].item.name);
+        //
+        //     }
+        // }
         // return arr;
         res.render('user/orders', {
             layout: 'eshop/blank',
@@ -76,7 +76,7 @@ router.get('/forgot', function(req, res, next) {
 	var errorMsg = req.flash('error')[0];
 	res.render('user/forgot', {
 		layout:'eshop/blank',
-		user: req.user, 
+		user: req.user,
 		errorMsg: errorMsg,
 		noErrorMsg:!errorMsg,
 		successMsg: successMsg,
@@ -143,7 +143,7 @@ router.post('/forgot', function(req, res, next) {
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
             transporter.sendMail(mailOptions, function(err) {
-            	 if (!err) { 
+            	 if (!err) {
 	                 req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
 				   	 res.redirect('/user/forgot');
 			   	} else {
@@ -300,7 +300,6 @@ router.post('/signin', passport.authenticate('local.signin', {
     failureRedirect: '/user/signin',
     failureFlash: true
 }), function(req, res, next) {
-    console.log("Referer: " + req.get('Referer'));
     meanlogger.log("auth","logged in",req.user);
     if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
         var oldUrl = req.session.oldUrl

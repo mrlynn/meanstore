@@ -36,7 +36,6 @@ function heredoc (f) {
  * @constructor
  */
 router.get('/categories', function(req, res, next) {
-console.log("in cate");
 	Category.find({},function(err,categories) {
 		// res.json(categories);
 		var filename = 'Categories.csv';
@@ -59,7 +58,6 @@ router.get('/products', function (req, res){
 	}],function(err,products) {
 		// res.json(categories);
 		var filename = ['Products-', Date.now()].join('');
-		console.log(filename);
 		var fields = ['name', 'title', 'description', 'shippable','taxable','price','cost','Product_Group','options'];
 		var fieldNames = ['Name', 'Title', 'Description', 'Ship?','Tax?','Price','Cost','Product_Group','Options'];
 		var data = json2csv({ data: products, fields: fields, fieldNames: fieldNames });
@@ -79,7 +77,6 @@ router.get('/users', function (req, res){
 		$unwind: "$orders"
 	}],function(err,users) {
 		var filename = ['Users-', Date.now()].join('');
-		console.log(filename);
 		var fields = ['first_name', 'last_name', 'email', 'name','ordered','sku','status'];
 		var fieldNames = ['first_name', 'last_name', 'email', 'name','ordered','sku','status'];
 		var data = json2csv({ data: users, fields: fields, fieldNames: fieldNames });
@@ -97,11 +94,9 @@ router.get('/orders', function (req, res){
 			includeArrayIndex: "item_no"
 		}
 	}],function(err,orders) {
-		console.log("Orders: " + JSON.stringify(orders));
 		var filename = ['Orders-', Date.now()].join('');
-		console.log(filename);
-		var fields = ['user.first_name', 'user.last_name', 'user.email', 'status','created','cart.product_name','cart.option','cart.product_price','cart.ticket_name','cart.ticket_email'];
-		var fieldNames = ['First name', 'Last Name', 'Email', 'Status','Ordered','Item','Option','Price','Ticket Name','Ticket Email'];
+		var fields = ['_id','user.first_name', 'user.last_name', 'user.email', 'status','created','cart.product_name','cart.option','cart.product_price','cart.ticket_name','cart.ticket_email'];
+		var fieldNames = ['ID','First name', 'Last Name', 'Email', 'Status','Ordered','Item','Option','Price','Ticket Name','Ticket Email'];
 		var data = json2csv({ data: orders, fields: fields, fieldNames: fieldNames });
 		res.set('Content-Disposition', ["attachment; filename=", filename, '.csv'].join(''))
 		res.end(data);
@@ -109,5 +104,3 @@ router.get('/orders', function (req, res){
 
 });
 module.exports = router;
-
-

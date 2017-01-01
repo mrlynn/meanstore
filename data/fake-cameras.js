@@ -74,19 +74,23 @@ async.times(100, function(i, next) {
         imagePath = '/img/' + brand.toLowerCase() + '-camera.jpg'
         var category = 'Camera';
         name = faker.commerce.productName() + ' Camera';
-        price = faker.commerce.price() ;
-        cost = Math.floor(Math.random() * price) + (price / 2)  /* Cost should be somewhere between 50% and 100% of price */
+        price = Math.floor((Math.random() * 100000 - 1) + 1);
+        cost = Math.floor((Math.random() * price) + (price / 2));
         code = 'cam' + Math.floor(i);
         console.log(code);
         product = new Product({
             code: code,
+            inventory: {
+                onHand: 10,
+                disableAtZero: Math.round(Math.random()) ? true : false,
+            },
             name: name,
             title: brand + ' ' + faker.commerce.productAdjective() + ' ' + color + ' ' + name,
             description: faker.lorem.sentence(),
             taxable: 'Yes',
             shippable: 'Yes',
-            price: price * 100,
-            cost: cost * 100,
+            price: price,
+            cost: cost,
             'Product_Group': product_group,
             category: 'Camera',
             usersBought: usersArray,

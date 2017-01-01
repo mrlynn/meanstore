@@ -38,15 +38,12 @@ module.exports = {
                 for (item in items) {
                     var group = item.Product_Group
                     stats.itemCount += 1
-                    if (group == 'TICKET') {
-                        if (items[item].code=='RU201701') {
+                    if (items[item].code=='RU201701') {
                             stats.ticketsSold += 1
-                        } else {
-                            if (items[item].code=='RU201702') {
-                                stats.banquetTickets +=1;
-                            }
-                        }
                     } else {
+                        if (items[item].code=='RU201702') {
+                                stats.banquetTickets +=1;
+                        }
                         if (group == 'APPAREL') {
                             stats.apparelSold += 1
                         } else {

@@ -25,7 +25,7 @@ for (var i=0; i < maxUsers; i++) {
 	var fields = { _id: 1 };
 	var options = { skip: 10, limit: 10, count: 5 }
 	/* let's get 5 random products to add to the user's purchased array */
-	Product.findRandom(filter, fields, options,function(err,purchasedArray) {
+	Product.findRandom(filter, fields, options, function(err,purchasedArray) {
 		if (err) {
 			console.log(err);
 		}

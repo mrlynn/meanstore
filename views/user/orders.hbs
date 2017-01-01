@@ -21,16 +21,19 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>Date</th><th>Item</th><th>Qty</th><th>Price</th>
+								<th>Date</th><th>Item</th><th>Type</th><th>Paid by</th><th>Qty</th><th>Price</th>
 							</tr>
 						</thead>
 						<tbody>
-						{{#each this.cart.items}}
+						{{#each this.cart}}
 							<tr>
 								<td>{{formatDate ../this.created "MM-DD-YYYY"}}</td>
-								<td>{{this.item.name}} - {{this.item.title}}</td>
+								<td>{{this.code}} {{this.product_name}} - {{this.product_title}}</td>
+								
+								<td>{{this.Product_Group}}</td>
+								<td>{{this.paidBy}}</td>
 								<td>{{this.qty}}</td>
-								<td>{{money this.price}}</td>
+								<td>{{money this.total}}</td>
 							</tr>
 						{{/each}}
 						</tbody>

@@ -51,7 +51,7 @@ router.get('/categories', function(req, res, next) {
 });
 
 /**
- * Get a single category 
+ * Get a single category
  * @constructor
  */
 router.get('/categories/:id', function(req, res, next) {
@@ -61,7 +61,7 @@ router.get('/categories/:id', function(req, res, next) {
 });
 
 /**
- * POST add new category 
+ * POST add new category
  * @constructor
  */
  router.post('/categories', function(req, res, next) {
@@ -79,7 +79,7 @@ router.get('/categories/:id', function(req, res, next) {
 })
 
 /**
- * DELETE a single category 
+ * DELETE a single category
  *
  */
 router.delete('/categories/:id', function(req, res, next) {
@@ -155,7 +155,7 @@ router.get('/facet/:category', function(req, res, next) {
 
 
 /**
- * GET all categories 
+ * GET all categories
  * @constructor
  */
  router.get('/products', function(req, res, next) {
@@ -165,11 +165,10 @@ router.get('/facet/:category', function(req, res, next) {
 });
 
 /**
- * GET product. 
+ * GET product.
  * @constructor
  */
 router.get('/product/:id', function(req, res, next) {
-	console.log("Get Product " + req.params.id);
 	Product.findById(req.params.id,function(err,product) {
 		res.json(product);
 	})
@@ -183,7 +182,7 @@ router.get('/products/:id', function(req, res, next) {
 });
 
 /**
- * POST - Create a product 
+ * POST - Create a product
  * @constructor
  */
 router.post('/api/products', function (req, res){
@@ -290,7 +289,7 @@ router.get('/tax/:id/:user', function(req, res, next) {
 					if (user.city.toLowerCase() == taxConfig.ourCityName.toLowerCase()) {
 						taxRate = taxConfig.ourCityTaxRate;
 					}
-				} else { 
+				} else {
 					taxRate = 0;
 				}
 				var price = Number(product.price).toFixed(2);
@@ -318,15 +317,13 @@ router.get('/search', function(req, res, next) {
 
 	  db.collection('products').find().toArray(function (err, result) {
 	    if (err) throw err
-
-	    console.log(result)
 	  });
 	});
 });
 
 /* get all categories */
 router.get('/orders', function(req, res, next) {
-	Category.find({},function(err,orders) {
+	Order.find({},function(err,orders) {
 		res.json(orders);
 	})
 });
@@ -410,5 +407,3 @@ router.get('/purchases-by-yearmo', function(req,res,next) {
     });
 });
 module.exports = router;
-
-

@@ -107,8 +107,8 @@
 								{{/if}}
 							</td>
 							<td>{{this.qty}}</td>
-							<td class='text-right' text-align="right">${{this.price}}</td>
-							<td class='text-right' text-align="right">${{this.itemTotal}}</td>
+							<td class='text-right' text-align="right">${{money this.price}}</td>
+							<td class='text-right' text-align="right">${{money this.itemTotal}}</td>
 							<td>
 								<div class="btn-group pull-right">
 									<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
@@ -126,7 +126,7 @@
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>Subtotal: </td>
-					<td class='text-right' text-align="right">${{this.totalPrice}}</td>
+					<td class='text-right' text-align="right">${{money this.totalPrice}}</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -163,9 +163,9 @@
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
 									{{#if user.telephone}}
-									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" >
+									<input name="telephone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" >
 									{{else}}
-									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" required>
+									<input name="telephone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" required>
 									{{/if}}
 								</div>
 							</div>
