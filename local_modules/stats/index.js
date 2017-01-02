@@ -30,10 +30,10 @@ module.exports = {
                 console.log("error " + err.message);
             }
             for (var i = 0; i < orders.length; i++) {
-                if (isNaN(parseFloat(orders[i].total))) {
+                if (isNaN(parseFloat(orders[i].total/100))) {
                     orders[i].total = 0;
                 }
-                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].total));
+                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].total/100));
                 var items = orders[i].cart;
                 for (item in items) {
                     var group = item.Product_Group
@@ -48,7 +48,7 @@ module.exports = {
                             stats.apparelSold += 1
                         } else {
                             if (group == 'DONATION') {
-                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].total));
+                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].total/100));
                                 stats.donationsCount += 1;
                             }
                         }
@@ -77,41 +77,5 @@ module.exports = {
             stats.itemCount = parseFloat(stats.itemCount).toFixed(0);
             callback(null, stats);
         })
-    },
-    getData: function(callback){
-      //use the find() API and pass an empty query object to retrieve all records
-      Event.find({}).toArray(function(err, docs){
-        if ( err ) throw err;
-        var monthArray = [];
-        var petrolPrices = [];
-        var dieselPrices = [];
-        for ( index in docs){
-          var doc = docs[index];
-          //category array
-          var month = doc['month'];
-          //series 1 values array
-          var petrol = doc['petrol'];
-          //series 2 values array
-          var diesel = doc['diesel'];
-          monthArray.push({"label": month});
-          petrolPrices.push({"value" : petrol});
-          dieselPrices.push({"value" : diesel});
-        }
-
-        var dataset = [
-          {
-            "seriesname" : "Petrol Price",
-            "data" : petrolPrices
-          },
-          {
-            "seriesname" : "Diesel Price",
-            "data": dieselPrices
-          }
-        ];
-        var response = {
-          "dataset" : dataset,
-          "categories" : monthArray
-        };
-      });
     }
 }

@@ -1,7 +1,6 @@
 var User = require('../models/user');
 var Product = require('../models/product');
 var Ticket = require('../models/ticket');
-var Apparel = require('../models/apparel');
 var taxCalc = require('../local_modules/tax-calculator');
 var async = require('async');
 var shippingCalc = require('../local_modules/shipping-calculator');
@@ -218,39 +217,7 @@ module.exports = function Cart(oldCart) {
 					});
 				return ticket;
 
-			} else { // ticket type
-				if (products[i].item.Product_Group == 'APPAREL') {
-					apparel = new Apparel({
-						user:{
-							first_name: user.first_name,
-							last_name: user.last_name,
-							email: user.email
-						},
-						option: option,
-						product_id: product_id
-					});
-					apparel.save(function(err,ticket) {
-						if (err) {
-							res.send('500','Problem saving ticket.');
-							console.log('Error Saving Ticket ' + err.message);
-						}
-						User.findById(user._id, function(err,userdoc) {
-							if (err) {
-								console.log("Unable to find user " + user._id);
-							}
-							User.update({_id:user._id},
-								{$push:
-									{purchased:
-										{code: code, purchased: dateobj}
-									}
-								},function(err, newuserdoc){
-							    	if (err) console.log("error " + error.message);
-								});
-							});
-							return ticket;
-					});
-				}
-			}
+			} 
 		}
 	}
 };

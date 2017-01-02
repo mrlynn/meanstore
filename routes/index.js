@@ -94,14 +94,14 @@ router.get('/', function(req, res, next) {
 
 			if (frontPageCategory) {
 				categCondition = {
-					$match: {
-						$and: [{
-								status: {
+					"$match": {
+						"$and": [{
+								"status": {
 									$ne: 'deleted'
 								}
 							},
 							{
-								category: frontPageCategory
+								"category": frontPageCategory
 							},
 							{
 								$or: [{
@@ -135,6 +135,7 @@ router.get('/', function(req, res, next) {
 					}
 				}
 			}
+			console.log("categCondition: " + JSON.stringify(categCondition));
 
 			// Product.find(categCondition, function(err, docs) {
 
@@ -811,6 +812,8 @@ router.post('/checkout', function(req, res, next) {
 				var totalTax = results.taxAmount.toFixed(2);
 				var grandtotal = ((parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal))).toFixed(2);
 				var errorMsg = req.flash('error')[0];
+				console.log("SUBTOTAL: " + subtotal);
+				console.log("GRANDTOTAL: " + grandtotal);
 
 				res.render('shop/checkout', {
 					user: req.user,
@@ -872,10 +875,10 @@ router.post('/create', function(req, res, next) {
 	var errorMsg = req.flash('error')[0];
 	var first_name = req.body.first_name;
 	var last_name = req.body.last_name;
-	var amount = parseFloat(req.body.amount);
-	var shippingtotal = parseFloat(req.body.shippingtotal);
-	var subtotal = parseFloat(req.body.subtotal);
-	var taxAmount = parseFloat(req.body.totalTax);
+	var amount = parseFloat(req.body.amount/100);
+	var shippingtotal = parseFloat(req.body.shippingtotal/100);
+	var subtotal = parseFloat(req.body.subtotal/100);
+	var taxAmount = parseFloat(req.body.totalTax/100);
 	req.check("email", "Enter a valid email address.");
 	req.check("telephone", "Enter a valid telephone number.");
 	var errors = req.validationErrors();
@@ -893,6 +896,9 @@ router.post('/create', function(req, res, next) {
 	}
 	var cart = new Cart(req.session.cart);
 	products = cart.generateArray();
+	console.log("PRODUCTS: " + JSON.stringify(products));
+	console.log("SUBTOTAL: " + subtotal);
+	console.log("AMOUNT: " + String(amount.toFixed(2)));
 
 	//11-17-2016
 	tax = taxCalc.calculateTaxReturn(products, req.user._id);
@@ -923,8 +929,8 @@ router.post('/create', function(req, res, next) {
 	var item_list = [];
 	var orders = [];
 	for (var i = 0, len = products.length; i < len; i++) {
-		var price = parseFloat(products[i].price);
-		price = String(price.toFixed(2));
+		var price = parseFloat(products[i].price/100);
+		price = String((price).toFixed(2));
 		qty = Number(products[i].qty);
 		tname = 'ticket_name_' + i;
 		oname = 'option_' + i;
@@ -993,6 +999,7 @@ router.post('/create', function(req, res, next) {
 	// We'll store the payment in a document and then redirect the user
 	// When the user authorizes, paypal will callback our /execute route and we'll complete the transaction
 	//
+	console.log("Create Payment : " + JSON.stringify(create_payment));
 
 	paypal.payment.create(create_payment, function(err, payment) {
 		if (err) {

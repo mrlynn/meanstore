@@ -37,7 +37,6 @@ router.get('/',  isAdmin, function(req, res, next) {
     		console.log(err.message);
     		return res.error('err');
     	}
-     	console.log('back with total ', tot);
     });
     Order.find({}, function(err, docs) {
         meanlogger.log("check","Viewed",req.user);
@@ -48,7 +47,7 @@ router.get('/',  isAdmin, function(req, res, next) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
             // res.render('shop/index', {
-            // 	title: 'MEAN Store', 
+            // 	title: 'MEAN Store',
             // 	products: productChunks,
             // 	user: user
             //   	});
@@ -89,7 +88,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
                 var pendingOrders = false;
                 var pickedUpOrders = true;
                 qryFilter = {receipt_status: 'complete'};
-            } 
+            }
         }
     }
     successMsg = req.flash('success')[0];
@@ -114,7 +113,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
                 pendingOrders: pendingOrders,
                 pickedUpOrders: pickedUpOrders,
                 errorMsg: errorMsg,
-                user: req.user, 
+                user: req.user,
                 stats: stats,
                 orders: orders,
                 isLoggedIn:req.isAuthenticated(),
@@ -287,7 +286,7 @@ router.get('/tickets', isAdmin, function(req, res, next) {
             noMessage: !successMsg,
             noErrorMsg: !errorMsg,
             errorMsg: errorMsg,
-            user: req.user, 
+            user: req.user,
             isLoggedIn:req.isAuthenticated(),
             successMsg: successMsg
         });
@@ -404,7 +403,7 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
     errorMsg = req.flash('error')[0];
     var adminPageTitle = "Event Log";
     var adminPageUrl = "/admin/events";
-/* main admin stats chart is as follows 
+/* main admin stats chart is as follows
 
 data: [
     {x: '2016 Q1', tickets: 3, banquet: 7},
@@ -495,7 +494,7 @@ router.get('/import',  isAdmin, function(req, res, next) {
 	    noMessage: !successMsg,
 	    noErrorMsg: !errorMsg,
 	    errorMsg: errorMsg,
-	    user: req.user, 
+	    user: req.user,
 	    isLoggedIn:req.isAuthenticated(),
 	    successMsg: successMsg
 	});
@@ -525,7 +524,7 @@ router.post('/import',  isAdmin, function(req, res, next) {
             var reader = csv.createCsvFileReader('/var/tmp/' + tmpFile, {
 			    'separator': ',',
 			    'quote': '"',
-			    'escape': '"',       
+			    'escape': '"',
 			    'comment': '',
 			    'columnsFromHeader': firstHeaders
 			});
@@ -884,7 +883,7 @@ var totalSales = function() {
         $group: {
             _id: null,
             'Total': {
-                $sum: '$cart.totalPrice'
+                $sum: 'cart.total'
             }
         }
     }, function(err, doc) {

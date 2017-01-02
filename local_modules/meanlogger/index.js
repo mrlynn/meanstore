@@ -10,7 +10,7 @@ var User = require('../../models/user');
 module.exports = {
 
 	log: function(activity,msg,user) {
-		var activity = {
+		var activitydoc = {
 			user: {
 				first_name: user.first_name,
 				last_name: user.last_name,
@@ -22,12 +22,13 @@ module.exports = {
 				state: 'never'
 			}
 		}
-		var act = new Activity(activity);
+		var act = new Activity(activitydoc);
 		var err = null;
 		act.save(act, function(err, data) {
 			if (err) {
 				console.log("ERROR: " + err.message);
 			}
+			if (activity=='view')
 			return;
 		});
 	}

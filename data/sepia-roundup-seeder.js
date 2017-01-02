@@ -22,6 +22,10 @@ var products = [
         code: 'RU201701',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 0,
         imagePath: '/images/ticket.jpg',
@@ -34,6 +38,10 @@ var products = [
     new Product({
         code: 'RU201702',
         shippable: 'No',
+        inventory: {
+          disableOnZero: true,
+          onHand: 350
+        },
         taxable: 'No',
         category: 'Round-up',
         order: 1,
@@ -61,6 +69,10 @@ var products = [
         code: 'RU201704',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 99,
         imagePath: '/images/ticket.jpg',
@@ -76,6 +88,10 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 99,
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
         imagePath: '/images/heart.png',
         name: 'donation',
         title: 'Donation',
@@ -89,6 +105,10 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 2,
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         imagePath: '/images/tee-shirt.jpg',
         name: 'teeshirt-small',
         title: 'Tee-Shirt (XS,S,M,L,XL)',
@@ -116,6 +136,10 @@ var products = [
         code: 'RU201707',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 3,
         imagePath: '/images/tee-shirt.jpg',
@@ -141,6 +165,10 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 4,
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         imagePath: '/images/hoodie.jpg',
         name: 'Hoodie-small',
         title: 'Hooded Sweatshirt',
@@ -170,6 +198,10 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         imagePath: '/images/hoodie.jpg',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         name: 'Hoodie-large',
         title: 'Hooded Sweatshirt XL Sizes',
         description: 'Hooded Sweatshirt with Round-up Logo. Sizes 2XL through 4XL. Choose specific size when you arrive.',
@@ -192,6 +224,10 @@ var products = [
         code: 'RU201710',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
         imagePath: '/images/ticket.png',
         name: 'Attendee Scholarship',
         title: 'Scholarship Donation',
@@ -202,6 +238,10 @@ var products = [
     }),
     new Product({
         code: 'RU201711',
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
         shippable: 'No',
         taxable: 'No',
         category: 'Round-up',

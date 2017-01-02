@@ -159,9 +159,9 @@
 										<tr>
 											<td>{{this.item.title}}</td>
 											<td class="text-right">{{this.qty}}</td>
-											<td class="text-right" text-align="right">${{this.price}}</td>
+											<td class="text-right" text-align="right">${{money this.price}}</td>
 											<td class="text-left">{{this.item.taxable}}</td>
-											<td class="text-right" text-align="right">${{this.itemTotal}}</td>
+											<td class="text-right" text-align="right">${{money this.itemTotal}}</td>
 											<td>
 												<div class="btn-group pull-right">
 													<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
@@ -180,14 +180,14 @@
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
 										<td>Total: </td>
-										<td class="text-right" text-align="right">${{subtotal}}</td>
+										<td class="text-right" text-align="right">${{money subtotal}}</td>
 										<td>&nbsp;</td>
 									</tr>
 									<tr>
 										<td colspan=3>{{taxDesc}}</td>
 										<td>Tax: </td>
 										<td class='text-right' text-align="right">
-										${{totalTax}}
+										${{money totalTax}}
 										</td>
 										<td>&nbsp;</td>
 									</tr>
@@ -196,7 +196,7 @@
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
 										<td>Shipping: </td>
-										<td class='text-right' text-align="right">${{shippingtotal}}</td>
+										<td class='text-right' text-align="right">${{money shippingtotal}}</td>
 										<td>&nbsp;</td>
 									</tr>
 									<tr>
@@ -204,7 +204,7 @@
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
 										<td>Total: </td>
-										<td class='text-right' text-align="right">${{grandtotal}}</td>
+										<td class='text-right' text-align="right">${{money grandtotal}}</td>
 										<td>&nbsp;</td>
 									</tr>
 								</tbody>
@@ -228,7 +228,7 @@
 					</div>
 				</div>
 				</div>
-				
+
 				{{else}}
 				<div class="row">
 					<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
@@ -296,4 +296,3 @@
 
   });
 </script>
-

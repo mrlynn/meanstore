@@ -81,7 +81,10 @@ var orderSchema = new Schema({
 		type: String,
 		required: false
 	},
-	total: String,
+	total: {
+    type: Number,
+    default: 0
+  },
 	paidBy: {
 		type: String,
 		default: 'Paypal',
@@ -129,8 +132,8 @@ orderSchema.post('save', function(doc) {
 		var incupdate = {
 			$inc: {}
 		};
-		incupdate.$inc['months.' + months[month] + '.sales'] = doc.cart.grandTotal;
-		incupdate.$inc['ytd'] = doc.cart.grandTotal;
+		incupdate.$inc['months.' + months[month] + '.sales'] = doc.cart.total;
+		incupdate.$inc['ytd'] = doc.cart.total;
 		db.collection('sales', function(err, collection) {
 			if (err) {
 				console.log('error ' + error.message);
