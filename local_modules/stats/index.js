@@ -30,24 +30,25 @@ module.exports = {
                 console.log("error " + err.message);
             }
             for (var i = 0; i < orders.length; i++) {
-                var items = orders[i].cart.items;
-                for (item in orders[i].cart.items) {
-                    var group = orders[i].cart.items[item].item.Product_Group
+                if (isNaN(parseFloat(orders[i].total/100))) {
+                    orders[i].total = 0;
+                }
+                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].total/100));
+                var items = orders[i].cart;
+                for (item in items) {
+                    var group = item.Product_Group
                     stats.itemCount += 1
-                    if (group == 'TICKET') {
-                        if (orders[i].cart.items[item].item.code=='RU201701') {
+                    if (items[item].code=='RU201701') {
                             stats.ticketsSold += 1
-                        } else {
-                            if (orders[i].cart.items[item].item.code=='RU201702') {
-                                stats.banquetTickets +=1;
-                            }
-                        }
                     } else {
+                        if (items[item].code=='RU201702') {
+                                stats.banquetTickets +=1;
+                        }
                         if (group == 'APPAREL') {
                             stats.apparelSold += 1
                         } else {
-                            if (group == 'VARPRICE') {
-                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].cart.items[item].itemTotal));
+                            if (group == 'DONATION') {
+                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].total/100));
                                 stats.donationsCount += 1;
                             }
                         }
@@ -64,7 +65,6 @@ module.exports = {
                 } else {
                     stats.totalUnApprovedOrders += 1;
                 }
-                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].cart.grandTotal));
             }
             stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived).toFixed(2));
             stats.totalApprovedOrders = parseFloat(stats.totalApprovedOrders).toFixed(0);
@@ -77,41 +77,5 @@ module.exports = {
             stats.itemCount = parseFloat(stats.itemCount).toFixed(0);
             callback(null, stats);
         })
-    }
-    getData: function(callback){
-      //use the find() API and pass an empty query object to retrieve all records
-      Event.find({}).toArray(function(err, docs){
-        if ( err ) throw err;
-        var monthArray = [];
-        var petrolPrices = [];
-        var dieselPrices = [];
-        for ( index in docs){
-          var doc = docs[index];
-          //category array
-          var month = doc['month'];
-          //series 1 values array
-          var petrol = doc['petrol'];
-          //series 2 values array
-          var diesel = doc['diesel'];
-          monthArray.push({"label": month});
-          petrolPrices.push({"value" : petrol});
-          dieselPrices.push({"value" : diesel});
-        }
-
-        var dataset = [
-          {
-            "seriesname" : "Petrol Price",
-            "data" : petrolPrices
-          },
-          {
-            "seriesname" : "Diesel Price",
-            "data": dieselPrices
-          }
-        ];
-        var response = {
-          "dataset" : dataset,
-          "categories" : monthArray
-        };
-      });
     }
 }

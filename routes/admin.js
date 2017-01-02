@@ -8,6 +8,7 @@ var User = require('../models/user');
 var Ticket = require('../models/ticket');
 var Activity = require('../models/activity');
 var Event = require('../models/events');
+var async = require('async');
 var Order = require('../models/order');
 var passport = require('passport');
 var moment = require('moment');
@@ -36,10 +37,8 @@ router.get('/',  isAdmin, function(req, res, next) {
     		console.log(err.message);
     		return res.error('err');
     	}
-     	console.log('back with total ', tot);
     });
     Order.find({}, function(err, docs) {
-        console.log("orders: " + docs);
         meanlogger.log("check","Viewed",req.user);
         Product.find(function(err, products) {
             productChunks = [];
@@ -48,7 +47,7 @@ router.get('/',  isAdmin, function(req, res, next) {
                 productChunks.push(docs.slice(i, i + chunkSize))
             }
             // res.render('shop/index', {
-            // 	title: 'MEAN Store', 
+            // 	title: 'MEAN Store',
             // 	products: productChunks,
             // 	user: user
             //   	});
@@ -66,8 +65,8 @@ router.get('/',  isAdmin, function(req, res, next) {
         });
     });
 });
-router.get('/orders:filter?', isAdmin, function(req, res, next) {
 
+router.get('/orders:filter?', isAdmin, function(req, res, next) {
     var filter = req.query.filter;
     console.log("Filter " + filter);
         meanlogger.log("check","Viewed orders",req.user);
@@ -89,7 +88,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
                 var pendingOrders = false;
                 var pickedUpOrders = true;
                 qryFilter = {receipt_status: 'complete'};
-            } 
+            }
         }
     }
     successMsg = req.flash('success')[0];
@@ -97,9 +96,8 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
     var adminPageTitle = "Orders";
     var adminPageUrl = "/admin/orders";
 
-    Order.find(qryFilter, function(err, orders) {
+    Order.find(qryFilter).sort({"created": -1}).exec(function(err, orders) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -115,7 +113,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
                 pendingOrders: pendingOrders,
                 pickedUpOrders: pickedUpOrders,
                 errorMsg: errorMsg,
-                user: req.user, 
+                user: req.user,
                 stats: stats,
                 orders: orders,
                 isLoggedIn:req.isAuthenticated(),
@@ -124,7 +122,7 @@ router.get('/orders:filter?', isAdmin, function(req, res, next) {
         })
 
     })
-})
+});
 
 router.post('/delete-order',  isAdmin, function(req, res, next) {
     successMsg = req.flash('success')[0];
@@ -198,7 +196,6 @@ router.get('/users:filter?', isAdmin, function(req, res, next) {
     console.log("Stats in route " + JSON.stringify(res.locals.stats));
     User.find(qryFilter, function(err, users) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -214,7 +211,7 @@ router.get('/users:filter?', isAdmin, function(req, res, next) {
                 adminUsers: adminUsers,
                 nonAdminUsers: nonAdminUsers,
                 errorMsg: errorMsg,
-                user: req.user, 
+                user: req.user,
                 stats: stats,
                 users: users,
                 isLoggedIn:req.isAuthenticated(),
@@ -289,7 +286,7 @@ router.get('/tickets', isAdmin, function(req, res, next) {
             noMessage: !successMsg,
             noErrorMsg: !errorMsg,
             errorMsg: errorMsg,
-            user: req.user, 
+            user: req.user,
             isLoggedIn:req.isAuthenticated(),
             successMsg: successMsg
         });
@@ -328,7 +325,6 @@ router.get('/activities:filter?', isAdmin, function(req, res, next) {
 
     Activity.find(qryFilter).sort({time: 'desc'}).exec( function(err, activities) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -407,10 +403,46 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
     errorMsg = req.flash('error')[0];
     var adminPageTitle = "Event Log";
     var adminPageUrl = "/admin/events";
+/* main admin stats chart is as follows
+
+data: [
+    {x: '2016 Q1', tickets: 3, banquet: 7},
+    {x: '2016 Q2', tickets: 3, banquet: 4},
+    {x: '2016 Q3', tickets: null, banquet: 1},
+    {x: '2015 Q4', tickets: 2, banquet: 5},
+    {x: '2015 Q3', tickets: 8, banquet: 2},
+    {x: '2015 Q2', tickets: 4, banquet: 4}
+  ],
+
+  */
+Event.aggregate([
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    },
+  ], function(err,yearmos){
+    var data = [];
+
+    if (err) {
+        console.log("error: " + err.message);
+    } else {
+        var i = 0;
+        async.each(yearmos,function(yearmo,next) {
+            data.push({
+                x: yearmo._id.year + '-' + yearmo._id.month,
+                purchases: yearmo.count
+            })
+        })
+    }
+
+
 
     Event.find(qryFilter).sort({when: 'desc'}).exec( function(err, events) {
         Stats.getStats(function(err,stats){
-            console.log("Got Stats? " + JSON.stringify(stats));
             if (err) {
                 console.log(error.message);
                 res.send(500,"error fetching orders");
@@ -420,6 +452,7 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
                 adminPageUrl: adminPageUrl,
                 layout: 'admin-page.hbs',
                 // csrfToken: req.csrfToken(),
+                yearmo: data,
                 noMessage: !successMsg,
                 noErrorMsg: !errorMsg,
                 allEvents: allEvents,
@@ -435,6 +468,7 @@ router.get('/events:filter?', isAdmin, function(req, res, next) {
             });
         });
     });
+});
 });
 
 router.post('/delete-event',  isAdmin, function(req, res, next) {
@@ -460,7 +494,7 @@ router.get('/import',  isAdmin, function(req, res, next) {
 	    noMessage: !successMsg,
 	    noErrorMsg: !errorMsg,
 	    errorMsg: errorMsg,
-	    user: req.user, 
+	    user: req.user,
 	    isLoggedIn:req.isAuthenticated(),
 	    successMsg: successMsg
 	});
@@ -490,7 +524,7 @@ router.post('/import',  isAdmin, function(req, res, next) {
             var reader = csv.createCsvFileReader('/var/tmp/' + tmpFile, {
 			    'separator': ',',
 			    'quote': '"',
-			    'escape': '"',       
+			    'escape': '"',
 			    'comment': '',
 			    'columnsFromHeader': firstHeaders
 			});
@@ -515,12 +549,14 @@ router.get('/products:filter?', isAdmin,function(req, res, next) {
     if (!filter || filter=='allProducts') {
         var allProducts = true;
         var deletedProducts = false;
-        qryFilter = {status: { $ne: 'deleted'}};
+        // qryFilter = {status: { $ne: 'deleted'}};
+        qryFilter = {};
     } else {
         if (filter=='deletedProducts') {
             var allOrders = false;
             var deletedProducts = true;
-            qryFilter = { status: 'deleted'};
+            // qryFilter = { status: 'deleted'};
+            qryFilter = { };
         }
     }
     Product.find(qryFilter,function(err, products) {
@@ -574,26 +610,39 @@ router.post('/delete-product',  isAdmin, function(req, res, next) {
     })
 })
 
-router.get('/edit-product/:id',  isAdmin,function(req, res, next) {
-	productId = req.params.id;
-	errorMsg = req.flash('error')[0];
-	successMsg = req.flash('success')[0];
-	Product.findById(req.params.id, function(err, product) {
-    	if (err) {
-    		req.flash('error','Error: ' + err.message);
-    		return res.redirect('/admin');
-    	}
-    	console.log("product: " + product);
-    	res.render('admin/editProduct',{
-    		product: product,
-    		layout: 'fullpage.hbs',
-    		product: product,
-    		errorMsg: errorMsg,
-    		successMsg: successMsg,
-    		noErrorMsg: !errorMsg,
-    		noMessage: !successMsg
+router.post('/edit-product',isAdmin, function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    successMsg = req.flash('success')[0];
+    var imageFile;
+    var updated = {
+        name: req.body.name,
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category,
+        Product_Group: req.body.Product_Group,
+        taxable: req.body.taxable,
+        shippable: req.body.shippable
+    }
+    if (req.files) {
+        imageFile = req.files.imageFile;
+        imageFile.mv(process.env.imagePath + '/' + req.body.name + '.png' , function(err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        })
+        updated.imagePath = '/images/' + req.body.name + '.png'
 
-    	})
+    }
+    Product.findOneAndUpdate({_id: req.body._id}, { $set: updated }, function(err,product) {
+            if (err) {
+                console.log("Unable to update product - " + err.message);
+                req.flash('error',"Unable to update product - " + err.message);
+                return res.redirect('/admin/products');
+            };
+            console.log("Product " + req.body.name + " Updated");
+            req.flash('success','Product ' + req.body.name + ' Updated!');
+            return res.redirect('/admin/products');
     });
 });
 
@@ -616,6 +665,7 @@ router.post('/add-product',isAdmin, function(req, res, next) {
             name: req.body.name,
             code: req.body.code,
             title: req.body.title,
+            Product_Group: req.body.Product_Group,
             price: parseFloat((req.body.price * 100).toFixed(2)),
             description: req.body.description,
             shippable: req.body.shippable,
@@ -633,8 +683,6 @@ router.post('/add-product',isAdmin, function(req, res, next) {
         });
     });
 });
-
-
 
 router.get('/categories:filter?', isAdmin,function(req, res, next) {
     successMsg = req.flash('success')[0];
@@ -772,6 +820,33 @@ router.get('/setup', isAdmin, function(req, res, next) {
 	})
 })
 
+/* display logger activities */
+router.get('/dashboard', isAdmin, function(req, res, next) {
+    successMsg = req.flash('success')[0];
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Dashboard";
+    var adminPageUrl = "/admin/dashboard";
+    Stats.getStats(function(err,stats){
+        if (err) {
+            console.log(error.message);
+            res.send(500,"error fetching orders");
+        }
+        res.render('admin/dashboard', {
+            adminPageTitle: adminPageTitle,
+            adminPageUrl: adminPageUrl,
+            layout: 'admin-page.hbs',
+            // csrfToken: req.csrfToken(),
+            noMessage: !successMsg,
+            noErrorMsg: !errorMsg,
+            errorMsg: errorMsg,
+            user: req.user,
+            stats: stats,
+            isLoggedIn:req.isAuthenticated(),
+            successMsg: successMsg
+        });
+    });
+});
+
 module.exports = router;
 function isAdmin(req, res, next) {
     if (!req.isAuthenticated()|| !req.user) {
@@ -808,7 +883,7 @@ var totalSales = function() {
         $group: {
             _id: null,
             'Total': {
-                $sum: '$cart.totalPrice'
+                $sum: 'cart.total'
             }
         }
     }, function(err, doc) {

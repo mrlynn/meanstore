@@ -1,7 +1,6 @@
 var User = require('../models/user');
 var Product = require('../models/product');
 var Ticket = require('../models/ticket');
-var Apparel = require('../models/apparel');
 var taxCalc = require('../local_modules/tax-calculator');
 var async = require('async');
 var shippingCalc = require('../local_modules/shipping-calculator');
@@ -49,12 +48,12 @@ module.exports = function Cart(oldCart) {
 		// this.totalShipping = results.shippingAmount;
 	};
 
-	this.add = function(item, id, price, size, name, email, type, taxable, shipable, userId) {
+	this.add = function(item, id, price, option, name, email, type, taxable, shipable, userId) {
 		var storedItem = this.items[id];
 		var locals = {};
 		for(var itemid in oldCart.items) {
 	    	if (id==itemid) {
-	    		if (oldCart.items[itemid].item.Product_Group=='VARPRICE') {
+	    		if (oldCart.items[itemid].item.Product_Group=='DONATION') {
 	    			console.log("DUPLICATE");
 	    			error = {
 	    				message: 'Unable to add duplicate donations.  Please clear previous donation before adding another.'
@@ -65,7 +64,7 @@ module.exports = function Cart(oldCart) {
 	    }
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, size: size, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
+			storedItem = this.items[id + option] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, option: option, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);
@@ -73,25 +72,17 @@ module.exports = function Cart(oldCart) {
 // this.totalShipping = result.totalShipping;
 // storedItem.taxAmount = result.taxAmount;
 		storedItem.type = type;
+		if (option!=null) {
+			storedItem.option = option;
+		}
 		if (type=='TICKET') {
 			storedItem.ticket_name = name;
 			storedItem.ticket_email = email;
-		} else {
-			if (type=='APPAREL') {
-				storedItem.size = size;
-			}
 		}
 		this.totalQty++;
 		this.totalPrice += parseFloat(price);
 		storedItem.type = type;
-		if (type=='TICKET') {
-			storedItem.ticket_name = name;
-			storedItem.ticket_email = email;
-		} else {
-			if (type=='APPAREL') {
-				storedItem.size = size;
-			}
-		};
+
 		if (taxable=='yes' || taxable==true) {
 			storedItem.taxAmount = ((price * taxRate) * 100)/100;
 			this.totalTax += ((price * .06) * 100)/100;
@@ -110,15 +101,15 @@ module.exports = function Cart(oldCart) {
 		this.totalQty = 0;
 		this.totalPrice = 0;
 		this.totalTax = 0;
-		storedItem = {item: {}, qty: 0, price: 0, size: 0, ticket_name: '', ticket_email: ''};
+		storedItem = {item: {}, qty: 0, price: 0, option: null, ticket_name: '', ticket_email: ''};
 	};
 
 	/* Reduce the qty of a specific item in the cart by 1 */
-	this.reduce = function(item, id, price, size) {
+	this.reduce = function(item, id, price, option) {
 		var storedItem = this.items[id];
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id] = {item: item, qty: 0, price: 0, size: 0, taxAmount: 0};
+			storedItem = this.items[id] = {item: item, qty: 0, price: 0, option: null, taxAmount: 0};
 		}
 		storedItem.qty--;
 		storedItem.price = price;
@@ -129,7 +120,7 @@ module.exports = function Cart(oldCart) {
 				storedItem.taxAmount = response.taxAmount;
 			}
 			storedItem.itemTotal = Number(price * storedItem.qty);
-			storedItem.size = size;
+			storedItem.option = option;
 			this.totalQty--;
 			this.totalPrice += Number(price);
 			if (this.items[id].qty <= 0) {
@@ -140,7 +131,7 @@ module.exports = function Cart(oldCart) {
 				this.totalQty = 0;
 				this.items = {}
 				this.totalPrice = 0;
-				storedItem = {item: {}, qty: 0, price: 0, size: 0};
+				storedItem = {item: {}, qty: 0, price: 0, option: null};
 			}
 		});
 
@@ -153,7 +144,7 @@ module.exports = function Cart(oldCart) {
 				id: id,
 				ticket_name: this.items[id].item.ticket_name,
 				email: this.items[id].item.ticket_email,
-				size: this.items[id].item.size
+				option: this.items[id].item.option
 			}
 			return obj;
 		}
@@ -191,8 +182,8 @@ module.exports = function Cart(oldCart) {
 			var ticket_email = products[i].item.ticket_email;
 			var code = products[i].item.code;
 			var ticket_name = products[i].item.ticket_name;
-			var size = products[i].item.size;
-			console.log("SIZE: " + size);
+			var option = products[i].item.option;
+			console.log("OPTION: " + option);
 			var dateobj = new Date();
 			if (itemgroup == 'TICKET') {
 				ticket = new Ticket({
@@ -226,39 +217,7 @@ module.exports = function Cart(oldCart) {
 					});
 				return ticket;
 
-			} else { // ticket type
-				if (products[i].item.Product_Group == 'APPAREL') {
-					apparel = new Apparel({
-						user:{
-							first_name: user.first_name,
-							last_name: user.last_name,
-							email: user.email
-						},
-						size: size,
-						product_id: product_id
-					});
-					apparel.save(function(err,ticket) {
-						if (err) {
-							res.send('500','Problem saving ticket.');
-							console.log('Error Saving Ticket ' + err.message);
-						}
-						User.findById(user._id, function(err,userdoc) {
-							if (err) {
-								console.log("Unable to find user " + user._id);
-							}
-							User.update({_id:user._id},
-								{$push:
-									{purchased:
-										{code: code, purchased: dateobj}
-									}
-								},function(err, newuserdoc){
-							    	if (err) console.log("error " + error.message);
-								});
-							});
-							return ticket;
-					});
-				}
-			}
+			} 
 		}
 	}
 };

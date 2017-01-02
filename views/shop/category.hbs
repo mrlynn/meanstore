@@ -35,8 +35,8 @@
                             <tbody>
                                 {{#each products}}
                                     <div class="row">
-                                        {{# each this}}
-                                            <tr class="odd gradeX">
+{{!--                                         {{# each this}}
+ --}}                                            <tr class="odd gradeX">
                                                 <form action="add-to-cart" method="POST">
                                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                                 <td>{{this.code}}</td>
@@ -63,7 +63,7 @@
                                                     </div>
                                                 {{else}}
                                                     {{#if this.isVariable}}
-                                                        <input type='hidden' id='type' name='type' value='VARPRICE'>
+                                                        <input type='hidden' id='type' name='type' value='DONATION'>
                                                         <h3 class="product-price text-center">
                                                             <input type='text' class='text-right' name='price' value='{{this.price}}'>
                                                         </h3>
@@ -98,8 +98,8 @@
                                                 </td>
                                             </tr>
                                             </form>
-                                        {{/each}}
-                                {{/each}}
+{{!--                                         {{/each}}
+ --}}                                {{/each}}
                             </tbody>
                         </table>
                     </div>

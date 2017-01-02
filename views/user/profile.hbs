@@ -1,6 +1,5 @@
 <div class="container">
 	<div class="row">
-		<h1>Profile</h1>
 		{{#if hasErrors }}
 		<div class="alert alert-danger">
 			{{# each message }}
@@ -8,6 +7,10 @@
 			{{/each}}
 		</div>
 		{{/if}}
+		<ul class="nav nav-tabs">
+		  <li class="active"><a href="/user/profile">Account Details</a></li>
+		  <li><a href="/user/orders">Orders</a></li>
+		</ul>
 		<form action="/user/update-profile" method="POST">
 			<div class="panel-body">
 				<div class="form-group">
@@ -80,40 +83,11 @@
 					</div>
 				</div>
 			</div>
-			<input type="hidden" name="_csrf" value="{{ csrfToken }}">
-			<button class="btn btn-default form-control" type="submit">Update</button>
+			<input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+			<button class="btn btn-default update" type="submit">Update</button>
 		</form>
 	</div>
-	<div class="row">
-		<h2>Orders</h2>
-		<div class="panel-body">
-			{{#if hasPayments}}
-			{{#each orders}}
-			<div class="panel panel-default">
-				<div class="panel-body"><h4>Order Status: {{this.status}}</h4>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Item</th><th>Qty</th><th>Price</th>
-							</tr>
-						</thead>
-						<tbody>
-						{{#each this.items}}
-							<tr>
-								<td>{{this.item.name}} - {{this.item.title}}</td>
-								<td>{{this.qty}}</td>
-								<td>${{this.price}}</td>
-							</tr>
-						{{/each}}
-						</tbody>
-					</table>
-				</div>
-				<div class="panel-footer"><p class="text-right"><h2 class="text-right">${{this.cart.totalPrice}}</h2></p></div>
-			</div>
-			{{/each}}
-			{{else}}
-			<h4>No orders</h4>
-			{{/if}}
-		</div>
-	</div>
-	</div>
+</div>
+
+<p><p><p><p><p>&nbsp;<p>

@@ -8,6 +8,15 @@
 	<div class=bottomline></div>
 </div>
 {{/each}}
+<h3 class=facettitle>Product Groups</h3>
+{{#each Product_Group}}
+<div class=facetedsearch id="{{ this._id }}">
+	<div class=facetlist>{{this._id}}</div>
+	<div class=facetitem id="{{this._id}}"><span class=facetitemcount>({{this.count}})</span></div>
+	<div class=bottomline></div>
+</div>
+{{/each}}
+
 
 {{!-- 
 

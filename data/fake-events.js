@@ -3,6 +3,7 @@ var User = require('../models/user');
 var Event = require('../models/events');
 var mongoose = require('mongoose');
 var faker = require('faker');
+var async = require('async');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
 
@@ -21,7 +22,7 @@ mongoose.connection.on('error', () => {
 var done = 0;
 var actions = ['like', 'view', 'purchase'];
 var action = 0;
-for (var i = 0; i < 100; i++) {
+async.times(100,function(i,next) {
     User.aggregate([{
         $sample: {
             size: 1
@@ -58,7 +59,7 @@ for (var i = 0; i < 100; i++) {
                 console.log(err);
                 return -1;
             }
-            action = actions[randInterval(0,actions.length)];
+            action = actions[randInterval(0,actions.length-1)];
             event = new Event({
                 namespace: 'products',
                 when: faker.date.past(),
@@ -77,21 +78,25 @@ for (var i = 0; i < 100; i++) {
                     Product_Group: product[0].Product_Group
                 }
             });
-            console.log("Event: " + JSON.stringify(event));
             event.save(function(err,eventId) {
                 if (err) {
                     console.log("Error: " + err.message);
                     return -1;
                 }
-            })
+            });
+            done++;
+            if (done == 100) {
+                exit();
+            }
         });
     });
-    done++;
-    if (done > 300) {
-        exit();
-    }
-}
+});
 
+
+
+function exit() {
+    mongoose.disconnect();
+}
 function randInterval(min,max)
 {
     return Math.floor(Math.random()*(max-min+1)+min);

@@ -1,0 +1,48 @@
+<div class="container">
+	<div class="row">
+		{{#if hasErrors }}
+		<div class="alert alert-danger">
+			{{# each message }}
+			<p>{{this}}</p>
+			{{/each}}
+		</div>
+		{{/if}}
+		<ul class="nav nav-tabs">
+		  <li><a href="/user/profile">Account Details</a></li>
+		  <li class="active"><a href="/user/orders">Orders</a></li>
+		</ul>
+	</div>
+	<div class="row">
+		<h2>Orders</h2>
+		<div class="panel-body">
+			{{#each orders}}
+			<div class="panel panel-default">
+				<div class="panel-body"><h4>Order Status: {{Upper this.status}}</h4>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Date</th><th>Item</th><th>Type</th><th>Paid by</th><th>Qty</th><th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+						{{#each this.cart}}
+							<tr>
+								<td>{{formatDate ../this.created "MM-DD-YYYY"}}</td>
+								<td>{{this.code}} {{this.product_name}} - {{this.product_title}}</td>
+								
+								<td>{{this.Product_Group}}</td>
+								<td>{{this.paidBy}}</td>
+								<td>{{this.qty}}</td>
+								<td>{{money this.total}}</td>
+							</tr>
+						{{/each}}
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-footer"><p class="text-right"><h2 class="text-right">{{money this.cart.totalPrice}}</h2></p></div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</div>
+<p><p>&nbsp;<p><p><p><p>&nbsp;<p><p>

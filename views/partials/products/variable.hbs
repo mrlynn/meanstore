@@ -1,16 +1,14 @@
 {{#if ../../isLoggedIn}}
-<form action='/add-to-cart' method='POST'>
-    <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-    <input type='hidden' id='type' name='type' value='VARPRICE'>
-    <h3 class="product-price text-center">
+    <form action='/add-to-cart' method='POST'>
+        <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
+        <input type='hidden' id='type' name='type' value='DONATION'>
         <input type='text' class='text-right' name='price' value='{{this.price}}'>
-    </h3>
-    <p class="text-center">
-        <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
-    </p>
-</form>
+        <p class="text-center">
+            <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
+        </p>
+    </form>
 {{else}}
-<p class="text-center">
-    <a href="/user/signin" class="btn btn-primary add-to-cart" role="button">Sign in to Buy</a>
-</p>
+    <p class="text-center">
+        <a href="/user/signin" class="btn btn-primary add-to-cart" role="button">Sign in to Buy</a>
+    </p>
 {{/if}}

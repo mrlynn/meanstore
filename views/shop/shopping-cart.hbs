@@ -85,8 +85,8 @@
 							<input type="hidden" name="itemTotal_{{inc @index }}" value="{{this.itemTotal}}">
 							<input type="hidden" name="ticket_email_{{inc @index }}" value="{{this.ticket_email}}">
 							<input type="hidden" name="ticket_name_{{inc @index }}" value="{{this.ticket_name}}">
-							<input type="hidden" name="size_{{inc @index }}" value="{{this.size}}">
-							<input type="hidden" name="on{{inc @index}}_1" value="Size:{{this.size}}">
+							<input type="hidden" name="option_{{inc @index }}" value="{{this.option}}">
+							<input type="hidden" name="on{{inc @index}}_1" value="Option:{{this.option}}">
 							<input type="hidden" name="item_name[null]" value="" />
 							<input type="hidden" name="shipping_flags[null]" value="" />
 							<input type="hidden" name="item_name[{{ @index }}]" value="{{this.item.name}}" />
@@ -102,13 +102,13 @@
 									<div class='tiny'><b>Name:</b> {{this.ticket_name}}<br>
 									<b>Email:</b> {{this.ticket_email}}</div>
 								{{/if}}
-								{{#if this.size}}
-								<div class='tiny'><b>Size:</b> {{this.size}}
+								{{#if this.option}}
+								<div class='tiny'><b>Option:</b> {{this.option}}
 								{{/if}}
 							</td>
 							<td>{{this.qty}}</td>
-							<td class='text-right' text-align="right">${{this.price}}</td>
-							<td class='text-right' text-align="right">${{this.itemTotal}}</td>
+							<td class='text-right' text-align="right">${{money this.price}}</td>
+							<td class='text-right' text-align="right">${{money this.itemTotal}}</td>
 							<td>
 								<div class="btn-group pull-right">
 									<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
@@ -126,7 +126,7 @@
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>Subtotal: </td>
-					<td class='text-right' text-align="right">${{this.totalPrice}}</td>
+					<td class='text-right' text-align="right">${{money this.totalPrice}}</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
@@ -137,9 +137,9 @@
 							<div class="inputGroupContainer">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-									<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text">
+									<input  name="first_name" placeholder="First Name" class="form-control"  value="{{user.first_name}}" type="text" required>
 									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-									<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text">
+									<input name="last_name" placeholder="Last Name" class="form-control" value="{{user.last_name}}"  type="text" required>
 								</div>
 							</div>
 						</div>
@@ -148,7 +148,11 @@
 							<div class="inputGroupContainer">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-									<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+									{{#if user.email}}
+									<input disabled name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text">
+									{{else }}
+									<input name="email" placeholder="E-Mail Address" class="form-control"  value="{{user.email}}" type="text" required>
+									{{/if}}
 								</div>
 							</div>
 						</div>
@@ -158,7 +162,11 @@
 							<div class="inputGroupContainer">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-									<input name="phone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text">
+									{{#if user.telephone}}
+									<input name="telephone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" >
+									{{else}}
+									<input name="telephone" placeholder="(845)555-1212" class="form-control"  value="{{user.telephone}}" type="text" required>
+									{{/if}}
 								</div>
 							</div>
 						</div>
@@ -232,9 +240,12 @@
 </div>
 </div>
 {{else}}
+<div class="container">
 <div class="row">
-<div class="col-sm-12 col-md-12">
+<div class="col-sm-12 col-md-12"><p>
 <h2>No items in Cart</h2>
+</p>
+</div>
 </div>
 </div>
 {{/if}}

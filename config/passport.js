@@ -143,13 +143,22 @@ passport.use(new FacebookStrategy({
 }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
+      if (err) { 
+        console.log("Problem fetching user.");
+        return done(err); 
+      }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        console.log("Existing User");
+        req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
         done(err);
       } else {
+        console.log("Not Existing User");
+
         User.findById(req.user.id, (err, user) => {
-          if (err) { return done(err); }
+          if (err) { 
+            console.log("Problem fetching user.");
+            return done(err); 
+          }
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
           user.profile.name = user.profile.name || `${profile.name.givenName} ${profile.name.familyName}`;
@@ -159,6 +168,9 @@ passport.use(new FacebookStrategy({
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {
+            if (err) {
+              console.log("Problem linking facebook to user.");
+            }
             req.flash('success', { msg: 'Facebook account has been linked.' });
             done(err, user);
           });
@@ -167,15 +179,23 @@ passport.use(new FacebookStrategy({
     });
   } else {
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
+      if (err) { 
+        console.log("Problem fetching user.");
+        return done(err); 
+      }      
       if (existingUser) {
+        console.log("Existing user.");
         return done(null, existingUser);
       }
       User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
-        if (err) { return done(err); }
+        if (err) { 
+          console.log("Problem fetching user.");
+          return done(err); 
+        }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
-          done(err);
+          console.log('There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.');
+          req.flash('error', 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' );
+          done('There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.');
         } else {
           const user = new User();
           user.email = profile._json.email;
@@ -197,61 +217,6 @@ passport.use(new FacebookStrategy({
   }
 }));
 
-passport.use(new TwitterStrategy({
-  consumerKey: process.env.TWITTER_KEY,
-  consumerSecret: process.env.TWITTER_SECRET,
-  callbackURL: '/user/twitter/callback',
-  passReqToCallback: true
-}, (req, accessToken, tokenSecret, profile, done) => {
-  if (req.user) {
-    User.findOne({ twitter: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
-      if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        done(err);
-      } else {
-        User.findById(req.user.id, (err, user) => {
-          if (err) { return done(err); }
-          user.twitter = profile.id;
-          user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-          user.profile.name = user.profile.name || profile.displayName;
-          user.first_name = user.first_name || profile.displayName;
-          user.profile.location = user.profile.location || profile._json.location;
-          user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
-          user.save((err) => {
-            if (err) { return done(err); }
-            req.flash('info', { msg: 'Twitter account has been linked.' });
-            done(err, user);
-          });
-        });
-      }
-    });
-  } else {
-    User.findOne({ twitter: profile.id }, (err, existingUser) => {
-      if (err) { 
-        console.log("ERROR: " + err.message);
-        return done(err); 
-      }
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      const user = new User();
-      // Twitter will not provide an email address.  Period.
-      // But a person’s twitter username is guaranteed to be unique
-      // so we can "fake" a twitter email address as follows:
-      user.email = `${profile.username}@twitter.com`;
-      user.twitter = profile.id;
-      user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-      user.profile.name = profile.displayName;
-      user.profile.location = profile._json.location;
-      user.profile.picture = profile._json.profile_image_url_https;
-      user.save((err) => {
-        done(err, user);
-      });
-    });
-  }
-}));
-
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
@@ -262,7 +227,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('error', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -276,7 +241,7 @@ passport.use(new GoogleStrategy({
           user.first_name = user.first_name || profile.name.givenName;
           user.last_name = user.last_name || profile.name.familyName;
           user.save((err) => {
-            req.flash('info', { msg: 'Google account has been linked.' });
+            req.flash('info','Google account has been linked.');
             done(err, user);
           });
         });
@@ -291,7 +256,7 @@ passport.use(new GoogleStrategy({
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+          req.flash('error', 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' );
           done(err);
         } else {
           const user = new User();

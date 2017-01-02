@@ -22,6 +22,10 @@ var products = [
         code: 'RU201701',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 0,
         imagePath: '/images/ticket.jpg',
@@ -34,6 +38,10 @@ var products = [
     new Product({
         code: 'RU201702',
         shippable: 'No',
+        inventory: {
+          disableOnZero: true,
+          onHand: 350
+        },
         taxable: 'No',
         category: 'Round-up',
         order: 1,
@@ -41,26 +49,30 @@ var products = [
         name: 'Banquet',
         title: 'Banquet Registration',
         description: 'Attendance Ticket for 2017 Round-up',
-        price: 2500,
-        Product_Group: 'TICKET'
-    }),
-    new Product({
-        code: 'RU201703',
-        shippable: 'No',
-        taxable: 'No',
-        category: 'Round-up',
-        order: 1,
-        imagePath: '/images/test.png',
-        name: 'test',
-        title: 'Test Item',
-        description: 'Test Attendance Ticket for 2017 Round-up',
-        price: 10,
-        Product_Group: 'TICKET'
+        price: 3500,
+        Product_Group: 'TICKET',
+        options: [{
+            name: 'Beef',
+            value: 'beef'
+        }, {
+            name: 'Chicken',
+            value: 'chicken'
+        }, {
+            name: 'Fish',
+            value: 'fish'
+        }, {
+            name: 'Vegetarian',
+            value: 'vegetarian'
+        }]
     }),
     new Product({
         code: 'RU201704',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 99,
         imagePath: '/images/ticket.jpg',
@@ -76,12 +88,16 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 99,
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
         imagePath: '/images/heart.png',
         name: 'donation',
         title: 'Donation',
         description: 'Donate to help defray Round-up costs.',
         price: 0,
-        Product_Group: 'VARPRICE'
+        Product_Group: 'DONATION'
     }),
     new Product({
         code: 'RU201706',
@@ -89,6 +105,10 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 2,
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         imagePath: '/images/tee-shirt.jpg',
         name: 'teeshirt-small',
         title: 'Tee-Shirt (XS,S,M,L,XL)',
@@ -116,6 +136,10 @@ var products = [
         code: 'RU201707',
         shippable: 'No',
         taxable: 'No',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         category: 'Round-up',
         order: 3,
         imagePath: '/images/tee-shirt.jpg',
@@ -141,6 +165,10 @@ var products = [
         taxable: 'No',
         category: 'Round-up',
         order: 4,
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         imagePath: '/images/hoodie.jpg',
         name: 'Hoodie-small',
         title: 'Hooded Sweatshirt',
@@ -170,6 +198,10 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         imagePath: '/images/hoodie.jpg',
+        inventory: {
+          disableOnZero: false,
+          onHand: 100
+        },
         name: 'Hoodie-large',
         title: 'Hooded Sweatshirt XL Sizes',
         description: 'Hooded Sweatshirt with Round-up Logo. Sizes 2XL through 4XL. Choose specific size when you arrive.',
@@ -186,7 +218,41 @@ var products = [
             name: '4XL',
             value: '4XL'
         }]
-    })
+    }),
+    new Product({
+        order: 5,
+        code: 'RU201710',
+        shippable: 'No',
+        taxable: 'No',
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
+        imagePath: '/images/ticket.png',
+        name: 'Attendee Scholarship',
+        title: 'Scholarship Donation',
+        description: 'Help another to attend the round-up by contributing to the scholarship fund.',
+        price: 2500,
+        Product_Group: 'DONATION',
+        category: 'Round-up'
+    }),
+    new Product({
+        code: 'RU201711',
+        inventory: {
+          disableOnZero: true,
+          onHand: 100
+        },
+        shippable: 'No',
+        taxable: 'No',
+        category: 'Round-up',
+        order: 99,
+        imagePath: '/images/heart.png',
+        name: 'Literature Donation',
+        title: 'Donation for Literature for Prisoners',
+        description: 'Donate for Big Books and/or Literature for Prisoners',
+        price: 0,
+        Product_Group: 'DONATION'
+    }),
 ]
 var done = 0;
 for (var i = 0; i < products.length; i++) {

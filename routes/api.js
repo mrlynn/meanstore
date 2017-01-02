@@ -3,6 +3,8 @@ var router = express.Router();
 var Cart = require('../models/cart');
 var Category = require('../models/category');
 var Product = require('../models/product');
+var Event = require('../models/events');
+var async = require('async');
 var Order = require('../models/order');
 var User = require('../models/user');
 var Payment = require('../models/payment');
@@ -49,7 +51,7 @@ router.get('/categories', function(req, res, next) {
 });
 
 /**
- * Get a single category 
+ * Get a single category
  * @constructor
  */
 router.get('/categories/:id', function(req, res, next) {
@@ -59,7 +61,7 @@ router.get('/categories/:id', function(req, res, next) {
 });
 
 /**
- * POST add new category 
+ * POST add new category
  * @constructor
  */
  router.post('/categories', function(req, res, next) {
@@ -77,7 +79,7 @@ router.get('/categories/:id', function(req, res, next) {
 })
 
 /**
- * DELETE a single category 
+ * DELETE a single category
  *
  */
 router.delete('/categories/:id', function(req, res, next) {
@@ -153,7 +155,7 @@ router.get('/facet/:category', function(req, res, next) {
 
 
 /**
- * GET all categories 
+ * GET all categories
  * @constructor
  */
  router.get('/products', function(req, res, next) {
@@ -163,11 +165,10 @@ router.get('/facet/:category', function(req, res, next) {
 });
 
 /**
- * GET product. 
+ * GET product.
  * @constructor
  */
 router.get('/product/:id', function(req, res, next) {
-	console.log("Get Product " + req.params.id);
 	Product.findById(req.params.id,function(err,product) {
 		res.json(product);
 	})
@@ -181,7 +182,7 @@ router.get('/products/:id', function(req, res, next) {
 });
 
 /**
- * POST - Create a product 
+ * POST - Create a product
  * @constructor
  */
 router.post('/api/products', function (req, res){
@@ -288,7 +289,7 @@ router.get('/tax/:id/:user', function(req, res, next) {
 					if (user.city.toLowerCase() == taxConfig.ourCityName.toLowerCase()) {
 						taxRate = taxConfig.ourCityTaxRate;
 					}
-				} else { 
+				} else {
 					taxRate = 0;
 				}
 				var price = Number(product.price).toFixed(2);
@@ -316,15 +317,13 @@ router.get('/search', function(req, res, next) {
 
 	  db.collection('products').find().toArray(function (err, result) {
 	    if (err) throw err
-
-	    console.log(result)
 	  });
 	});
 });
 
 /* get all categories */
 router.get('/orders', function(req, res, next) {
-	Category.find({},function(err,orders) {
+	Order.find({},function(err,orders) {
 		res.json(orders);
 	})
 });
@@ -358,7 +357,53 @@ router.post('/order', function(req, res, next) {
 		}
 		res.send(category);
 	})
+});
+router.get('/donut-chart', function(req, res, next) {
+	Event.aggregate([
+	{
+		$group: { "_id": "$thing.category", "value": { $sum: 1 } }
+	},{
+		$project: { "_id": -1, "value": 1}
+	}], function(err,donuts) {
+		var data = [];
+		async.each(donuts, function(donut, next) {
+			data.push({
+				label: donut._id,
+				value: donut.value
+			})
+		})
+		res.json(data);
+	});
 })
+router.get('/purchases-by-yearmo', function(req,res,next) {
+	Event.aggregate([{
+		$match: {
+			'action': 'purchase'
+		}
+	},
+    { "$group": {
+        "_id": {
+            "year": {"$year": "$when" },
+            "month": {"$month": "$when" }
+            },
+          "count": { "$sum": 1 }
+        }
+    },
+  ], function(err,yearmos){
+	    var data = [];
+
+	    if (err) {
+	        console.log("error: " + err.message);
+	    } else {
+	        var i = 0;
+	        async.each(yearmos,function(yearmo,next) {
+	            data.push({
+	                x: yearmo._id.year + '-' + yearmo._id.month,
+	                purchases: yearmo.count
+	            })
+	        })
+	    }
+    res.json(data);
+    });
+});
 module.exports = router;
-
-

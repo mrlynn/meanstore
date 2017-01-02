@@ -12,10 +12,10 @@
                 {{successMsg}}
             </div>
             <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
-            {{errorMsg}}
+                {{errorMsg}}
+            </div>
         </div>
     </div>
-</div>
 {{>search}}
 <div class="row">
     {{# each products }}
@@ -66,7 +66,7 @@
                                     {{#if ../../isLoggedIn}}
                                         <form action='/add-to-cart' method='POST'>
                                         <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                        <input type='hidden' id='type' name='type' value='VARPRICE'>
+                                        <input type='hidden' id='type' name='type' value='DONATION'>
                                         <h3 class="product-price text-center">
                                             <input type='text' class='text-right' name='price' value='{{this.price}}'>
                                         </h3>
