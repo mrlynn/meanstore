@@ -11,8 +11,7 @@
 	{{#each products}}
         <div class="row">
 		{{#each this}}
-
-            {{#if this.title }}
+            {{#if this.name }}
             <div class="col-sm-3">
     			<div class="product-image-wrapper">
     				<div class="single-products">
@@ -23,35 +22,35 @@
     						<p>{{this.title}}</p>
                             <h4>{{this.code}}</h4>
                             {{#if ../../isLoggedIn}}
-                                        <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
-                                        <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
-                                    {{else}}
-                                        <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}
-                                    {{/if}}
-    						        {{#if this.isVariable }}
-                                        {{#if this.options }}
-                                        <h3>Select:</h3>
-                                        <select class="form-control input-sm" name="option">
-                                            {{#each this.options}}
-                                                <option name="{{value}}">{{name}}</option>
-                                            {{/each}}
-                                        </select>
-                                        {{/if}}
-                                        {{#if ../../isLoggedIn}}
-                                        <form action='/add-to-cart' method='POST'>
-                                            <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                            <input type='hidden' id='type' name='type' value='DONATION'>
-                                            <label for="price">Amount</label>
-                                            <input type='text' class='text-right form-control input-sm' name='price' value='{{money this.price}}'>
-                                            <p class="text-center">
-                                                <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
-                                            </p>
-                                        </form>
-                                        {{else}}
-                                            <p class="text-center">
-                                                <a href="/user/signin" class="btn btn-primary add-to-cart" role="button">Sign in to Buy</a>
-                                            </p>
-                                        {{/if}}
+                                <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
+                                <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
+                            {{else}}
+                                <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}
+                            {{/if}}
+ 					        {{#if this.isDonation }}
+                                {{#if this.options }}
+                                <h3>Select:</h3>
+                                <select class="form-control input-sm" name="option">
+                                    {{#each this.options}}
+                                        <option name="{{value}}">{{name}}</option>
+                                    {{/each}}
+                                </select>
+                                {{/if}}
+                                {{#if ../../isLoggedIn}}
+                                    <form action='/add-to-cart' method='POST'>
+                                        <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
+                                        <input type='hidden' id='type' name='type' value='DONATION'>
+                                        <label for="price">Amount</label>
+                                        <input type='text' class='text-right form-control input-sm' name='price' value='{{money this.price}}'>
+                                        <p class="text-center">
+                                            <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
+                                        </p>
+                                    </form>
+                                {{else}}
+                                    <p class="text-center">
+                                        <a href="/user/signin" class="btn btn-primary add-to-cart" role="button">Sign in to Buy</a>
+                                    </p>
+                                {{/if}}
                             {{else}} <!-- if this.isVariable -->
     							{{#if this.Attributes}}
                                     <h3>Features</h3>
@@ -113,7 +112,7 @@
                                             <h2 class="product-price text-center">
                                                 ${{money this.price}}
                                             </h2>
-                                            
+
                                             {{#if ../../isLoggedIn}}
                                             <p class="text-center">
                                                 <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
@@ -142,7 +141,7 @@
                                                 <h2 class="product-price text-center">
                                                     ${{money this.price}}
                                                 </h2>
-                                                
+
                                                 {{#if ../../isLoggedIn}}
                                                 <p class="text-center">
                                                     <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
@@ -159,11 +158,11 @@
                             {{/if}} <!-- if this.isVariable -->
     					</div>
                          {{#if this.sale_attributes.new}}
-                                    <img src="/images/home/new.png" width=42 class="new" alt="">
-                                {{/if}}
-                                {{#if this.sale_attributes.sale}}
-                                    <img src="/images/home/sale.png" width=42 class="sale" alt="">
-                                {{/if}}
+                            <img src="/images/home/new.png" width=42 class="new" alt="">
+                        {{/if}}
+                        {{#if this.sale_attributes.sale}}
+                            <img src="/images/home/sale.png" width=42 class="sale" alt="">
+                        {{/if}}
     				</div>
     			</div>
             </div>
@@ -171,7 +170,6 @@
 	{{/each}}
     </div>
 {{/each}}
-
 	{{!-- <ul class="pagination">
 		<li class="active"><a href="">1</a></li>
 		<li><a href="">2</a></li>

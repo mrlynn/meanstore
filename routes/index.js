@@ -40,6 +40,11 @@ var useFacets = (process.env.facets === true);
 var viewTour = (process.env.viewTour === true);
 useFacets = true;
 var frontPageCategory = process.env.frontPageCategory;
+if (frontPageCategory) {
+	if (!catExists(frontPageCategory)) {
+		frontPageCategory = false;
+	}
+}
 var viewDocuments = process.env.viewDocuments;
 
 if (useFacets == true) {
@@ -58,8 +63,7 @@ router.get('/whypaypal', function(req, res, next) {
 	res.render('shop/whypaypal');
 });
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/testing', function(req, res, next) {
 
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
@@ -158,6 +162,147 @@ router.get('/', function(req, res, next) {
 				}
 
 				res.render('shop/eshop', {
+					layout: 'eshop/testing',
+					title: title,
+					navcats: req.app.get('navcats'),
+					navgroups: req.app.get('navgroups'),
+					salegroups: req.app.get('salegroups'),
+					categoryrecord: JSON.stringify(categoryrecord),
+					showRecommendations: eval(res.locals.showRecommendations),
+					allcategories: res.locals.allcategories,
+					keywords: Config.keywords,
+					products: productChunks,
+					recommended: docs,
+					Product_Group: Product_Group,
+					user: req.user,
+					errorMsg: errorMsg,
+					noErrorMsg: !errorMsg,
+					successMsg: successMsg,
+					viewDocuments: viewDocuments,
+					tutorial: tutorial,
+					noMessage: !successMsg,
+					viewTour: viewTour,
+					isLoggedIn: req.isAuthenticated()
+				});
+			});
+		});
+});
+/* GET home page. */
+router.get('/', function(req, res, next) {
+
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	var tutorial = req.params.tutorial;
+	if (tutorial == 1) {
+		req.session.tutorial = true;
+	} else {
+		req.session.tutorial = false;
+	}
+	var categoryrecord = {
+		"_id": "ObjectId('58485813edf44d95fb117223')",
+		"name": "Television",
+		"slug": "Television",
+		"attributes": [],
+		"ancestors": [],
+		"__v": 0
+	};
+	Product.aggregate(
+		[{
+			$group: {
+				_id: "$Product_Group",
+				count: {
+					$sum: 1
+				}
+			}
+		}, {
+			$sort: {
+				_id: 1
+			}
+		}],
+		function(err, Product_Group) {
+			if (frontPageCategory) {
+				categCondition = {
+					"$match": {
+						"$and": [{
+								"status": {
+									$ne: 'deleted'
+								}
+							},
+							{
+								"category": frontPageCategory
+							},
+							{
+								$or: [{
+									"inventory.onHand": {
+										$gt: 0
+									}
+								}, {
+									"inventory.disableOnZero": false
+								}]
+							}
+						]
+					}
+				}
+			} else {
+				// categCondition = { $sample: { size: 40 } };
+				categCondition = {
+					"$match": {
+						"$and": [{
+							"status": {
+								"$ne": 'deleted'
+							}
+						}, {
+							$or: [{
+								"inventory.onHand": {
+									"$gt": 0
+								}
+							}, {
+								"inventory.disableOnZero": false
+							}]
+						}]
+					}
+				}
+			}
+			console.log("categCondition: " + JSON.stringify(categCondition));
+
+			// Product.find(categCondition, function(err, docs) {
+
+			// Product.aggregate([
+			// 	categCondition,
+			// 	{
+			// 		"$sample": {
+			// 			size: 40
+			// 		}
+			// 	}
+			// ]
+			Product.find({
+				"$and": [{
+							"status": {
+								"$ne": 'deleted'
+							}
+						}, {
+							$or: [{
+								"inventory.onHand": {
+									"$gt": 0
+								}
+							}, {
+								"inventory.disableOnZero": false
+							}]
+						}]
+			}
+			, function(err, docs) {
+				if (err) {
+					products = {}
+				}
+
+				productChunks = [];
+				productJSON = [];
+				chunkSize = 4;
+				for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
+					productChunks.push(docs.slice(i, i + chunkSize));
+				}
+
+				res.render('shop/eshop', {
 					layout: 'eshop/eshop',
 					title: title,
 					navcats: req.app.get('navcats'),
@@ -218,7 +363,6 @@ router.get('/sale', function(req, res, next) {
 			}
 		}],
 		function(err, Product_Group) {
-
 			if (frontPageCategory) {
 				categCondition = {
 					category: frontPageCategory
@@ -233,7 +377,6 @@ router.get('/sale', function(req, res, next) {
 				for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
 					productChunks.push(docs.slice(i, i + chunkSize));
 				}
-
 				res.render('shop/eshop', {
 					layout: 'eshop/eshop',
 					title: title,
@@ -606,6 +749,8 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 	var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
 	var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
 	var products = cart.generateArray();
+
+	console.log("GET SH grand: " + grandTotal);
 	recommendations.GetRecommendations(cart, function(err, recommendations) {
 			if (err) {
 				errorMsg = req.flash('error :', err.message);
@@ -929,8 +1074,9 @@ router.post('/create', function(req, res, next) {
 	var item_list = [];
 	var orders = [];
 	for (var i = 0, len = products.length; i < len; i++) {
-		var price = parseFloat(products[i].price/100);
-		price = String((price).toFixed(2));
+		var extprice = parseFloat(products[i].price/100);
+		extprice = String((extprice).toFixed(2));
+		intprice = String(parseFloat(products[i].price));
 		qty = Number(products[i].qty);
 		tname = 'ticket_name_' + i;
 		oname = 'option_' + i;
@@ -944,7 +1090,7 @@ router.post('/create', function(req, res, next) {
 		};
 		item = {
 				"name": products[i].item.title,
-				"price": price,
+				"price": extprice,
 				"quantity": qty,
 				"currency": "USD",
 				"sku": products[i].item.code
@@ -959,7 +1105,8 @@ router.post('/create', function(req, res, next) {
 			productId: products[i].item._id,
 			product_name: products[i].item.title,
 			Product_Group: products[i].item.Product_Group,
-			product_price: price,
+			product_price: intprice,
+			product_price_double: parseFloat(products[i].price/100),
 			product_qty: qty,
 			paidBy: 'Paypal',
 			ticket_name: ticket_name,
@@ -1036,7 +1183,7 @@ router.post('/create', function(req, res, next) {
 					billing_zipcode: req.body.shipping_zipcode,
 					paymentId: payment.id,
 					status: 'pending',
-					total: parseFloat(cart.grandTotal).toFixed(2)
+					total: parseFloat(cart.grandTotal)
 				});
 				order.save(function(err) {
 					if (err) {
@@ -1190,6 +1337,7 @@ router.get('/execute', function(req, res, next) {
 										status: payment.state,
 										productId: product.item._id,
 										sku: product.sku,
+										code: product.code,
 										name: product.item.name,
 										category: product.category,
 										Product_Group: product.Product_Group
@@ -1565,6 +1713,14 @@ router.init = function(c) {
 }
 
 module.exports = router;
+
+function catExists(cat) {
+	Category.findOne({"name": cat}, function(err,categorydoc) {
+		if (err||!categorydoc) {
+			return false;
+		}
+	})
+}
 
 function userInfo(req, res, next) {
 	if (req.user) {
