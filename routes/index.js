@@ -139,7 +139,7 @@ router.get('/testing', function(req, res, next) {
 					}
 				}
 			}
-			console.log("categCondition: " + JSON.stringify(categCondition));
+			// console.log("categCondition: " + JSON.stringify(categCondition));
 
 			// Product.find(categCondition, function(err, docs) {
 
@@ -263,8 +263,6 @@ router.get('/', function(req, res, next) {
 					}
 				}
 			}
-			console.log("categCondition: " + JSON.stringify(categCondition));
-
 			// Product.find(categCondition, function(err, docs) {
 
 			// Product.aggregate([
@@ -548,18 +546,43 @@ router.get('/category/:slug', function(req, res, next) {
 							]
 						}
 					}
-					Product.aggregate([
-						// $match: {
-						//     $and: [{
-						//         $or: [{
-						//             'category': new RegExp(category.slug, 'i')
-						//         }, {
-						//             'category': new RegExp(category.name, 'i')
-						//         }]
-						//     }, srch]
-						// }
-						categCondition
-					], function(err, products) {
+					categCondition = {
+						$and: [{
+									$or: [{
+										'category': new RegExp(category.slug, 'i')
+									}, {
+										'category': new RegExp(category.name, 'i')
+									}]
+								},
+								{
+									status: {
+										$ne: 'deleted'
+									}
+								},
+								{
+									$or: [{
+										"inventory.onHand": {
+											$gt: 0
+										}
+									}, {
+										"inventory.disableOnZero": false
+									}]
+								}
+							]
+					}
+					Product.find(categCondition,function(err, products) {
+					// Product.aggregate([
+					// 	// $match: {
+					// 	//     $and: [{
+					// 	//         $or: [{
+					// 	//             'category': new RegExp(category.slug, 'i')
+					// 	//         }, {
+					// 	//             'category': new RegExp(category.name, 'i')
+					// 	//         }]
+					// 	//     }, srch]
+					// 	// }
+					// 	categCondition
+					// ], function(err, products) {
 						if (err || !products || products === 'undefined') {
 							console.log("Error: " + err.message);
 							req.flash('error', 'Problem finding products');
@@ -642,7 +665,8 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 			return res.redirect('/');
 		}
 		if (product.Product_Group == 'DONATION') {
-			theprice = price;
+			console.log("PRICE: " + parseFloat(price*100));
+			theprice = parseFloat(price*100);
 		} else {
 			theprice = product.price;
 		}
@@ -750,7 +774,6 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 	var grandTotal = parseFloat(Number(cart.grandTotal).toFixed(2));
 	var products = cart.generateArray();
 
-	console.log("GET SH grand: " + grandTotal);
 	recommendations.GetRecommendations(cart, function(err, recommendations) {
 			if (err) {
 				errorMsg = req.flash('error :', err.message);
@@ -957,9 +980,6 @@ router.post('/checkout', function(req, res, next) {
 				var totalTax = results.taxAmount.toFixed(2);
 				var grandtotal = ((parseFloat(subtotal) + parseFloat(totalTax) + parseFloat(shippingtotal))).toFixed(2);
 				var errorMsg = req.flash('error')[0];
-				console.log("SUBTOTAL: " + subtotal);
-				console.log("GRANDTOTAL: " + grandtotal);
-
 				res.render('shop/checkout', {
 					user: req.user,
 					layout: 'eshop/blank',
@@ -1041,10 +1061,6 @@ router.post('/create', function(req, res, next) {
 	}
 	var cart = new Cart(req.session.cart);
 	products = cart.generateArray();
-	console.log("PRODUCTS: " + JSON.stringify(products));
-	console.log("SUBTOTAL: " + subtotal);
-	console.log("AMOUNT: " + String(amount.toFixed(2)));
-
 	//11-17-2016
 	tax = taxCalc.calculateTaxReturn(products, req.user._id);
 	var create_payment = {
@@ -1146,7 +1162,6 @@ router.post('/create', function(req, res, next) {
 	// We'll store the payment in a document and then redirect the user
 	// When the user authorizes, paypal will callback our /execute route and we'll complete the transaction
 	//
-	console.log("Create Payment : " + JSON.stringify(create_payment));
 
 	paypal.payment.create(create_payment, function(err, payment) {
 		if (err) {
@@ -1269,7 +1284,6 @@ router.get('/execute', function(req, res, next) {
 
 		} else {
 			// Update payment record with new state - should be approved.
-
 			Payment.find({
 				id: paymentId
 			}, function(err, paymentDocument) {
@@ -1304,6 +1318,7 @@ router.get('/execute', function(req, res, next) {
 						}
 						/* Update Users Bought Array */
 						async.each(products, function(product, next) {
+							console.log("PRODUCT: " + product);
 							event = new Event({
 								namespace: 'products',
 								person: {
@@ -1339,6 +1354,7 @@ router.get('/execute', function(req, res, next) {
 										sku: product.sku,
 										code: product.code,
 										name: product.item.name,
+										price: product.item.price,
 										category: product.category,
 										Product_Group: product.Product_Group
 									}

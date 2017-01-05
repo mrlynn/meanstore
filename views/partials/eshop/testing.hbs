@@ -1,0 +1,24 @@
+<div class="features_items"><!--featured_items-->
+    {{#if category}}
+        <h2 class="title text-center">Category: {{category.name}}</h2>
+    {{else}}
+        {{#if group}}
+            <h2 class="title text-center">Group: {{group}}</h2>
+        {{else}}
+            <h2 class="title text-center">Featured Items</h2>
+        {{/if}}
+    {{/if}}
+	{{#each products}}
+        <div class="row">
+		{{#each this}}
+            {{this.name}} {{this.Product_Group}} {{this.isVariable}} {{this.isApparel}} {{this.isTicket}}
+	   {{/each}}
+    </div>
+    {{/each}}
+	{{!-- <ul class="pagination">
+		<li class="active"><a href="">1</a></li>
+		<li><a href="">2</a></li>
+		<li><a href="">3</a></li>
+		<li><a href="">&raquo;</a></li>
+	</ul> --}}
+</div><!--featured_items-->

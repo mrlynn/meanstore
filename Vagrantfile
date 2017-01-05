@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
     end
     server.vm.hostname = "meanmart.mongodb.local"
     server.vm.network :private_network, ip: "192.168.14.200"
-    server.vm.provision :shell, path: "provision-vagrant.sh", args: ENV['ARGS']
+    server.vm.provision :shell, path: "scripts/provision-vagrant.sh", args: ENV['ARGS']
 
   end
 end

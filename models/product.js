@@ -40,6 +40,10 @@ var schema = new Schema({
         type: Currency,
         required: true
 	},
+	product_price_double: {
+		type: Number,
+		required: false
+	},
 	cost: {
         type: Currency,
         required: false
@@ -132,11 +136,6 @@ var schema = new Schema({
 			Type: Number
 		}
 	}]
-},
-{
-	toJSON: {
-		getters: true
-	}
 });
 // shippable Getter
 schema.path('shippable').get(function(txt) {
@@ -172,54 +171,44 @@ schema.path('taxable').set(function(txt) {
   	return false;
   }
 });
-// Getter
-// schema.path('price').get(function(num) {
-//   return (num / 100).toFixed(2);
-// });
 
-// // Setter
-// schema.path('price').set(function(num) {
-//   return num * 100;
-// });
-
-schema.virtual('isVariable')
-	.get(function() {
-		if (this.Product_Group=='DONATION') {
-			return true;
-		}
+schema.virtual('isDonation').get(function() {
+	if (this.price == 0||this.price=='0'||this.Product_Group=='DONATION'||this.price=='0.00'||this.price==0.00) {
+		return true;
+	}
+	return false;
+})
+schema.virtual('isVariable').get(function() {
+	if (this.Product_Group=='DONATION') {
+		return true;
+	}
 	return false;
 });
 
-schema.virtual('isTicket')
-	.get(function() {
-		if (this.Product_Group=='TICKET') {
-			return true;
-		}
+schema.virtual('isTicket').get(function() {
+	if (this.Product_Group=='TICKET') {
+		return true;
+	}
 	return false;
 });
 
-schema.virtual('hasOptions')
-	.get(function() {
-		if (this.options.length < 0) {
-			return false;
-		}
+schema.virtual('hasOptions').get(function() {
+	if (this.options.length < 0) {
+		return false;
+	}
 	return true;
 });
 
-schema.virtual('isApparel')
-	.get(function() {
-		if (this.Product_Group=='APPAREL') {
-			return true;
-		}
+schema.virtual('isApparel').get(function() {
+	if (this.Product_Group=='APPAREL') {
+		return true;
+	}
 	return false;
-});	
+});
 // schema.methods.setPrice = function(price) {
 // 	this.price = price;
 // };
-function getCurrency(amt) {
-	return (amt / 100).toFixed(2);
 
-}
 // function setPrice(price) {
 // 	return (price * 100).toFixed(2);
 
@@ -229,7 +218,16 @@ function getCurrency(amt) {
 // }
 schema.plugin(random);
 
-schema.index({name: 'text',title:'text',description:'text',category:'text', code: 'text', Product_Group: 'text'});
+schema.index({name: 'text',title:'text',description:'text',category:'text', code: 'text'});
 
 module.exports = mongoose.model('Product',schema);
+// Getter
+// schema.path('price').get(function(num) {
+//   return (num / 100).toFixed(2);
+// });
+
+// // Setter
+// schema.path('price').set(function(num) {
+//   return num * 100;
+// });
 

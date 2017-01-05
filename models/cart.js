@@ -19,6 +19,8 @@ module.exports = function Cart(oldCart) {
 	this.grandTotal = Number(oldCart.totalPrice) || 0; // Grandtotal
 	this.totalPriceWithTax = Number(oldCart.totalPriceWithTax) || 0; // Total with shipping/tax
 
+	console.log("old cart: " + JSON.stringify(oldCart));
+
 	/* TODO: Figure out how to change the value of this in the cart.add method from within the necessary method calls calculateShipping and calculateTax
 	/* add item to cart */
 	/* TODO: How do I make a call to calculateTax from my cart.js module without losing "this" */
@@ -64,11 +66,13 @@ module.exports = function Cart(oldCart) {
 	    }
 		if (!storedItem) {
 			// create a new entry
-			storedItem = this.items[id + option] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, option: option, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
+			storedItem = this.items[id + name + email + option] = {item: item, qty: 0, ticket_name: name, ticket_email: email, price: price, option: option, type: type, taxAmount: 0, taxable: taxable, shipable: shipable};
 		}
 		storedItem.qty++;
 		storedItem.price = parseFloat(price);
-		storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
+		// storedItem.itemTotal = Number(price * storedItem.qty).toFixed(2);
+		storedItem.itemTotal = Number((price*100) * storedItem.qty);
+		console.log("Stored Item Item Total: " + JSON.stringify(storedItem));
 // this.totalShipping = result.totalShipping;
 // storedItem.taxAmount = result.taxAmount;
 		storedItem.type = type;
