@@ -51,7 +51,7 @@ router.get('/',  isAdmin, function(req, res, next) {
             // 	products: productChunks,
             // 	user: user
             //   	});
-            res.render('admin/index', {
+            res.render('admin/dashboard', {
                 layout: 'admin-page.hbs',
                 products: productChunks,
                 errorMsg: errorMsg,
@@ -68,8 +68,7 @@ router.get('/',  isAdmin, function(req, res, next) {
 
 router.get('/orders:filter?', isAdmin, function(req, res, next) {
     var filter = req.query.filter;
-    console.log("Filter " + filter);
-        meanlogger.log("check","Viewed orders",req.user);
+    meanlogger.log("check","Viewed orders",req.user);
 
     if (!filter || filter=='allOrders') {
         var allOrders = true;

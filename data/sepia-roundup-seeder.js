@@ -228,7 +228,7 @@ var products = [
           disableOnZero: true,
           onHand: 100
         },
-        imagePath: '/images/ticket.png',
+        imagePath: '/images/ticket.jpg',
         name: 'Attendee Scholarship',
         title: 'Scholarship Donation',
         description: 'Help another to attend the round-up by contributing to the scholarship fund.',
