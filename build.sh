@@ -3,4 +3,4 @@ rm -rf .env.hackathon
 cp .env.hackathon.example .env.hackathon
 git add --all
 git commit
-git push origin meanmart
+git push origin sepia
