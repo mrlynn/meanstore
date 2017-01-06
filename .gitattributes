@@ -1,0 +1,4 @@
+*.js linguist-language=Javascript
+public/stylesheets/* linguist-vendored
+public/css/* linguist-vendored
+public/javascripts/* linguist-vendored
