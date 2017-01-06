@@ -139,7 +139,7 @@ app.use(errorHandler());
 app.use(mongoSanitize({
   replaceWith: '_'
 }));
-docs(app, mongoose); // 2nd param is optional
+// docs(app, mongoose); // 2nd param is optional
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 
@@ -233,6 +233,10 @@ app.use('/user', userRoutes);
 app.use('/category', routes);
 app.use('/', routes);
 // catch 404 and forward to error handler
+
+app.get('*', function(req, res){
+  res.send('what???', 404);
+});
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;

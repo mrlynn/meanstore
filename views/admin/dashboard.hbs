@@ -39,22 +39,3 @@
     </div>
     <!-- /.container-fluid -->
 </div>
-
-
-<script>
-var table = $('#example').DataTable({
-    processing: true,
-    serverSide: true,
-    ajax: {
-        url: "http://localhost:3000/api/products"
-    },    
-    columns: [ 
-        { data : "_id" },
-        { data : "name" },
-        { data : "title" },
-        { data : "Product_Group" },
-        { data : "price" },        
-        { data : "created" }
-   ]     
-}); 
-</script>
