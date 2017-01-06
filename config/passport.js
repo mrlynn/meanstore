@@ -149,8 +149,8 @@ passport.use(new FacebookStrategy({
       }
       if (existingUser) {
         console.log("Existing User");
-        req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
-        done(err);
+        // req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
+        return done(err, user);
       } else {
         console.log("Not Existing User");
 
