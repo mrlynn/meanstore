@@ -23,6 +23,24 @@ Category.find({}, function(err,categories) {
 	}
 });
 
+router.get('/buckauto', function(req, res, next) {
+	var url = 'mongodb://localhost:27017/hackathon';
+	MongoClient.connect(url, (err, db) => {
+	Product.aggregate([{
+		"$bucketAuto": {
+			"$groupBy": "$price",
+			"buckets": 4
+		}
+	}],function(err,product) {
+		if (err) {
+			console.log("Error: " + err.message);
+			res.send(500, "Problem fetching products");
+		}
+		res.json(product);
+	})
+});
+});
+
 /**
  * Present statistics for various database objects
  * @constructor

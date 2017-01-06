@@ -784,13 +784,13 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 					title: 'Gorgeous Fresh Hat Camera',
 					description: 'Error ea velit et explicabo.',
 					price: 973,
-					imagePath: '/img/lumix-camera.jpg'
+					imagePath: '/images/lumix-camera.jpg'
 				}, {
 					code: 'cam1001',
 					title: 'Tasty Metal Chicken Camera',
 					description: 'Lumix Incredible orchid Tasty Metal Chicken Camera',
 					price: 360,
-					imagePath: '/img/sony-camera.jpg'
+					imagePath: '/images/sony-camera.jpg'
 				}]
 			}
 			res.render('shop/shopping-cart', {
@@ -1605,6 +1605,16 @@ router.get('/product/:id/', function(req, res, next) {
 	});
 });
 
+router.get('/privacy', function(req,res,next) {
+	res.render('privacy', {
+		layout: 'eshop/blank'
+	});
+});
+router.get('/tos', function(req,res,next) {
+	res.render('tos', {
+		layout: 'eshop/blank'
+	});
+});
 router.get('/overview', function(req, res, next) {
 	categoryrecord = {
 		"_id": "ObjectId('58485813edf44d95fb117223')",

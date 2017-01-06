@@ -474,10 +474,10 @@ db.products.aggregate([{
         ])
 
 
-        db.products.aggregate([
+        db.users.aggregate([
             {
                 $graphLookup: {
-                    from: "users",
+                    from: "products",
                     startWith: "$usersBought",
                     connectFromField: "usersBought",
                     connectToField: "_id",
@@ -492,7 +492,7 @@ db.products.aggregate([{
 
 
         db.users.aggregate( [
-            {"$unwind":{"path":"orders"}},
+            {"$unwind":{"path":"$orders"}},
             {
                 $graphLookup: {
                     from: "products.",

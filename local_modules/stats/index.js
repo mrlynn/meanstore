@@ -4,6 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var Product = require('../../models/product');
 var Event = require('../../models/events');
+var async = require('async');
 var Order = require('../../models/order');
 var User = require('../../models/user');
 var Cart = require('../../models/cart');
@@ -29,14 +30,18 @@ module.exports = {
             if (err) {
                 console.log("error " + err.message);
             }
-            for (var i = 0; i < orders.length; i++) {
-                if (isNaN(parseFloat(orders[i].total/100))) {
-                    orders[i].total = 0;
+            async.each(orders, function(order, next) {
+            // for (var i = 0; i < orders.length; i++) {
+                if (isNaN(parseFloat(order.total/100))) {
+                    order.total = 0;
+                    // orders[i].total = 0;
                 }
-                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(orders[i].total/100));
-                var items = orders[i].cart;
+                console.log("ORDER: " + JSON.stringify(order))
+                stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived) + parseFloat(order.total/100));
+
+                var items = order.cart;
                 for (item in items) {
-                    var group = item.Product_Group
+                    var group = items[item].Product_Group
                     stats.itemCount += 1
                     if (items[item].code=='RU201701') {
                             stats.ticketsSold += 1
@@ -48,7 +53,7 @@ module.exports = {
                             stats.apparelSold += 1
                         } else {
                             if (group == 'DONATION') {
-                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(orders[i].total/100));
+                                stats.donationsAmount = (parseFloat(stats.donationsAmount) + parseFloat(order.total/100));
                                 stats.donationsCount += 1;
                             }
                         }
@@ -60,12 +65,12 @@ module.exports = {
                 // 	console.log("ITEMS: " + JSON.stringify(item._id));
                 // 	console.log("---");
                 // }
-                if (orders[i].status == 'approved') {
+                if (order.status == 'approved') {
                     stats.totalApprovedOrders += 1;
                 } else {
                     stats.totalUnApprovedOrders += 1;
                 }
-            }
+            });
             stats.totalAmountReceived = (parseFloat(stats.totalAmountReceived).toFixed(2));
             stats.totalApprovedOrders = parseFloat(stats.totalApprovedOrders).toFixed(0);
             stats.donationsAmount = parseFloat(stats.donationsAmount).toFixed(2);
