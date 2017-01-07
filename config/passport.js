@@ -34,26 +34,15 @@ passport.use('local.signup', new LocalStrategy({
     req.checkBody('password', 'Invalid Password').notEmpty().isLength({
         min: 4
     });
-    req.checkBody('first_name', 'Invalid First Name').notEmpty().isLength({
-        min: 1
-    });
-    req.checkBody('last_name', 'Invalid Last Name').notEmpty().isLength({
-        min: 1
-    });
-    req.checkBody('addr1', 'Invalid Address').notEmpty().isLength({
-        min: 4
-    });
-    req.checkBody('city', 'Invalid City').notEmpty().isLength({
-        min: 4
-    });
-    req.checkBody('state', 'Invalid State').notEmpty().isLength({
-        min: 2
-    });
-    req.checkBody('zipcode', 'Invalid Zipcode').notEmpty().isLength({
-        min: 2
-    });
-
+    req.checkBody('first_name', 'Invalid First Name').notEmpty();
+    req.checkBody('last_name', 'Invalid Last Name').notEmpty();
+    // req.checkBody('addr1', 'Invalid Address').notEmpty();
+    req.checkBody('telephone', 'Invalid Telephone').notEmpty();
+    // req.checkBody('city', 'Invalid City').notEmpty();
+    // req.checkBody('state', 'Invalid State').notEmpty();
+    // req.checkBody('zipcode', 'Invalid Zipcode').notEmpty();
     var errors = req.validationErrors();
+    console.log(JSON.stringify(errors));
     if (errors) {
         var messages = [];
         errors.forEach(function(error) {
@@ -149,8 +138,8 @@ passport.use(new FacebookStrategy({
       }
       if (existingUser) {
         console.log("Existing User");
-        req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
-        done(err);
+        // req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
+        return done(err, user);
       } else {
         console.log("Not Existing User");
 
