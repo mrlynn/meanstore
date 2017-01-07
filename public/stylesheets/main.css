@@ -199,7 +199,7 @@ a#scrollUp i{
 
 .shop-menu ul li a {
   background: #FFFFFF;
-  color: #589636;
+  color: #2c93e3;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -216,7 +216,7 @@ a#scrollUp i{
 
 .shop-menu ul li a:hover {
 /*	color:#2c93e3;
-*/  color:#589636;
+*/  color:#2c93e3;
 	background:#fff;
 }
 
@@ -240,7 +240,7 @@ a#scrollUp i{
 }
 
 .mainmenu ul li a {
-	color: #589636;
+	color: #2c93e3;
 	font-family: 'Roboto', sans-serif;
 	font-size: 17px;
 	font-weight: 300;
@@ -251,7 +251,7 @@ a#scrollUp i{
 .mainmenu ul li a:hover, .mainmenu ul li a.active,  .shop-menu ul li a.active{
 	background:none;
 /*	color:#fdb45e;
-*/  color:#589636;
+*/  color:#2c93e3;
 }
 
 .search_box input {
@@ -304,7 +304,7 @@ ul.sub-menu {
 }
 
 .dropdown ul.sub-menu li .active{
-  color: #589636;
+  color: #2c93e3;
   padding-left: 0;
 }
 
@@ -322,7 +322,7 @@ ul.sub-menu {
 }
 
 .navbar-nav li ul.sub-menu li a:hover{
-    color: #589636;
+    color: #2c93e3;
 }
 
 .fa-angle-down{
@@ -1027,7 +1027,7 @@ h2.title {
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
-  background-color: #589636;
+  background-color: #2c93e3;
   border:0px;
   color: #FFFFFF;
   cursor: default;
@@ -1056,7 +1056,7 @@ h2.title {
 }
 
 .recommended-item-control i {
-  background: none repeat scroll 0 0 #589636;
+  background: none repeat scroll 0 0 #2c93e3;
   color: #FFFFFF;
   font-size: 20px;
   padding: 4px 10px;
@@ -2416,8 +2416,6 @@ h2.title {
   left: 5px
 } 
 
-
-
 /*************************
 ******* Contact CSS ********
 **************************/
@@ -2468,7 +2466,7 @@ h2.title {
 #contact-page .form-control:focus, 
 #contact-page .form-control:hover {
   box-shadow: inherit;
-  border-color: #589636;
+  border-color: #2c93e3;
 }
 
 #contact-page .contact-info {

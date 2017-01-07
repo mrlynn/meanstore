@@ -133,6 +133,7 @@ app.use(validator({
         return param >= num;
   }
 }));
+
 app.use(cookieParser());
 app.use(breadcrumbs.init());
 app.use(errorHandler());
@@ -158,9 +159,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Create global logged in variable login to indicate whether the user is logged in or not.
-// app.use(csrf());
 
 app.use(function(req,res,next) {
     // if (typeof res.locals.allcats == 'undefined') {
@@ -214,7 +212,7 @@ app.use(function(req,res,next) {
             var pageName = path.basename(parsed.pathname);
             res.locals.pageName = pageName.toLowerCase();
             res.locals.req = req;
-            // res.locals._csrf = req.csrfToken();
+            //res.locals._csrf = req.csrfToken();
             var ipInfo = getIP(req);
             next();
           });
@@ -235,7 +233,7 @@ app.use('/', routes);
 // catch 404 and forward to error handler
 
 app.get('*', function(req, res){
-  res.send('what???', 404);
+  res.status(404).send('what???', 404);
 });
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

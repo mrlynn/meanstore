@@ -39,7 +39,7 @@
                                 {{#if ../../isLoggedIn}}
                                     <form action='/add-to-cart' method='POST'>
                                         <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                        <input type='hidden' id='type' name='type' value='DONATION'>
+                                        <input type='hidden' id='type' name='Product_Group' value='DONATION'>
                                         <label for="price">Amount</label>
                                         <input type='text' class='text-right form-control input-sm' name='price' value='{{money this.price}}'>
                                         <p class="text-center">
@@ -66,6 +66,7 @@
                                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                             <input type='hidden' id='price' name='price' value='{{ this.price }}'>
                                             <input type='hidden' id='type' name='type' value='APPAREL'>
+                                            <input type='hidden' id='type' name='Product_Group' value='APPAREL'>
                                             {{#if this.options }}
                                             <h3>Select:</h3>
                                             <select class="form-control input-sm" name="option">
@@ -95,6 +96,7 @@
                                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                             <input type='hidden' id='price' name='price' value='{{money this.price }}'>
                                             <input type='hidden' id='type' name='type' value='TICKET'>
+                                            <input type='hidden' id='type' name='Product_Group' value='TICKET'>
                                             <div class='form-group'>
                                                 <label for='Name'>Name for Ticket</label>
                                                 <input class='form-control input-sm' type='text' name='ticket_name' value="{{../../user.first_name}}">
@@ -130,6 +132,7 @@
                                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                                 <input type='hidden' id='price' name='price' value='{{ money this.price }}'>
                                                 <input type='hidden' id='type' name='type' value='SIMPLE'>
+                                                <input type='hidden' id='type' name='Product_Group' value='SIMPLE'>
                                                 {{#if this.options }}
                                                     <h3>Select</h3>
                                                     <select class="form-control input-sm" name="option">

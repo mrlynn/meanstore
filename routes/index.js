@@ -621,9 +621,9 @@ router.get('/category/:slug', function(req, res, next) {
 
 router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
 	var ticket_name = req.body.ticket_name || null;
 	var ticket_email = req.body.ticket_email || null;
-	var errorMsg = req.flash('error')[0];
 	var price = req.body.price || null;
 	var type = req.body.Product_Group || null;
 
@@ -633,13 +633,14 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 	if (type == 'TICKET') {
 		req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
 	}
+
 	if (type == 'DONATION') {
 		if (price >= 1000) {
 			errors = 1;
 			req.flash('error', 'Unable to accept donations greater than $1000.00');
 			return res.redirect('/');
 		}
-		if (price < 0) {
+		if (price < 1||price==0) {
 			req.flash('error', 'Unable to process negative donations.');
 			return res.redirect('/');
 		}

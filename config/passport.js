@@ -27,11 +27,11 @@ passport.use('local.signup', new LocalStrategy({
     passReqToCallback: true
 }, function(req, email, password, done) {
 	console.log("Checking");
-    req.checkBody('email', 'Invalid Email').notEmpty().isEmail();
-    req.checkBody('password', 'Invalid Password').notEmpty().isLength({
+    req.checkBody('email', 'Invalid Email').isEmail();
+    req.checkBody('password', 'Invalid Password').isLength({
         min: 4
     });
-    req.checkBody('password', 'Invalid Password').notEmpty().isLength({
+    req.checkBody('password', 'Invalid Password').isLength({
         min: 4
     });
     req.checkBody('first_name', 'Invalid First Name').notEmpty();
@@ -75,6 +75,9 @@ passport.use('local.signup', new LocalStrategy({
         newUser.addr2 = req.body.addr2;
         newUser.city = req.body.city;
         newUser.state = req.body.state;
+        newUser.home_group = req.body.home_group;
+        newUser.sober_date = req.body.sober_date;
+        newUser.website = req.body.website;
         newUser.zipcode = req.body.zipcode;
         newUser.telephone = req.body.telephone;
         newUser.role = 'visitor';
@@ -142,7 +145,6 @@ passport.use(new FacebookStrategy({
         return done(err, user);
       } else {
         console.log("Not Existing User");
-
         User.findById(req.user.id, (err, user) => {
           if (err) { 
             console.log("Problem fetching user.");
@@ -154,6 +156,9 @@ passport.use(new FacebookStrategy({
           user.first_name = user.first_name || `${profile.name.givenName}`;
           user.last_name = user.last_name || `${profile.name.familyName}`;
           user.role = user.role || "visitor";
+          user.home_group = user.home_group || "None specified";
+          user.sober_date = user.sober_date || "";
+          user.website = user.website || "";
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {

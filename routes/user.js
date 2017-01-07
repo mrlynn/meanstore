@@ -10,6 +10,7 @@ var Payment = require('../models/payment');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 var ObjectId = require('mongoose').Types.ObjectId;
+var validator = require('express-validator');
 var bcrypt = require('bcrypt-nodejs');
 var async = require('async');
 var crypto = require('crypto');
@@ -21,18 +22,42 @@ const chalk = require('chalk');
 dotenv.load({
     path: '.env.hackathon'
 });
+var csrfProtection = csrf({ cookie: true })
 
 var smtpConfig = require('../config/smtp-config.js');
 
-var csrfProtection = csrf();
+router.post('/update-profile', csrfProtection, function(req,res,next) {
+    req.checkBody('sober_date', 'Invalid date').optional({ checkFalsy: true }).isDate();
+    var errors = req.validationErrors();
+    if (errors) {
+        req.flash('error','Invalid date entered for Sobriety date.  Please use mm/dd/yyyy format.');
+        return res.redirect('/user/profile');
+    }
+    User.update({_id: req.user._id}, req.body)
+        .then(function (err, user) {
+            req.user = user;
+            req.flash('success','User Updated');
+            res.redirect('/user/profile');
+        })
+        .catch(function (err) {
+            console.log("Error: " + JSON.stringify(err));
+            req.flash('error','Problem updating user profile.');
+            res.redirect('/user/profile');
+            res.status(400).send(err);
+    });
+});
 
-router.use(csrfProtection);
-
-router.get('/profile', isLoggedIn, function(req, res, next) {
-
+router.get('/profile', isLoggedIn, csrfProtection, function(req, res, next) {
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
     res.render('user/profile', {
         layout: 'eshop/blank',
         user: req.user,
+        errorMsg: errorMsg,
+        noErrorMsg: !errorMsg,
+        successMsg: successMsg,
+        noMessage: !successMsg,
+        csrfToken: req.csrfToken()
     });
 
 });
@@ -241,7 +266,7 @@ router.get('/signup', function(req, res, next) {
     var messages = req.flash('error');
     res.render('user/signup', {
         layout: 'eshop/blank',
-        csrfToken: req.csrfToken(),
+        //csrfToken: req.csrfToken(),
         message: messages,
         hasErrors: messages.length > 0
     });
