@@ -264,15 +264,24 @@ router.use('/', notLoggedIn, function(req, res, next) {
 
 router.get('/signup', function(req, res, next) {
     var messages = req.flash('error');
+    var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
     res.render('user/signup', {
         layout: 'eshop/blank',
         //csrfToken: req.csrfToken(),
         message: messages,
-        hasErrors: messages.length > 0
+        successMsg: successMsg,
+        noMessage: !successMsg,
+        noErrorMessage: !errorMsg,
+        message: messages,
+        noErrorMsg: !errorMsg,
+        successMsg: successMsg,
+        noMessage: !successMsg
     });
 });
 
 router.post('/signup', passport.authenticate('local.signup', {
+    
     successRedirect: '/user/profile',
     failureRedirect: '/user/signup',
     failureFlash: true
@@ -287,7 +296,7 @@ router.post('/signup', passport.authenticate('local.signup', {
     }
 });
 
-router.get('/signin', function(req, res, next) {
+router.get('/signin', csrfProtection, function(req, res, next) {
     var successMsg = req.flash('success')[0];
     var errorMsg = req.flash('error')[0];
     if (process.env.FACEBOOK_ID) {
@@ -306,7 +315,7 @@ router.get('/signin', function(req, res, next) {
     var messages = req.flash('error');
     res.render('user/signin', {
         layout: 'eshop/blank',
-        csrfToken: req.csrfToken(),
+        // csrfToken: req.csrfToken(),
         authFacebook: authFacebook,
         authGoogle: authGoogle,
         successMsg: successMsg,

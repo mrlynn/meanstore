@@ -27,22 +27,33 @@ passport.use('local.signup', new LocalStrategy({
     passReqToCallback: true
 }, function(req, email, password, done) {
 	console.log("Checking");
-    req.checkBody('email', 'Invalid Email').isEmail();
-    req.checkBody('password', 'Invalid Password').isLength({
+    req.checkBody('email', 'Invalid Email').notEmpty().isEmail();
+    req.checkBody('password', 'Invalid Password').notEmpty().isLength({
         min: 4
     });
-    req.checkBody('password', 'Invalid Password').isLength({
+    req.checkBody('password', 'Invalid Password').notEmpty().isLength({
         min: 4
     });
-    req.checkBody('first_name', 'Invalid First Name').notEmpty();
-    req.checkBody('last_name', 'Invalid Last Name').notEmpty();
-    // req.checkBody('addr1', 'Invalid Address').notEmpty();
-    req.checkBody('telephone', 'Invalid Telephone').notEmpty();
-    // req.checkBody('city', 'Invalid City').notEmpty();
-    // req.checkBody('state', 'Invalid State').notEmpty();
-    // req.checkBody('zipcode', 'Invalid Zipcode').notEmpty();
+    req.checkBody('first_name', 'Invalid First Name').notEmpty().isLength({
+        min: 1
+    });
+    req.checkBody('last_name', 'Invalid Last Name').notEmpty().isLength({
+        min: 1
+    });
+    req.checkBody('addr1', 'Invalid Address').notEmpty().isLength({
+        min: 4
+    });
+    req.checkBody('city', 'Invalid City').notEmpty().isLength({
+        min: 4
+    });
+    req.checkBody('state', 'Invalid State').notEmpty().isLength({
+        min: 2
+    });
+    req.checkBody('zipcode', 'Invalid Zipcode').notEmpty().isLength({
+        min: 2
+    });
+
     var errors = req.validationErrors();
-    console.log(JSON.stringify(errors));
     if (errors) {
         var messages = [];
         errors.forEach(function(error) {
@@ -73,11 +84,11 @@ passport.use('local.signup', new LocalStrategy({
         newUser.last_name = req.body.last_name;
         newUser.addr1 = req.body.addr1;
         newUser.addr2 = req.body.addr2;
+        newUser.home_group = req.body.home_group;
+        newUser.website = req.body.website;
+        newUser.sober_date = req.body.sober_date;
         newUser.city = req.body.city;
         newUser.state = req.body.state;
-        newUser.home_group = req.body.home_group;
-        newUser.sober_date = req.body.sober_date;
-        newUser.website = req.body.website;
         newUser.zipcode = req.body.zipcode;
         newUser.telephone = req.body.telephone;
         newUser.role = 'visitor';
@@ -141,10 +152,11 @@ passport.use(new FacebookStrategy({
       }
       if (existingUser) {
         console.log("Existing User");
-        // req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
-        return done(err, user);
+        req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
+        done(err);
       } else {
         console.log("Not Existing User");
+
         User.findById(req.user.id, (err, user) => {
           if (err) { 
             console.log("Problem fetching user.");
@@ -156,9 +168,6 @@ passport.use(new FacebookStrategy({
           user.first_name = user.first_name || `${profile.name.givenName}`;
           user.last_name = user.last_name || `${profile.name.familyName}`;
           user.role = user.role || "visitor";
-          user.home_group = user.home_group || "None specified";
-          user.sober_date = user.sober_date || "";
-          user.website = user.website || "";
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {
