@@ -159,6 +159,7 @@ passport.use(new FacebookStrategy({
 
         User.findById(req.user.id, (err, user) => {
           if (err) { 
+            req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
             console.log("Problem fetching user.");
             return done(err); 
           }
