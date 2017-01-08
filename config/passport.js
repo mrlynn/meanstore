@@ -112,7 +112,7 @@ passport.use('local.signin', new LocalStrategy({
         errors.forEach(function(error) {
             messages.push(error.msg);
         });
-        return done(null, false, req.flash('error', messages));
+        return done(null, false, messages);
     }
     User.findOne({
         'email': email

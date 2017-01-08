@@ -48,7 +48,7 @@ var products = [
         imagePath: '/images/banquet.jpg',
         name: 'Banquet',
         title: 'Banquet Registration',
-        description: 'Attendance Ticket for 2017 Round-up',
+        description: 'Attendance Ticket for 2017 Round-up Banquet',
         price: 3500,
         Product_Group: 'TICKET',
         options: [{

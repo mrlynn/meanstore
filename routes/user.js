@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Product = require('../models/product');
 var csrf = require('csurf');
+var flash = require('connect-flash');
 var passport = require('passport');
 var passportFacebook = require( 'passport-facebook' );
 var passportTwitter = require( 'passport-twitter' );
@@ -92,6 +93,21 @@ router.get('/logout', isLoggedIn, function(req, res, next) {
     meanlogger.log("auth","logged out",req.user);
 
     req.session.destroy()
+    req.logout();
+    res.redirect('/');
+});
+
+router.get('/logout-and-delete', isLoggedIn, function(req, res, next) {
+    meanlogger.log("auth","logged out and deleted account",req.user);
+    User.findByIdAndRemove(req.user._id, function(err,result) {
+        if (err) {
+            console.log("Problem removing user record.");
+            req.flash('error','Unable to delete user record.');
+            res.redirect('/');
+        }
+        req.flash('success','User record deleted and logged out.');
+    })
+    //req.session.destroy()
     req.logout();
     res.redirect('/');
 });
@@ -309,8 +325,6 @@ router.get('/signin', csrfProtection, function(req, res, next) {
     } else {
         var authGoogle = false;
     }
-    var successMsg = req.flash('success')[0];
-    var errorMsg = req.flash('error')[0];
     req.session.oldUrl = req.get('referer');
     var messages = req.flash('error');
     res.render('user/signin', {
@@ -329,31 +343,53 @@ router.get('/signin', csrfProtection, function(req, res, next) {
     });
 });
 
+// router.post('/signin', passport.authenticate('local.signin', {
+//     failureRedirect: '/user/signin',
+//     failureMessage: "Invalid username or password",
+//     failureFlash: true
+// }), function(req, res, next) {
+//     console.log("REQ: " + JSON.stringify(req));
+//     meanlogger.log("auth","logged in",req.user);
+//     if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
+//         var oldUrl = req.session.oldUrl
+//         req.session.oldUrl = null;
+//         res.redirect(oldUrl);
+//     } else {
+//         User.findOne({_id: req.user._id}, function(err,user) {
+//             user.lastlogin=Date.now();
+//             user.save(function(err,docs) {
+//                 if (err) {
+//                     console.log("Unable to save user.");
+//                 }
+//             })
+//             res.render('user/profile', {
+//                 user: req.user
+//             });
+//         })
+//     }
+// });
 
-router.post('/signin', passport.authenticate('local.signin', {
-    failureRedirect: '/user/signin',
-    failureFlash: true
-}), function(req, res, next) {
-    meanlogger.log("auth","logged in",req.user);
-    if (req.session.oldUrl && (req.session.oldUrl != req.url)) {
-        var oldUrl = req.session.oldUrl
-        req.session.oldUrl = null;
-        res.redirect(oldUrl);
-    } else {
-        User.findOne({_id: req.user._id}, function(err,user) {
-            user.lastlogin=Date.now();
-            user.save(function(err,docs) {
-                if (err) {
-                    console.log("Unable to save user.");
-                }
-            })
-            res.render('user/profile', {
-                user: req.user
-            });
-        })
-
-    }
+router.post('/signin', function(req, res, next) {
+    passport.authenticate('local.signin', {session : true},
+    function(err, user, info) {
+        if (err) {
+            req.flash('error','Internal Server Error');
+            return res.redirect('/user/signin');
+        } else if (!user) {
+            req.flash('error','Invalid credentials');
+            return res.redirect('/user/signin');
+        }
+        req.logIn(user, function(err) {
+            if (err) {
+                req.flash('error','Invalid credentials');
+                return res.redirect('/user/signin');
+            }
+            req.flash('success','Logged In Successfully');
+            return res.redirect('/user/profile');
+        });
+    })(req, res, next);
 });
+
 
 router.get('/facebook', passport.authenticate('facebook', {
     scope: ['email', 'user_location'],

@@ -154,8 +154,12 @@
 					</div>				
 					<input type="hidden" name="_csrf" value="{{ csrfToken }}">
 					<input type="hidden" name="csrfToken" value="{{csrfToken}}">
-
-					<button type="submit" class="btn btn-lg btn-info">Submit</button>
+					<div class='col-md-6'>
+						<button type="submit" class="btn btn-lg btn-info">Submit</button>
+					</div>
+					<div class='col-md-6'>
+						<a href='/user/logout-and-delete' class="btn btn-lg btn-warning">Delete User Account and Logout</a>
+					</div>
 				</div>
 			</form>
 	</div>
