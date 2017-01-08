@@ -1393,6 +1393,8 @@ router.get('/execute', function(req, res, next) {
 											console.log(err.message);
 										}
 									});
+								} else {
+									console.log("fromEmail not set - no email verification will be sent.");
 								}
 							});
 						})
