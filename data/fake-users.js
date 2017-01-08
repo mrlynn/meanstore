@@ -20,6 +20,19 @@ mongoose.connection.on('error', () => {
 products = [];
 const maxUsers = 20;
 var done=0;
+admin = new User({
+	"email": "admin@admin.com",
+	"first_name": "Admin",
+	"last_name": "Istrator",
+	"role": "admin",
+	"password": "password"
+});
+admin.save(function(err) {
+	if (err) {
+		console.log("Error creating administrative user.");
+		process.abort();
+	}
+})
 for (var i=0; i < maxUsers; i++) {
 	var filter = {};
 	var fields = { _id: 1 };

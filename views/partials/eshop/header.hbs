@@ -15,7 +15,7 @@
 						<div class="social-icons pull-right">
 							<ul class="nav navbar-nav">
 								{{#if login}}
-								<li><a href="/user/profile"><i class="fa fa-user"></i> Account</a></li>
+								<li><a href="/user/profile"><i class="fa fa-user"></i> {{user.first_name}} {{user.last_name}}</a></li>
 								{{/if}}
 								<li><a href="/shopping-cart"><i class="fa fa-shopping-cart"></i> Cart</i>
 					            {{#if session.cart.totalQty }}

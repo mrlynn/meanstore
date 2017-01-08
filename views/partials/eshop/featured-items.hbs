@@ -19,8 +19,12 @@
                             <a href="{{this.imagePath}}" rel="prettyPhoto" title="{{this.title}}" >
                                 <img src="{{this.imagePath}}" width="100" alt="{{this.title}}" />
                             </a>
-    						<p>{{this.title}}</p>
+                            <p><h2>{{this.title}}</h2></p>
+                            <p>{{this.description}}</p>
                             <h4>{{this.code}}</h4>
+                            {{#if this.inventory.disableAtZero}}
+                                <p>({{this.inventory.onHand}}) Available</p>
+                            {{/if}}
                             {{#if ../../isLoggedIn}}
                                 <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
                                 <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>

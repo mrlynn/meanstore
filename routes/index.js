@@ -1319,7 +1319,7 @@ router.get('/execute', function(req, res, next) {
 						}
 						/* Update Users Bought Array */
 						async.each(products, function(product, next) {
-							console.log("PRODUCT: " + product);
+							console.log("PRODUCT: " + JSON.stringify(product));
 							event = new Event({
 								namespace: 'products',
 								person: {
@@ -1369,6 +1369,16 @@ router.get('/execute', function(req, res, next) {
 									console.log("Unable to update user - " + err.message);
 									return -1;
 								}
+								Product.findOneAndUpdate({
+									_id: product.item._id,
+									"inventory.disableAtZero": true
+								},{
+									'$inc': {'inventory.onHand': -1},
+								}, function(err,product) {
+									if (err) {
+										console.log("Problem decrementing inventory.");
+									}
+								});
 								if (!process.env.fromEmail === null) {
 									var mailOptions = {
 										to: newUser.email,

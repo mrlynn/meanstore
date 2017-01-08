@@ -23,7 +23,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -39,7 +39,7 @@ var products = [
         code: 'RU201702',
         shippable: 'No',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: true,
           onHand: 350
         },
         taxable: 'No',
@@ -70,7 +70,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -89,7 +89,7 @@ var products = [
         category: 'Round-up',
         order: 99,
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/heart.png',
@@ -106,7 +106,7 @@ var products = [
         category: 'Round-up',
         order: 2,
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/tee-shirt.jpg',
@@ -137,7 +137,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -166,7 +166,7 @@ var products = [
         category: 'Round-up',
         order: 4,
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/hoodie.jpg',
@@ -199,7 +199,7 @@ var products = [
         taxable: 'No',
         imagePath: '/images/hoodie.jpg',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         name: 'Hoodie-large',
@@ -225,7 +225,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/ticket.jpg',
@@ -239,7 +239,7 @@ var products = [
     new Product({
         code: 'RU201711',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         shippable: 'No',
