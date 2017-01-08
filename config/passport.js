@@ -12,7 +12,7 @@ dotenv.load({ path: '.env.hackathon' });
 // Mindspace meanstack cart tutorial
 //https://www.youtube.com/watch?v=GHNLWHGCBEc
 passport.serializeUser(function(user, done) {
-    done(null, user._id);
+    done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -84,9 +84,6 @@ passport.use('local.signup', new LocalStrategy({
         newUser.last_name = req.body.last_name;
         newUser.addr1 = req.body.addr1;
         newUser.addr2 = req.body.addr2;
-        newUser.home_group = req.body.home_group;
-        newUser.website = req.body.website;
-        newUser.sober_date = req.body.sober_date;
         newUser.city = req.body.city;
         newUser.state = req.body.state;
         newUser.zipcode = req.body.zipcode;
@@ -157,9 +154,8 @@ passport.use(new FacebookStrategy({
       } else {
         console.log("Not Existing User");
 
-        User.findById(req.user._id, (err, user) => {
+        User.findById(req.user.id, (err, user) => {
           if (err) { 
-            req.flash('error','There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.');
             console.log("Problem fetching user.");
             return done(err); 
           }
@@ -228,14 +224,13 @@ passport.use(new GoogleStrategy({
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
-    console.lo
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
         req.flash('error', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
-        User.findById(req.user._id, (err, user) => {
+        User.findById(req.user.id, (err, user) => {
           if (err) { return done(err); }
           user.google = profile.id;
           user.role = 'visitor';

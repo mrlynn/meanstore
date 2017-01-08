@@ -888,8 +888,8 @@ var totalSales = function() {
     }, function(err, doc) {
     	if (err) {
     		console.log("err: " + err.message);
+            return err;
     	}
-        console.log('Total ', doc[0].Total);
 		return doc;
 
     });

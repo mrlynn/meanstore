@@ -113,12 +113,9 @@ var products = [
         name: 'teeshirt-small',
         title: 'Tee-Shirt (XS,S,M,L,XL)',
         description: 'Small through XL tee-shirt with Round-up Logo.   Choose specific size when you arrive.',
-        price: 1400,
+        price: 1200,
         Product_Group: 'APPAREL',
         options: [{
-            name: 'X Small',
-            value: 'XS'
-        }, {
             name: 'Small',
             value: 'S'
         }, {
@@ -146,7 +143,7 @@ var products = [
         name: 'Teeshirt-large',
         title: 'Tee-Shirt (2XL,3XL,4XL)',
         description: '2XL through 3XL tee-shirt with Round-up Logo.  Choose specific size when you arrive.',
-        price: 1800,
+        price: 1400,
         Product_Group: 'APPAREL',
         options: [{
             name: '2XL',
@@ -173,12 +170,9 @@ var products = [
         name: 'Hoodie-small',
         title: 'Hooded Sweatshirt',
         description: 'Hooded Sweatshirt with Round-up Logo. Sizes XS through XL.  Choose specific size when you arrive.',
-        price: 2500,
+        price: 2200,
         Product_Group: 'APPAREL',
         options: [{
-            name: 'X Small',
-            value: 'XS'
-        }, {
             name: 'Small',
             value: 'S'
         }, {
@@ -253,6 +247,23 @@ var products = [
         price: 0,
         Product_Group: 'DONATION'
     }),
+    new Product({
+        code: 'RU201712',
+        shippable: 'No',
+        taxable: 'No',
+        inventory: {
+          disableAtZero: false,
+          onHand: 100
+        },
+        category: 'Round-up',
+        order: 99,
+        imagePath: '/images/coffeemug.png',
+        name: 'Coffee Mug',
+        title: '2017 Round-up Ceramic Mug',
+        description: 'Think of the great times you had at Round-up every time you drink your coffee or tea.',
+        price: 2500,
+        Product_Group: 'SIMPLE'
+    })
 ]
 var done = 0;
 for (var i = 0; i < products.length; i++) {

@@ -1,7 +1,7 @@
 var express = require('express');
+var nodalytics = require('nodalytics');
 var path = require('path');
 var favicon = require('serve-favicon');
-// var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
@@ -62,13 +62,6 @@ var categoryrecord = {
   "__v": 0
 };
 
-// try {
-//   var configJSON = fs.readFileSync(__dirname + "/config/pp-config.json");
-//   var config = JSON.parse(configJSON.toString());
-// } catch (e) {
-//   console.error("File config.json not found or is invalid: " + e.message);
-//   process.exit(1);
-// }
 var app = express();
 dotenv.load({ path: '.env.hackathon' });
 
@@ -80,9 +73,6 @@ mongoose.connection.on('error', () => {
   process.exit();
 });
 require('./config/passport');
-
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
 
 var hbs = expressHbs.create({
     helpers: {
@@ -140,7 +130,7 @@ app.use(errorHandler());
 app.use(mongoSanitize({
   replaceWith: '_'
 }));
-// docs(app, mongoose); // 2nd param is optional
+docs(app, mongoose); // 2nd param is optional
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 
@@ -220,16 +210,14 @@ app.use(function(req,res,next) {
     });
 });
 app.use(fileUpload());
-
-// app.use('/facet', facetRoutes);
+app.use(nodalytics(process.env.GA_TRACKING_ID));
 app.use('/exporter', exporter);
-
 app.use('/api', api);
-// app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/category', routes);
 app.use('/', routes);
+
 // catch 404 and forward to error handler
 
 app.get('*', function(req, res){
