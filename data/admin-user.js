@@ -17,20 +17,25 @@ mongoose.connection.on('error', () => {
   process.exit();
 });
 
-admin = new User({
-	"email": "admin@admin.com",
-	"first_name": "Admin",
-	"last_name": "Istrator",
-	"role": "admin",
-	"password": "password"
-});
-
-admin.save(function(err) {
+User.findOneAndRemove({"email":"admin@admin.com"},function(err,next) {
 	if (err) {
-		console.log("Error creating administrative user.");
-		process.abort();
+		console.log("Problem removing admin user.");
 	}
-	this.exit();
+	admin = new User({
+		"email": "admin@admin.com",
+		"first_name": "Admin",
+		"last_name": "Istrator",
+		"role": "admin",
+		"password": "password"
+	});
+
+	admin.save(function(err) {
+		if (err) {
+			console.log("Error creating administrative user.");
+			process.abort();
+		}
+		exit();
+	})
 })
 
 function exit() {
