@@ -25,12 +25,12 @@
                             {{#if this.inventory.disableAtZero}}
                                 <p>({{this.inventory.onHand}}) Available</p>
                             {{/if}}
-                            {{#if ../../isLoggedIn}}
+                            {{!--{{#if ../../isLoggedIn}}
                                 <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
                                 <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
                             {{else}}
                                 <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}
-                            {{/if}}
+                            {{/if}}--}}
  					        {{#if this.isDonation }}
                                 {{#if this.options }}
                                 <h3>Select:</h3>

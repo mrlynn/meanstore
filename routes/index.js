@@ -777,7 +777,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 
 	recommendations.GetRecommendations(cart, function(err, recommendations) {
 			if (err) {
-				errorMsg = req.flash('error :', err.message);
+				errorMsg = req.flash('error', err.message);
 			}
 			if (!recommendations && res.locals.showRecommendations) {
 				recommendations = [{
@@ -794,6 +794,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 					imagePath: '/images/sony-camera.jpg'
 				}]
 			}
+			console.log("error: " + errorMsg);
 			res.render('shop/shopping-cart', {
 				layout: 'eshop/blank',
 				products: cart.generateArray(),

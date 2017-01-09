@@ -55,12 +55,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-                    <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+                    {{#if successMsg}}
+                    <div id="success" class="alert alert-success {{#if noMessage}}hidden{{/if}}" >
                         {{successMsg}}
                     </div>
-                    <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+                    {{/if}}
+                    {{#if errorMsg}}
+                    <div id="danger" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
                         {{errorMsg}}
                     </div>
+                    {{/if}}
                 </div>
             </div>
             <div class="row">
