@@ -63,13 +63,35 @@ var categoryrecord = {
 };
 
 var app = express();
-dotenv.load({ path: '.env.hackathon' });
+if (process.env.NODE_ENV) {
+  console.log("USING .env.hackathon-" + process.env.NODE_ENV);
+  dotenv.load({ path: '.env.hackathon-' + process.env.NODE_ENV });
+} else {
+  console.log("USING .env.hackathon" );
+  dotenv.load({ path: '.env.hackathon' });
+}
 
+var options = {
+  db: { native_parser: true },
+  user: process.env.MONGO_USER,
+  pass: process.env.MONGO_PASS,
+  authSource: 'admin'
+}
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+// mongoose.connect(process.env.MONGODB_URI,options);
+if (process.env.MONGO_USER) {
+  console.log("USING MONGO_USER " + process.env.MONGO_USER);
+  var URI = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
+  console.log("URL: " + URI);
+  console.log("Options: " + options);
+  mongoose.connect(URI, options);
+} else {
+  console.log("NOT USING MONGO_USER ");
+  mongoose.connect('mongodb://localhost:27017/hackathon');
+}
+console.log("connected");
 mongoose.connection.on('error', () => {
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
+  console.log('%s MongoDB connection error in app.js Please make sure MongoDB is running.', chalk.red('✗'));
   process.exit();
 });
 require('./config/passport');

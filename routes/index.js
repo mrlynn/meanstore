@@ -189,7 +189,12 @@ router.get('/testing', function(req, res, next) {
 });
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
+	if (!req.session.category===null) {
+		return res.redirect('/category/' + req.session.category);
+	}
+	if (!req.session.group===null) {
+		return res.redirect('/group/' + req.session.group);
+	}
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	var tutorial = req.params.tutorial;
@@ -405,6 +410,7 @@ router.get('/sale', function(req, res, next) {
 /* GET home page. */
 router.get('/group/:slug?', function(req, res, next) {
 	var group_slug = req.params.slug;
+	req.session.group = req.params.slug; // Save Group for later
 	var q = req.query.q;
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
@@ -456,6 +462,7 @@ router.get('/group/:slug?', function(req, res, next) {
 /* GET home page. */
 router.get('/category/:slug', function(req, res, next) {
 	var category_slug = req.params.slug;
+	req.session.category = req.params.slug;
 	var q = req.query.q;
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
@@ -682,9 +689,22 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 			cart.totalShipping = 0;
 			req.session.cart = cart;
 			req.flash('success', 'Item successfully added to cart. ');
+			if (!req.session.group===null) {
+				res.redirect('/group/' + req.session.group);
+			} else {
+				if (!req.session.category===null) {
+					res.redirect('/category/' + req.session.category);
+				}
+			}
+			if (!req.session.category===null) {
+				res.redirect('/category/' + req.session.category);
+			} else {
+				if (!req.session.group === null) {
+					res.redirect('/group/' + req.session.group);
+				}
+			}
 			res.redirect('/');
 		}
-
 		// });
 	});
 });

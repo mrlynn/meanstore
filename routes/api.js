@@ -16,15 +16,11 @@ var Config = require('../config/config.js');
 var taxCalc = require('../local_modules/tax-calculator');
 var meanlogger = require('../local_modules/meanlogger');
 
-Category.find({}, function(err,categories) {
-	if (err) {
-		req.session.error('error','Error retrieiving categories');
-		res.redirect('/');
-	}
-});
+
 
 router.get('/buckauto', function(req, res, next) {
-	var url = 'mongodb://localhost:27017/hackathon';
+	var options = { server: { socketOptions: { keepAlive: 1 } } };
+	var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
 	MongoClient.connect(url, (err, db) => {
 	Product.aggregate([{
 		"$bucketAuto": {
@@ -46,7 +42,7 @@ router.get('/buckauto', function(req, res, next) {
  * @constructor
  */
 router.get('/stats', function(req, res, next) {
-	var url = 'mongodb://localhost:27017/hackathon';
+	var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
 	MongoClient.connect(url, (err, db) => {
 
     db.stats((err, stats) => {

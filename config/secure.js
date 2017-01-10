@@ -1,8 +1,8 @@
-use admin
+use hackathon
 db.createUser(
   {
-    user: "admin",
-    pwd: "password",
-    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+    user: "sepia",
+    pwd: "S0ber4llD4y",
+    roles: [ { role: "readWrite", db: "hackathon" },{ role: "dbAdmin", db: "hackathon" } ]
   }
 )
