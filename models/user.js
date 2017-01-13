@@ -6,6 +6,9 @@ var random = require('mongoose-simple-random');
 var userSchema = new Schema({
 	resetPasswordToken: String,
   	resetPasswordExpires: Date,
+	email_verified: {
+		type: Boolean
+	},
 	email: {
 		type: String,
 		required: false

@@ -6,9 +6,7 @@ var User = require('../../models/user');
 var Cart = require('../../models/cart');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
-    path: '.env.hackathon'
-});
+
 
 /* 
 	Shipping Charges 

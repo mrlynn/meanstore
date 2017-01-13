@@ -20,9 +20,9 @@ var meanlogger = require('../local_modules/meanlogger');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
 
-dotenv.load({
-    path: '.env.hackathon'
-});
+// dotenv.load({
+//     path: '.env.hackathon'
+// });
 var csrfProtection = csrf({ cookie: true })
 
 var smtpConfig = require('../config/smtp-config.js');
@@ -60,7 +60,6 @@ router.get('/profile', isLoggedIn, csrfProtection, function(req, res, next) {
         noMessage: !successMsg,
         csrfToken: req.csrfToken()
     });
-
 });
 router.get('/orders', isLoggedIn, function(req, res, next) {
 
@@ -282,27 +281,26 @@ router.get('/signup', function(req, res, next) {
     var messages = req.flash('error');
     var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
+    console.log("MEssages: " + JSON.stringify(messages));
     res.render('user/signup', {
         layout: 'eshop/blank',
         //csrfToken: req.csrfToken(),
-        message: messages,
-        successMsg: successMsg,
-        noMessage: !successMsg,
-        noErrorMessage: !errorMsg,
-        message: messages,
-        noErrorMsg: !errorMsg,
-        successMsg: successMsg,
-        noMessage: !successMsg
+        "successMsg": successMsg,
+        "noMessage": !successMsg,
+        "message": messages,
+        "errorMsg": messages[0],
+        "noErrorMsg": !messages,
     });
 });
 
+
 router.post('/signup', passport.authenticate('local.signup', {
-    
     successRedirect: '/user/profile',
     failureRedirect: '/user/signup',
     failureFlash: true
 }), function(req, res, next) {
     meanlogger.log("auth","signup attempt",req.user);
+    console.log("BACK FROM SIGNUP");
     if (req.session.oldUrl) {
         var oldUrl = req.session.oldUrl
         req.session.oldUrl = null;
@@ -332,8 +330,6 @@ router.get('/signin', csrfProtection, function(req, res, next) {
         // csrfToken: req.csrfToken(),
         authFacebook: authFacebook,
         authGoogle: authGoogle,
-        successMsg: successMsg,
-        noMessage: !successMsg,
         noErrorMessage: !errorMsg,
         message: messages,
         noErrorMsg: !errorMsg,

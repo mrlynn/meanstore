@@ -163,7 +163,8 @@ app.use(session({
     // Re-use our existing mongoose connection to mongodb.
     store: new MongoStore({mongooseConnection: mongoose.connection}),
     // 3 hours - connect mongo will hover up old sessions
-    cookie: { maxAge: 180 * 60 * 1000 }
+    cookie: { maxAge: 180 * 60 * 1000 },
+    secure: false
 }));
 
 app.use(flash());

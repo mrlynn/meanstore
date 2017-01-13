@@ -26,9 +26,9 @@ const async = require('async');
 const chalk = require('chalk');
 var meanlogger = require('../local_modules/meanlogger');
 
-dotenv.load({
-	path: '.env.hackathon'
-});
+// dotenv.load({
+// 	path: '.env.hackathon'
+// });
 
 var title = process.env.title;
 
