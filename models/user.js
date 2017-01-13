@@ -96,6 +96,7 @@ var userSchema = new Schema({
 	facebook: String,
 	twitter: String,
 	google: String,
+	WordpressId: String,
 	profile: {
 	    name: String,
 	    gender: String,

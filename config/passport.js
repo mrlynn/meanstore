@@ -4,6 +4,7 @@ var LocalStrategy = require('passport-local').Strategy;
 const dotenv = require('dotenv');
 
 const FacebookStrategy = require('passport-facebook').Strategy;
+const WordpressStrategy = require('passport-oauth2-complete-for-wordpress').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
@@ -20,6 +21,19 @@ passport.deserializeUser(function (id, done) {
 		done(err, user);
 	});
 });
+
+passport.use('wordpress', new WordpressStrategy({
+    clientID: "MgfzPbcIMrTNcyD6cPpW2sDnnfGzt7",
+    clientSecret: "jfnyOcK1VxtOkFnYMzObwQE9e2oUBR",
+    wordpressUrl: 'http://aasepia.org',
+    callbackURL: 'http://localhost:3001/user/wordpress/callback'
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ WordpressId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
+));
 
 passport.use('local.signup', new LocalStrategy({
 	usernameField: 'email',

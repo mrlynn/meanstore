@@ -386,6 +386,15 @@ router.post('/signin', function(req, res, next) {
     })(req, res, next);
 });
 
+router.get('/wordpress',
+  passport.authorize('wordpress'));
+
+router.get('/wordpress/callback:code?', 
+  passport.authorize('wordpress', { failureRedirect: '/user/signin' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
 router.get('/facebook', passport.authenticate('facebook', {
     scope: ['email', 'user_location'],
