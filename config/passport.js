@@ -26,7 +26,7 @@ passport.use('wordpress', new WordpressStrategy({
     clientID: "MgfzPbcIMrTNcyD6cPpW2sDnnfGzt7",
     clientSecret: "jfnyOcK1VxtOkFnYMzObwQE9e2oUBR",
     wordpressUrl: 'http://aasepia.org',
-    callbackURL: 'http://localhost:3001/user/wordpress/callback'
+    callbackURL: 'http://roundup.aasepia.org/user/wordpress/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     User.findOrCreate({ WordpressId: profile.id }, function (err, user) {
