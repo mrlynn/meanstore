@@ -244,7 +244,17 @@ app.use('/', routes);
 // catch 404 and forward to error handler
 
 app.get('*', function(req, res){
-  res.status(404).send('what???', 404);
+  // res.status(404).send('what???', 404);
+  var errorMsg = req.flash('error','Page Not Found');
+  var successMsg = '';
+
+  res.status(404).render('shop/404', {
+		layout: 'eshop/blank',
+		// csrfToken: req.csrfToken(),
+		noErrorMsg: !errorMsg,
+		successMsg: successMsg,
+		noMessage: !successMsg,
+	});
 });
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
