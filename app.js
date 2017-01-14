@@ -245,13 +245,14 @@ app.use('/', routes);
 
 app.get('*', function(req, res){
   // res.status(404).send('what???', 404);
-  var errorMsg = req.flash('error','Page Not Found');
+  var errorMsg = '';
   var successMsg = '';
 
   res.status(404).render('shop/404', {
 		layout: 'eshop/blank',
 		// csrfToken: req.csrfToken(),
 		noErrorMsg: !errorMsg,
+    errorMsg: errorMsg,
 		successMsg: successMsg,
 		noMessage: !successMsg,
 	});
