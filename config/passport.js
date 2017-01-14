@@ -14,7 +14,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 //https://www.youtube.com/watch?v=GHNLWHGCBEc
 passport.serializeUser(function (user, done) {
 	done(null, user.id);
-});
+}); 
 
 passport.deserializeUser(function (id, done) {
 	User.findById(id, function (err, user) {
