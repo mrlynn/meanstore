@@ -4,8 +4,7 @@ var Product = require('../models/product');
 var csrf = require('csurf');
 var flash = require('connect-flash');
 var passport = require('passport');
-var passportFacebook = require('passport-facebook');
-var passportTwitter = require('passport-twitter');
+
 var User = require('../models/user');
 var Payment = require('../models/payment');
 var Order = require('../models/order');
@@ -309,7 +308,7 @@ router.get('/signup', function (req, res, next) {
 	var messages = req.flash('error');
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	console.log("MEssages: " + JSON.stringify(messages));
+	console.log("Messages: " + JSON.stringify(messages));
 	res.render('user/signup', {
 		layout: 'eshop/blank',
 		//csrfToken: req.csrfToken(),
@@ -320,14 +319,22 @@ router.get('/signup', function (req, res, next) {
 		"noErrorMsg": !messages,
 	});
 });
-
-
 router.post('/signup', passport.authenticate('local.signup', {
+    
 	successRedirect: '/user/profile',
 	failureRedirect: '/user/signup',
 	failureFlash: true
 }), function (req, res, next) {
 	meanlogger.log("auth", "signup attempt", req.user);
+    req.session.first_name = req.body.first_name;
+    req.session.last_name = req.body.last_name;
+    req.session.addr1 = req.body.addr1;
+    req.session.city = req.body.city;
+    req.session.state = req.body.state;
+    req.session.email = req.body.email;
+    req.session.telephone = req.body.telephone;
+    req.session.zipcode = req.body.zipcode;
+    console.log("SESSIONS: " + JSON.stringify(req.session));
 	console.log("BACK FROM SIGNUP");
 	if (req.session.oldUrl) {
 		var oldUrl = req.session.oldUrl
@@ -339,6 +346,8 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', csrfProtection, function (req, res, next) {
+    
+    console.log("In GET SIGNIN");
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	if (process.env.FACEBOOK_ID) {
@@ -360,6 +369,14 @@ router.get('/signin', csrfProtection, function (req, res, next) {
 		authGoogle: authGoogle,
 		noErrorMessage: !errorMsg,
 		message: messages,
+        first_name: req.session.first_name,
+        last_name: req.session.last_name,
+        addr1: req.session.addr1,
+        city: req.session.city,
+        state: req.session.state,
+        zipcode: req.session.zipcode,
+        telephone: req.session.telephone,
+        email: req.session.email,
 		noErrorMsg: !errorMsg,
 		successMsg: successMsg,
 		noMessage: !successMsg,
@@ -394,7 +411,7 @@ router.get('/signin', csrfProtection, function (req, res, next) {
 // });
 
 router.post('/signin', function (req, res, next) {
-    
+
 	passport.authenticate('local.signin', {
 			session: true
 		},
@@ -415,19 +432,6 @@ router.post('/signin', function (req, res, next) {
 				return res.redirect('/user/profile');
 			});
 		})(req, res, next);
-});
-
-router.get('/wordpress',
-	passport.authorize('wordpress'));
-
-router.get('/wordpress/callback/:code?',
-	passport.authorize('wordpress', {
-		failureRedirect: '/user/signin'
-	}),
-	function (req, res) {
-		// Successful authentication, redirect home.
-        req.flash('success','Successfully logged in via aasepia.org');
-		res.redirect('/');
 });
 
 router.get('/facebook', passport.authenticate('facebook', {
@@ -475,4 +479,8 @@ function notLoggedIn(req, res, next) {
 		return next();
 	}
 	res.redirect('/');
+}
+function saveSession(req,res,next) {
+    req.session.first_name = req.body.first_name;
+    return next();
 }
