@@ -32,14 +32,14 @@
 								
 								<td>{{this.Product_Group}}</td>
 								<td>{{this.paidBy}}</td>
-								<td>{{this.qty}}</td>
-								<td>{{money this.total}}</td>
+								<td>{{this.product_qty}}</td>
+								<td>{{money this.product_price}}</td>
 							</tr>
 						{{/each}}
 						</tbody>
 					</table>
 				</div>
-				<div class="panel-footer"><p class="text-right"><h2 class="text-right">{{money this.cart.totalPrice}}</h2></p></div>
+				<div class="panel-footer"><p class="text-right"><h2 class="text-right">{{money this.total}}</h2></p></div>
 			</div>
 			{{/each}}
 		</div>

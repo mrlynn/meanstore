@@ -69,7 +69,7 @@ router.get('/orders', isLoggedIn, function (req, res, next) {
 
 	Order.find({
 		$or: [{
-			user: req.user._id
+			"user.id": req.user._id
 		}, {
 			"user.email": req.user.email
 		}]
@@ -81,14 +81,14 @@ router.get('/orders', isLoggedIn, function (req, res, next) {
 		if (err) {
 			return res.write('Error');
 		}
-		var arr = [];
+		// var arr = [];
 		// for (var order in orders) {
 		//     console.log("Cart Item: " + orders[order]);
 		//     console.log("------------");
 		//     for (var item in orders[order].cart.items) {
 		//         console.log("Item " + item);
 		//         console.log(orders[order].cart.items[item].item.name);
-		//
+		
 		//     }
 		// }
 		// return arr;
