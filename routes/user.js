@@ -308,7 +308,6 @@ router.get('/signup', function (req, res, next) {
 	var messages = req.flash('error');
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	console.log("Messages: " + JSON.stringify(messages));
 	res.render('user/signup', {
 		layout: 'eshop/blank',
 		//csrfToken: req.csrfToken(),
@@ -334,8 +333,7 @@ router.post('/signup', passport.authenticate('local.signup', {
     req.session.email = req.body.email;
     req.session.telephone = req.body.telephone;
     req.session.zipcode = req.body.zipcode;
-    console.log("SESSIONS: " + JSON.stringify(req.session));
-	console.log("BACK FROM SIGNUP");
+
 	if (req.session.oldUrl) {
 		var oldUrl = req.session.oldUrl
 		req.session.oldUrl = null;
@@ -346,8 +344,6 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 router.get('/signin', csrfProtection, function (req, res, next) {
-    
-    console.log("In GET SIGNIN");
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	if (process.env.FACEBOOK_ID) {

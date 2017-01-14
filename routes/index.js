@@ -1400,7 +1400,7 @@ router.get('/execute', function(req, res, next) {
 										console.log("Problem decrementing inventory.");
 									}
 								});
-								if (!process.env.fromEmail === null) {
+								if (!res.locals.fromEmail === null) {
 									var mailOptions = {
 										to: newUser.email,
 										from: process.env.fromEmail,
