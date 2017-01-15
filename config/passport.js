@@ -116,6 +116,7 @@ passport.use('local.signin', new LocalStrategy({
 		});
 		return done(null, false, messages);
 	}
+  console.log("In passport");
 	User.findOne({
 		'email': email
 	}, function (err, user) {

@@ -25,19 +25,21 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-offset-3 col-sm-9">
-                                        <div class="checkbox">
+                                        {{!--<div class="checkbox">
                                             <label class="">
                                                 <input type="checkbox" class="" name="inputRemember" checked="checked">Remember me
                                             </label>
-                                        </div>
+                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="form-group last">
-                                    <div class="col-sm-offset-3 col-sm-9"><button type="submit" class="btn btn-success">Login</button>&nbsp;&nbsp;&nbsp;<button type="reset" class="btn btn-default">Reset</button>
-                                    <p class="pull-right">Forgot? <a href="/user/forgot">Reset</a></p>
+                                    <div class="col-sm-offset-3 col-sm-9"><button type="submit" class="btn btn-success">Login</button>&nbsp;
+                                    <p class="pull-right">Forgot? <a type="button" class="btn btn-default" href="/user/forgot">Reset</a></p>
                                 </div>
+								
                             </div>
                         </form>
+						
                         </section>    
                         </div>
                         <!-- Social Login -->
@@ -53,10 +55,14 @@
                                 <i class="fa fa-facebook"></i> Sign in with Facebook
                             </a>
                             <p class="text-info top-buffer-10" align="center"><i class="fa fa-info-circle"></i>&nbsp;We will never post on your walls.</p>
-                            <br><p class="text-info top-buffer-10" align="center">Need an account? <a href="/user/signup" type="button" class="btn btn-info">Sign Up</a></p>
                         </div>
                         <br>
                     </div>
+					<div class="col-sm-12">
+						<hr>
+									<p class="text" align="center"><p class="text-info top-buffer-5" align="center">Need an account? <a href="/user/signup" type="button" class="btn btn-info">Sign Up</a></p>
+</p>
+					</div>
                 </div>
                 <div class="panel-footer" align="center"></div>
             </div>

@@ -218,6 +218,7 @@ app.use(function(req,res,next) {
             res.locals.title = process.env.title;
             res.locals.pageNotes = process.env.pageNotes;
             res.locals.fromEmail = process.env.fromEmail;
+            res.locals.viewTour = process.env.viewTour;
             var parsed = url.parse(req.url);
             var pageName = path.basename(parsed.pathname);
             res.locals.pageName = pageName.toLowerCase();

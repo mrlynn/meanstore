@@ -82,13 +82,14 @@ router.get('/orders', isLoggedIn, function (req, res, next) {
 			return res.write('Error');
 		}
 		// var arr = [];
+		// var total = 0;
 		// for (var order in orders) {
 		//     console.log("Cart Item: " + orders[order]);
 		//     console.log("------------");
 		//     for (var item in orders[order].cart.items) {
 		//         console.log("Item " + item);
 		//         console.log(orders[order].cart.items[item].item.name);
-		
+		//         total = parseFloat(orders[order].cart.items[item].item.)
 		//     }
 		// }
 		// return arr;
@@ -161,7 +162,7 @@ router.post('/forgot', function (req, res, next) {
 					if (err) {
 						req.flash('error', 'An error occurred.');
 					}
-                    console.log("Saved User: " + JSON.stringify(user));
+					console.log("Saved User: " + JSON.stringify(user));
 					done(err, token, user);
 				});
 			});
@@ -226,7 +227,7 @@ router.get('/reset/:token', function (req, res) {
 			errorMsg = req.flash('error', 'Password reset token is invalid or has expired.');
 			return res.redirect('/user/forgot');
 		}
-        console.log("Found User: " + JSON.stringify(user));
+		console.log("Found User: " + JSON.stringify(user));
 		res.render('user/reset', {
 			user: req.user,
 			token: req.params.token,
@@ -260,7 +261,7 @@ router.post('/reset/:token', function (req, res) {
 				if (err) {
 					console.log("Error: " + err.message);
 				}
-                console.log("User: " + JSON.stringify(user));
+				console.log("User: " + JSON.stringify(user));
 				// if (!user) {
 				// 	errorMsg = req.flash('error', 'Password reset token is invalid or has expired.');
 				// 	return res.redirect('back');
@@ -288,7 +289,7 @@ router.post('/reset/:token', function (req, res) {
 			};
 			transporter.sendMail(mailOptions, function (err) {
 				req.flash('success', 'Success! Your password has been changed.');
-                res.redirect('/');
+				res.redirect('/');
 				done(err);
 			});
 		}
@@ -319,20 +320,19 @@ router.get('/signup', function (req, res, next) {
 	});
 });
 router.post('/signup', passport.authenticate('local.signup', {
-    
 	successRedirect: '/user/profile',
 	failureRedirect: '/user/signup',
 	failureFlash: true
 }), function (req, res, next) {
 	meanlogger.log("auth", "signup attempt", req.user);
-    req.session.first_name = req.body.first_name;
-    req.session.last_name = req.body.last_name;
-    req.session.addr1 = req.body.addr1;
-    req.session.city = req.body.city;
-    req.session.state = req.body.state;
-    req.session.email = req.body.email;
-    req.session.telephone = req.body.telephone;
-    req.session.zipcode = req.body.zipcode;
+	req.session.first_name = req.body.first_name;
+	req.session.last_name = req.body.last_name;
+	req.session.addr1 = req.body.addr1;
+	req.session.city = req.body.city;
+	req.session.state = req.body.state;
+	req.session.email = req.body.email;
+	req.session.telephone = req.body.telephone;
+	req.session.zipcode = req.body.zipcode;
 
 	if (req.session.oldUrl) {
 		var oldUrl = req.session.oldUrl
@@ -346,6 +346,7 @@ router.post('/signup', passport.authenticate('local.signup', {
 router.get('/signin', csrfProtection, function (req, res, next) {
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
+    console.log("Error: " + JSON.stringify(errorMsg));
 	if (process.env.FACEBOOK_ID) {
 		var authFacebook = true
 	} else {
@@ -364,15 +365,16 @@ router.get('/signin', csrfProtection, function (req, res, next) {
 		authFacebook: authFacebook,
 		authGoogle: authGoogle,
 		noErrorMessage: !errorMsg,
+        errorMsg: errorMsg,
 		message: messages,
-        first_name: req.session.first_name,
-        last_name: req.session.last_name,
-        addr1: req.session.addr1,
-        city: req.session.city,
-        state: req.session.state,
-        zipcode: req.session.zipcode,
-        telephone: req.session.telephone,
-        email: req.session.email,
+		first_name: req.session.first_name,
+		last_name: req.session.last_name,
+		addr1: req.session.addr1,
+		city: req.session.city,
+		state: req.session.state,
+		zipcode: req.session.zipcode,
+		telephone: req.session.telephone,
+		email: req.session.email,
 		noErrorMsg: !errorMsg,
 		successMsg: successMsg,
 		noMessage: !successMsg,
@@ -407,22 +409,70 @@ router.get('/signin', csrfProtection, function (req, res, next) {
 // });
 
 router.post('/signin', function (req, res, next) {
-
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+    if (process.env.FACEBOOK_ID) {
+		var authFacebook = true
+	} else {
+		var authFacebook = false;
+	}
+	if (process.env.GOOGLE_ID) {
+		var authGoogle = true;
+	} else {
+		var authGoogle = false;
+	}
+	req.session.oldUrl = req.get('referer');
+	var messages = req.flash('error');
 	passport.authenticate('local.signin', {
 			session: true
 		},
 		function (err, user, info) {
+            console.log("trying to log in");
 			if (err) {
 				req.flash('error', 'Internal Server Error');
-				return res.redirect('/user/signin');
-			} else if (!user) {
+				console.log("Error: " + err.message);
+                                res.redirect('/user/signin');
+
+				res.render('user/signin', {
+					layout: 'eshop/blank',
+					authFacebook: authFacebook,
+					authGoogle: authGoogle,
+					noErrorMessage: !errorMsg,
+					noErrorMsg: !errorMsg,
+					successMsg: successMsg,
+					noMessage: !successMsg
+				});
+				// return res.redirect('/user/signin');
+			}
+			if (!user) {
 				req.flash('error', 'Invalid credentials');
-				return res.redirect('/user/signin');
+				console.log("Error Login - invalid credentials");
+                return res.redirect('/user/signin');
+				// return res.render('user/signin', {
+				// 	layout: 'eshop/blank',
+				// 	authFacebook: authFacebook,
+				// 	authGoogle: authGoogle,
+				// 	noErrorMessage: !errorMsg,
+				// 	noErrorMsg: !errorMsg,
+				// 	successMsg: successMsg,
+				// 	noMessage: !successMsg,
+				// })
 			}
 			req.logIn(user, function (err) {
 				if (err) {
 					req.flash('error', 'Invalid credentials');
-					return res.redirect('/user/signin');
+					console.log("Error Login - invalid credentials");
+                    return res.redirect('/user/signin');
+
+					// return res.render('user/signin', {
+					// 	layout: 'eshop/blank',
+					// 	authFacebook: authFacebook,
+					// 	authGoogle: authGoogle,
+					// 	noErrorMessage: !errorMsg,
+					// 	noErrorMsg: !errorMsg,
+					// 	successMsg: successMsg,
+					// 	noMessage: !successMsg,
+					// })
 				}
 				req.flash('success', 'Logged In Successfully');
 				return res.redirect('/user/profile');
@@ -476,7 +526,8 @@ function notLoggedIn(req, res, next) {
 	}
 	res.redirect('/');
 }
-function saveSession(req,res,next) {
-    req.session.first_name = req.body.first_name;
-    return next();
+
+function saveSession(req, res, next) {
+	req.session.first_name = req.body.first_name;
+	return next();
 }

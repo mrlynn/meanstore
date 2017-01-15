@@ -1288,6 +1288,7 @@ router.get('/like/:id', isLoggedIn, function(req, res, next) {
 });
 
 router.get('/execute', function(req, res, next) {
+	console.log("Completing Order: " + res.locals.fromEmail);
 	var paymentId = req.query.paymentId;
 	var token = req.query.token;
 	var PayerID = req.query.PayerID
@@ -1400,13 +1401,24 @@ router.get('/execute', function(req, res, next) {
 										console.log("Problem decrementing inventory.");
 									}
 								});
-								if (!res.locals.fromEmail === null) {
+								var mailOptions = {
+										to: res.locals.fromEmail,
+										from: req.user.email,
+										subject: "User Completed Purchase: " + req.user.first_name + ' ' + req.user.last_name,
+										text: req.user.first_name + ' ' + req.user.last_name + '\n' + req.user.email + '\n' + req.user.addr1 + '\n' + req.user.city + ', ' + req.user.state + ' ' + req.user.zipcode + '\n' + req.user.telephone + '\n\n' + newUser
+									};
+									transporter.sendMail(mailOptions, function(err) {
+										if (err) {
+											console.log(err.message);
+										}
+									});
+								if (res.locals.fromEmail) {
 									var mailOptions = {
 										to: newUser.email,
 										from: process.env.fromEmail,
 										subject: process.env.mailSubject,
 										text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
-											'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+											'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n' + JSON.stringify(newOrder)
 									};
 									meanlogger.log('dollar', 'Completed Purchase', req.user);
 									transporter.sendMail(mailOptions, function(err) {
