@@ -32,7 +32,7 @@
 						<div class="modal-body">
 							<div class="form-group">
 								{{!--                     <textarea rows='15' class="form-control">{{cartJSON}}</textarea>
-							--}}                    <pre>{{JSON cartJSON}}</pre>
+							--}} <pre>{{JSON cartJSON}}</pre>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -107,9 +107,9 @@
 								<div class="btn-group pull-right">
 									<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
-										<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
-										<li><a href="/empty-cart">Remove All</a></li>
+										{{!--<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>--}}
+										{{!--<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>--}}
+										<li><a href="/empty-cart">Clear Cart</a></li>
 									</ul>
 								</div>
 							</td>

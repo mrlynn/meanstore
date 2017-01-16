@@ -9,13 +9,34 @@ dotenv.load({
     path: '.env.hackathon'
 });
 
+if (process.env.NODE_ENV) {
+  // console.log("USING .env.hackathon-" + process.env.NODE_ENV);
+  dotenv.load({ path: '.env.hackathon-' + process.env.NODE_ENV });
+} else {
+  console.log("USING .env.hackathon" );
+  dotenv.load({ path: '.env.hackathon' });
+}
+
+var options = {
+  db: { native_parser: true },
+  user: process.env.MONGO_USER,
+  pass: process.env.MONGO_PASS,
+  authSource: 'admin'
+}
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+if (process.env.MONGO_USER) {
+  console.log("USING MONGO_USER " + process.env.MONGO_USER);
+  var URI = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
+  mongoose.connect(URI, options);
+} else {
+  mongoose.connect('mongodb://localhost:27017/hackathon');
+}
 mongoose.connection.on('error', () => {
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
+  console.log('%s MongoDB connection error in app.js Please make sure MongoDB is running.', chalk.red('✗'));
   process.exit();
 });
+
+
 
 User.findOneAndRemove({"email":"admin@admin.com"},function(err,next) {
 	if (err) {
@@ -26,7 +47,7 @@ User.findOneAndRemove({"email":"admin@admin.com"},function(err,next) {
 		"first_name": "Admin",
 		"last_name": "Istrator",
 		"role": "admin",
-		"password": "password"
+		"password": "adminPass"
 	});
 
 	admin.save(function(err) {

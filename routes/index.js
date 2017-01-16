@@ -63,130 +63,6 @@ router.get('/whypaypal', function(req, res, next) {
 	res.render('shop/whypaypal');
 });
 
-router.get('/testing', function(req, res, next) {
-
-	var successMsg = req.flash('success')[0];
-	var errorMsg = req.flash('error')[0];
-	var tutorial = req.params.tutorial;
-	if (tutorial == 1) {
-		req.session.tutorial = true;
-	} else {
-		req.session.tutorial = false;
-	}
-	var categoryrecord = {
-		"_id": "ObjectId('58485813edf44d95fb117223')",
-		"name": "Television",
-		"slug": "Television",
-		"attributes": [],
-		"ancestors": [],
-		"__v": 0
-	};
-	Product.aggregate(
-		[{
-			$group: {
-				_id: "$Product_Group",
-				count: {
-					$sum: 1
-				}
-			}
-		}, {
-			$sort: {
-				_id: 1
-			}
-		}],
-		function(err, Product_Group) {
-
-			if (frontPageCategory) {
-				categCondition = {
-					"$match": {
-						"$and": [{
-								"status": {
-									$ne: 'deleted'
-								}
-							},
-							{
-								"category": frontPageCategory
-							},
-							{
-								$or: [{
-									"inventory.onHand": {
-										$gt: 0
-									}
-								}, {
-									"inventory.disableOnZero": false
-								}]
-							}
-						]
-					}
-				}
-			} else {
-				// categCondition = { $sample: { size: 40 } };
-				categCondition = {
-					"$match": {
-						"$and": [{
-							"status": {
-								"$ne": 'deleted'
-							}
-						}, {
-							$or: [{
-								"inventory.onHand": {
-									"$gt": 0
-								}
-							}, {
-								"inventory.disableOnZero": false
-							}]
-						}]
-					}
-				}
-			}
-			// console.log("categCondition: " + JSON.stringify(categCondition));
-
-			// Product.find(categCondition, function(err, docs) {
-
-			Product.aggregate([
-				categCondition,
-				{
-					"$sample": {
-						size: 40
-					}
-				}
-			], function(err, docs) {
-				if (err) {
-					products = {}
-				}
-				productChunks = [];
-				productJSON = [];
-				chunkSize = 4;
-				for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
-					productChunks.push(docs.slice(i, i + chunkSize));
-				}
-
-				res.render('shop/eshop', {
-					layout: 'eshop/testing',
-					title: title,
-					navcats: req.app.get('navcats'),
-					navgroups: req.app.get('navgroups'),
-					salegroups: req.app.get('salegroups'),
-					categoryrecord: JSON.stringify(categoryrecord),
-					showRecommendations: eval(res.locals.showRecommendations),
-					allcategories: res.locals.allcategories,
-					keywords: Config.keywords,
-					products: productChunks,
-					recommended: docs,
-					Product_Group: Product_Group,
-					user: req.user,
-					errorMsg: errorMsg,
-					noErrorMsg: !errorMsg,
-					successMsg: successMsg,
-					viewDocuments: viewDocuments,
-					tutorial: tutorial,
-					noMessage: !successMsg,
-					viewTour: viewTour,
-					isLoggedIn: req.isAuthenticated()
-				});
-			});
-		});
-});
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	if (!req.session.category===null) {
@@ -221,7 +97,7 @@ router.get('/', function(req, res, next) {
 			}
 		}, {
 			$sort: {
-				_id: 1
+				order: 1
 			}
 		}],
 		function(err, Product_Group) {
