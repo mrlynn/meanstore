@@ -41,6 +41,7 @@
     "express-validator": "^2.21.0",
     "faker": "^3.1.0",
     "fs": "0.0.1-security",
+    "geocoder": "^0.2.2",
     "google-oauth": "0.0.2",
     "hbs": "~4.0.0",
     "helper-timeago": "^0.1.0",

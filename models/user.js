@@ -6,8 +6,9 @@ var random = require('mongoose-simple-random');
 var userSchema = new Schema({
 	resetPasswordToken: String,
   	resetPasswordExpires: Date,
-	email_verified: {
-		type: Boolean
+	location: {
+      type: { type: String },
+	  coordinates: [ Number ]
 	},
 	email: {
 		type: String,
@@ -140,5 +141,6 @@ userSchema.methods.encryptPassword = function(password) {
 userSchema.methods.validPassword = function(password) {
 	return bcrypt.compareSync(password, this.password);
 }
+userSchema.index({ loc : '2dsphere' });
 
 module.exports = mongoose.model('User', userSchema);

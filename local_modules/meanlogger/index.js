@@ -6,7 +6,6 @@ var Cart = require('../../models/cart');
 var Activity = require('../../models/activity');
 var Order = require('../../models/order');
 var User = require('../../models/user');
-const GA_TRACKING_ID = process.env.GA_TRACKING_ID;
 
 module.exports = {
 	log: function(activity,msg,user) {
