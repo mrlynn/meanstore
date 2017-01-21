@@ -71,6 +71,7 @@ async.times(100, function(i, next) {
 			taxable: 'Yes',
 			shippable: 'Yes',
             price: price,
+			brand: brand,
             cost: cost,
 			sale_attributes: {
                 featured: Math.round(Math.random()) ? true : false,
@@ -88,13 +89,13 @@ async.times(100, function(i, next) {
 				Name: 'brand',
 				Value: brand
 			},{
-				Name: "Screen Size",
+				Name: "ScreenSize",
 				Value: Math.floor((Math.random() * 75-1) + 1)
 			},{
 				Name: 'Resolution',
 				Value: resolution
 			},{
-				Name: 'Number of Ports',
+				Name: 'NumberofPorts',
 				Value: Math.floor((Math.random() * 5-1) + 1)
 			},{
 				Name: 'Price',

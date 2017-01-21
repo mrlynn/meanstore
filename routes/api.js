@@ -16,8 +16,6 @@ var Config = require('../config/config.js');
 var taxCalc = require('../local_modules/tax-calculator');
 var meanlogger = require('../local_modules/meanlogger');
 
-
-
 router.get('/buckauto', function(req, res, next) {
 	var options = { server: { socketOptions: { keepAlive: 1 } } };
 	var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
@@ -101,6 +99,7 @@ router.delete('/categories/:id', function(req, res, next) {
 		res.json(category);
 	})
 });
+
 
 /**
  * GET facets for category

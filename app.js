@@ -22,6 +22,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var fs = require('fs');
 var cors = require('cors');
+var Prism = require('prismjs');
+var marked = require('marked');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var bookRoutes = require('./routes/books');
@@ -179,6 +181,11 @@ app.use(function(req,res,next) {
         }
         app.set('navcats',navcats);
         // console.log("Navcats in app.js " + JSON.stringify(navcats));
+        if (process.env.theme) {
+          res.locals.themeurl = '/stylesheets/themes/' + process.env.theme + '.css'
+        } else {
+          res.locals.themeurl = '/stylesheets/main.css'
+        }
         res.locals.navcats = navcats;
         res.locals.login = req.isAuthenticated();
         if (res.locals.login) {

@@ -1,6 +1,7 @@
 <div class="features_items">
-asdfasdf    <!--index-->
+ <!--index-->
     <h2 class="title text-center">{{title}}</h2>
+    ISLOGGED IN: {{isLoggedIn}}
     {{#each products}} {{#each this}} {{# if this.title}}
     <div class="col-sm-4">
         <div class="product-image-wrapper">
@@ -12,7 +13,10 @@ asdfasdf    <!--index-->
                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                             <input type='hidden' id='type' name='type' value='DONATION'>
                             <h2 class="product-price text-center">
-                                <a href="/product/{{this._id}}"><input type='text' class='text-right' name='price' value='{{this.price}}'></a>
+                                <a href="/product/{{this._id}}">
+                                {{#if ../../isLoggedIn}}
+                                <input type='text' class='text-right' name='price' value='{{this.price}}'></a>
+                                {{/if}}
                             </h2>
                             <p class="text-center">
                                 <input type='submit' value='Add to Cart' class="btn btn-primary add-to-cart" role="button">
@@ -64,12 +68,14 @@ asdfasdf    <!--index-->
                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                 <input type='hidden' id='price' name='price' value='{{ this.price }}'>
                                 <input type='hidden' id='type' name='type' value='TICKET'>
+                                {{#if ../../isLoggedIn}}
                                 <div class='form-group'>
                                     <label for='Name'>Name for Ticket</label>
                                     <input class='form-control input-sm' type='text' name='ticket_name' value="{{../../user.first_name}}">
                                     <label for='Name'>Email</label>
                                     <input class='form-control input-sm' type='text' name='ticket_email' value="{{../../user.email}}">
                                 </div>
+                                {{/if}}
                                 <h2 class="product-price text-center">
                                     ${{this.price}}
                                 </h2>

@@ -17,6 +17,7 @@ var schema = new Schema({
 	tags: [{
 		type: String
 	}],
+	brand: String,
 	status: {
 		type: String
 	},

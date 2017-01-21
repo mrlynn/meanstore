@@ -162,6 +162,26 @@
 					</div>
 				</div>
 			</form>
+			<p data-placement="top" data-toggle="tooltip" title="View Document ">
+        <button class="ui right floated btn btn-warning btn-xs" data-title="view" data-toggle="modal" data-target="#view"> <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="view" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View User Document</h4>
+            </div>
+            <div class="modal-body">
+                <pre><code class="prettyPrint">{{JSON user}}</code></pre>
+            </div>
+        <!-- /.modal-content -->
+        </div>
+    <!-- /.modal-dialog -->
+    </div>
+</div>
 	</div>
 </div>
 

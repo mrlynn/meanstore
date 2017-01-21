@@ -25,6 +25,11 @@ const dotenv = require('dotenv');
 const async = require('async');
 const chalk = require('chalk');
 var meanlogger = require('../local_modules/meanlogger');
+var MongoClient = require('mongodb').MongoClient
+var url = 'mongodb://localhost:27017/myproject';
+// Use connect method to connect to the Server
+
+
 
 // dotenv.load({
 // 	path: '.env.hackathon'
@@ -336,6 +341,240 @@ router.get('/group/:slug?', function(req, res, next) {
 });
 
 /* GET home page. */
+router.get('/category/Television', function(req, res, next) {
+	var category_slug = req.params.slug;
+	req.session.category = req.params.slug;
+	var q = req.query.q;
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	var url = 'mongodb://localhost:27017/hackathon';
+	navcats = {};
+	navgroups = {};
+	if (req.params.q) {
+		search = {
+			$match: {
+				$and: [{
+						$text: {
+							$search: q
+						}
+					}
+					// { category: new RegEx(category_slug, 'i')}
+				]
+			}
+		}
+	} else {
+		search = {
+			$match: {
+				// category: new RegExp(category_slug, 'i')
+			}
+		}
+	}
+	MongoClient.connect(url, function(err, db) {
+	var collection = db.collection( 'products' );
+		collection.aggregate([{
+			"$match": {category: "Television"}
+			},
+			{
+				"$facet": {
+					price: [
+						{
+							$bucket: {
+								groupBy: "$price",
+								boundaries: [0, 200, 699, 1000, 1500],
+								default: "Over 1500",
+								output: {"count": {$sum: 1}}
+							}
+						},
+						{
+							"$project": {
+								lowerPriceBound: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					brands: [
+						{
+							"$sortByCount": "$brand"
+						},
+						{
+							"$project": {
+								brand: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					screenSize: [
+						{
+							$bucketAuto: {
+								groupBy: "$Attributes.screenSize",
+								buckets: 5
+							}
+						},
+						{
+							$project: {
+								size: "$_id",
+								_id: 0,
+								count: 1
+							}
+						}
+					],
+					resolution: [
+						{
+							"$sortByCount": "$Attributes.Resolution"
+						},
+						{
+							"$project": {
+								resolution: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					screenTechnology: [
+						{
+							"$sortByCount": "$specs.ScreenSize"
+						},
+						{
+							"$project": {
+								technology: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					]
+				}
+			}
+		], function(err, results) {
+		Product.aggregate([{
+				$sortByCount: "$category"
+			}], function(err, allcats) {
+				Product.aggregate([
+					search, {
+						$sortByCount: "$category"
+					}
+				], function(err, navcats) {
+					Category.findOne({
+						// slug: new RegExp(category_slug, 'i')
+						$or: [{
+							'slug': new RegExp(category_slug, 'i')
+						}, {
+							'name': new RegExp(category_slug, 'i')
+						}],
+
+					}, function(err, category) {
+						if (err) {
+							console.log("Error finding category " + category_slug);
+							req.flash('error', 'Cannot find category');
+							return res.redirect('/');
+						}
+						if (!category) {
+							console.log("Error finding category " + category_slug);
+							req.flash('error', 'Cannot find category');
+							return res.redirect('/');
+						}
+						Product.aggregate([search, {
+							$sortByCount: "$Product_Group"
+						}], function(err, navgroups) {
+							if (q) {
+								srch = {
+									$text: {
+										search: q
+									}
+								}
+							} else {
+								srch = {}
+							}
+							/* find all products in category selected */
+							categCondition = {
+								$match: {
+									$and: [{
+											$or: [{
+												'category': 'Television'
+											}, {
+												'category': new RegExp(category.name, 'i')
+											}]
+										},
+										{
+											status: {
+												$ne: 'deleted'
+											}
+										},
+										{
+											$or: [{
+												"inventory.onHand": {
+													$gt: 0
+												}
+											}, {
+												"inventory.disableOnZero": false
+											}]
+										}
+									]
+								}
+							}
+							categCondition = {
+								$and: [{
+											$or: [{
+												'category': new RegExp(category.slug, 'i')
+											}, {
+												'category': new RegExp(category.name, 'i')
+											}]
+										},
+										{
+											status: {
+												$ne: 'deleted'
+											}
+										},
+										{
+											$or: [{
+												"inventory.onHand": {
+													$gt: 0
+												}
+											}, {
+												"inventory.disableOnZero": false
+											}]
+										}
+									]
+							}
+							Product.find({category: "Television"},function(err, products) {
+								if (err || !products || products === 'undefined') {
+									console.log("Error: " + err.message);
+									req.flash('error', 'Problem finding products');
+									res.redirect('/');
+								}
+								if (category.format != 'table') {
+									productChunks = [];
+									chunkSize = 4;
+									for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+										productChunks.push(products.slice(i, i + chunkSize))
+									};
+								}
+								res.render('shop/eshop', {
+									layout: 'eshop/television',
+									navcats: navcats,
+									results: results,
+									navgroups: navgroups,
+									viewDocuments: viewDocuments,
+									category: category,
+									products: productChunks,
+									productChunks: productChunks,
+									user: req.user,
+									q: q,
+									errorMsg: errorMsg,
+									noErrorMsg: !errorMsg,
+									successMsg: successMsg,
+									noMessage: !successMsg,
+									isLoggedIn: req.isAuthenticated()
+								});
+							});
+						});
+					});
+				})
+			})
+		})
+	})
+})
 router.get('/category/:slug', function(req, res, next) {
 	var category_slug = req.params.slug;
 	req.session.category = req.params.slug;
@@ -362,6 +601,7 @@ router.get('/category/:slug', function(req, res, next) {
 		}
 	}
 	/* Create a list of categories and product counts within CAMERAS (100) */
+
 	Product.aggregate([{
 		$sortByCount: "$category"
 	}], function(err, allcats) {
@@ -1478,11 +1718,16 @@ router.post('/search', function(req, res, next) {
 router.get('/product/:id/', function(req, res, next) {
 	var productId = req.params.id;
 	// if we have a cart, pass it - otherwise, pass an empty object
-
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
 	Product.findById(productId, function(err, product) {
 		if (err) {
 			// replace with err handling
 			return res.redirect('/');
+		}
+		if (!product) {
+			req.flash('error','Product is not found.');
+			res.redirect('/');
 		}
 		if (!req.user || req.user === 'undefined' || req.user == null) {
 			req.user = {};
@@ -1516,11 +1761,11 @@ router.get('/product/:id/', function(req, res, next) {
 					return res.redirect('/');
 				}
 				res.render('shop/product', {
-					layout: 'fullpage.hbs',
+					layout: 'eshop/blank',
 					recommendations: recommendations,
 					product: product,
-					errorMsg: "Product not found.",
-					noErrorMsg: 0
+					errorMsg: errorMsg,
+					noErrorMsg: !errorMsg
 				});
 			});
 		});
