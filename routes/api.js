@@ -416,6 +416,7 @@ router.get('/purchases-by-yearmo', function(req,res,next) {
 	            })
 	        })
 	    }
+		console.log(JSON.stringify(data));
     res.json(data);
     });
 });

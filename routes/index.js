@@ -902,7 +902,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 		});
 	}
 	var cart = new Cart(req.session.cart);
-	var cartJSON = JSON.stringify(cart);
+	var cartJSON = cart;
 	var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
 	var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
 	var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
@@ -1893,9 +1893,9 @@ router.get('/overview', function(req, res, next) {
 		}
 		res.render('overview', {
 			layout: 'eshop/blank',
-			user: JSON.stringify(userrecord),
+			user: req.user,
 			product: doc,
-			order: JSON.stringify(orderrecord)
+			order: orderrecord
 		});
 	});
 })
