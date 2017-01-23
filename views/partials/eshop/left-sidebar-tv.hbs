@@ -37,16 +37,36 @@
                             </div>
                         </div>            
             {{/each}} 
-              <h2>Resolution</h2>
-            {{#each this.screenSize}}
+
+            <h2>External Ports</h2>
+            {{#each this.number_of_ports}}
+                <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"><a href="/brand/{{this.brand}}?q={{../q}}">{{this.ports}} <span class="pull-right">({{this.count}})</span></a></h4>
+                            </div>
+                        </div>            
+            {{/each}} 
+
+           <h2>Screen Resolution</h2>
+            {{#each this.resolution}}
+                <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"><a href="/brand/{{this.brand}}?q={{../q}}">{{this.resolution}} <span class="pull-right">({{this.count}})</span></a></h4>
+                            </div>
+                        </div>            
+            {{/each}} 
+
+              <h2>Screen Size</h2>
+            {{#each this.ScreenSize}}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title"><a href="/screenSize/{{this.screenSize}}?q={{../q}}">{{this.Resolution}} <span class="pull-right">({{this.count}})</span></a></h4>
+                        <h4 class="panel-title"><a href="/screenSize/{{this.ScreenSize}}?q={{../q}}">{{this.ScreenSize}}" <span class="pull-right">({{this.count}})</span></a></h4>
                     </div>
                 </div>            
             {{/each}}           
         {{/each}}
-        <p data-placement="top" data-toggle="tooltip" title="View Document ">
+        <hr>
+        <p class="text-center" data-placement="top" data-toggle="tooltip" title="View Document ">
         <button class="ui right floated btn btn-warning btn-xs" data-title="view" data-toggle="modal" data-target="#view-search"> <span class="glyphicon glyphicon-eye-open"></span> View Facet Search
         </button>
 </p>
@@ -56,94 +76,106 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                <h4 class="modal-title custom_align" id="Heading">View Faceted Search Results</h4>
+                <h4 class="modal-title custom_align" id="Heading">View Faceted Aggregation</h4>
             </div>
             <div class="modal-body">
-                <pre><code class="prettyPrint">
-        db.products.aggregate([
+<pre><code class="prettyPrint">
+db.products.aggregate([
 {
-$match: {category: "Television"}
+    "$match": {category: "Television"}
+},
+{ 
+    "$unwind": "$Attributes"
 },
 {
-$facet: {
-price: [
-    {
-        $bucket: {
-            groupBy: "$price",
-            boundaries: [0, 200, 699, 1000, 1500],
-            default: "Over 1500",
-            output: {"count": {$sum: 1}}
-        }
-    },
-    {
-        $project: {
-            lowerPriceBound: "$_id",
-            count: 1,
-            _id: 0
-        }
+    "$facet": {
+        price: [
+            {
+                $bucket: {
+                    groupBy: { 
+                        "$divide": [ "$price", 100 ]
+                    },
+                    boundaries: [0, 200, 400, 500, 600, 700, 1000, 2000, 5000],
+                    default: "Over 5000.00",
+                    output: {"count": {$sum: 1}}
+                }
+            },
+            {
+                "$project": {
+                    lowerPriceBound: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ],
+        brands: [
+            {
+                "$sortByCount": "$brand"
+            },
+            {
+                "$project": {
+                    brand: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ],
+        "Screen Sizes": [
+            {
+                "$match":{ "Attributes.Name": "ScreenSize" }
+            },
+            {
+                "$sortByCount": "$Attributes.Value"
+            },
+            {
+                "$project": {
+                    ScreenSize: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ],
+        resolution: [
+            {
+                "$match": { "Attributes.Name": "Resolution" }
+            },
+            {
+                "$sortByCount": "$Attributes.Value"
+            },
+            {
+                "$project": {
+                    resolution: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ],
+        number_of_ports: [
+            {
+                "$match": {
+                    "Attributes.Name": "NumberofPorts"
+                }
+            },
+            {
+                "$sortByCount": "$Attributes.Value"
+            },
+            {
+                "$project": {
+                    ports: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ]
     }
-],
-brands: [
-    {
-        $sortByCount: "$brand"
-    },
-    {
-        $project: {
-            brand: "$_id",
-            count: 1,
-            _id: 0
-        }
-    }
-],
-screenSize: [
-    {
-        $bucketAuto: {
-            groupBy: "$Attributes.Resolution",
-            buckets: 5
-        }
-    },
-    {
-        $project: {
-            size: "$_id",
-            _id: 0,
-            count: 1
-        }
-    }
-],
-type: [
-    {
-        $sortByCount: "$Attributes.NumberOfPorts"
-    },
-    {
-        $project: {
-            type: "$_id",
-            count: 1,
-            _id: 0
-        }
-    }
-],
-screenTechnology: [
-    {
-        $sortByCount: "$specs.ScreenSize"
-    },
-    {
-        $project: {
-            technology: "$_id",
-            count: 1,
-            _id: 0
-        }
-    }
-]
-}
-}
-])</code></pre>
+}])</code></pre>
             </div>
         <!-- /.modal-content -->
         </div>
     <!-- /.modal-dialog -->
     </div>
 </div>
-<p data-placement="top" data-toggle="tooltip" title="View Document ">
+<p class="text-center" data-placement="top" data-toggle="tooltip" title="View Document ">
         <button class="ui right floated btn btn-warning btn-xs" data-title="view" data-toggle="modal" data-target="#view-results"> <span class="glyphicon glyphicon-eye-open"></span> View Facet Results
         </button>
 </p>

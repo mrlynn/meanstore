@@ -628,3 +628,59 @@ db.products.aggregate([
 		}
 	}
 ])
+
+
+
+
+Find others who purchased the SharedKeyboardAndMouseEventInit
+
+products: {
+    _id: ObjectId("58848a779debf63272c3bb1e"),
+    name: 'banana',
+    usersBought: [ 1, 2, 3, 4 ]
+},{
+    _id: 'b',
+    name: 'apple',
+    usersBought: [ 1, 2 ]
+}, {
+     _id: 'c',
+    name: 'pear',
+    usersBought: [ 3, 4 ]
+}
+
+users: {
+    _id: 1,
+    name: 'mike'
+    purchased: [ a, b, c ]
+},{
+    _id: 2,
+    name: 'kelly',
+    purchased: [ b, x, y ]
+}
+
+db.products.aggregate([
+  { $match: {"_id": ObjectId("58848a779debf63272c3bb1e") } }, // Only look at 
+  {
+    $graphLookup: {
+      from: 'users', // Use the customers collection
+      startWith: '$usersBought', // Start looking at the document's `friends` property
+      connectFromField: 'usersBought', // A link in the graph is represented by the friends property...
+      connectToField: '_id', // ... pointing to another customer's _id property
+      maxDepth: 1, // Only recurse one level deep
+      as: 'connections' // Store this in the `connections` property
+    }
+  }
+]);
+
+db.users.aggregate( [
+         {"$match":{"name":"Lucy"}},
+          {"$graphLookup": {
+		  from: "users",   /* look up from airports collection */
+		  startWith: "$purchased", /* start at Lucys nearest airport */
+		  connectFromField: "purchased", /* recurse connecting 'connects' */
+		  connectToField: "airport",    /* field to 'airport' field */
+		  maxDepth: 2,                  /* stop after recursing twice */
+		  depthField: "numFlights",   /* record number of flights */
+		  as: "destinations"  /* array containing all expanded documents */
+	    }}
+	] )

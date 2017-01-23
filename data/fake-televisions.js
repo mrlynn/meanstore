@@ -27,6 +27,7 @@ mongoose.connection.on('error', () => {
 products = [];
 brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Throwback'];
 resolutions = ['1080p','1080l','720p','1440p','4k','8k'];
+screensizes = [26,29,32,36,42,44,46,52,55,60,72];
 product_groups = ['Flat Screen','Cathode Ray Tube','LCD','HDTV','Curved'];
 
 var done = 0;
@@ -48,7 +49,8 @@ async.times(100, function(i, next) {
 		brandNum = Math.floor((Math.random() * brands.length-1) + 1);
 		resNum = Math.floor((Math.random() * resolutions.length-1) + 1);
 		resolution = resolutions[resNum];
-
+		scrnNum = Math.floor((Math.random() * screensizes.length-1) + 1);
+		screensize = screensizes[scrnNum];
 		brand = brands[brandNum];
 		imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
 		name = brand;
@@ -90,7 +92,7 @@ async.times(100, function(i, next) {
 				Value: brand
 			},{
 				Name: "ScreenSize",
-				Value: Math.floor((Math.random() * 75-1) + 1)
+				Value: screensize
 			},{
 				Name: 'Resolution',
 				Value: resolution

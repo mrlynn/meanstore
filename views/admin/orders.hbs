@@ -179,7 +179,7 @@
                             </td>
 <td>
                             <p data-placement="top" data-toggle="tooltip" title="View Document">
-        <button class="ui right floated btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#view"> <span class="glyphicon glyphicon-search"></span>
+        <button class="ui right floated btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#view"> <span class="glyphicon glyphicon-eye-open"></span>
         </button>
 </p>
 <!-- Add Dialog -->
@@ -191,12 +191,10 @@
                 <h4 class="modal-title custom_align" id="Heading">View Order Document</h4>
             </div>
             <div class="modal-body">
-                <form action='/admin/update-order' method='POST'>
-                <textarea rows=15 class='form-control'>{{this}}</textarea>
-                </form>
+                <pre><code class="prettyPrint">{{JSON this}} </code> </pre>
             </div>
             <div class="modal-footer">
-                <button type="submit" onClick="submit();" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Update</button>
+                <button type="submit" onClick="submit();" class="btn btn-warning btn-lg" data-dismiss="modal" style="width: 100%;"><span class="glyphicon glyphicon-remove"></span>Close</button>
             </div>
                             </form>
 

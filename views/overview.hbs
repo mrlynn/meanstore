@@ -4,7 +4,7 @@
         <p><img style='float:left;width:100px;height:100px; margin-right:10px;' src='images/meanmart-100x100.png' style='align:left'>This site was created to showcase MongoDB's capabilities in the Faceted Search, Graph Lookup and BI/Analytics spaces.  These capabilities are demonstrated through the lense of a ficticious online ecommerce company "MEANMart".  To view the online shop, click <a href="/" target="_blank">here</a>.
         </p><p>
         This vendor faces the same challenges most retail companies face today, striving to ensure that their products are not only available online but searchable and displayed in a manner that lets customers easily find products by many facets. </p>
-        <p><a href="http://meanmart.mlynn.org" target="_blank" class="btn btn-success btn-lg">Get started</a></p>
+        <p><a href="http://github.com/mrlynn/meanstore" target="_blank" class="btn btn-success btn-lg">Get started</a></p>
     </div>
 </div>
 
@@ -55,8 +55,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
- --}}                    <pre>{{JSON user}}</pre>
+                    <pre><code class="prettyPrint">{{JSON user}}</code></pre>
                 </div>
             </div>
             <div class="modal-footer">
@@ -110,6 +109,7 @@
             
 <button class="btn btn-warning btn-lg" data-title="View" data-toggle="modal" data-target="#order-modal">View Order Document <span class="glyphicon glyphicon-eye-open"></span>
 </button>
+<p>Notice the Attributes field, which contains different fields depending upon the category of the product.</p>
 </p>
 <!-- Add Dialog -->
 <div class="modal fade" id="order-modal" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
@@ -161,8 +161,9 @@
             </div>
             <div class="modal-body">
                 <pre><code class="prettyPrint">
-                    
-                var Product = require('../models/product');
+// Michael Lynn <michael.lynn@mongodb.com
+// Generate fake products 
+var Product = require('../models/product');
 var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
@@ -186,8 +187,6 @@ mongoose.connection.on('error', () => {
   process.exit();
 });
 
-// Product.remove({},function(err,results) {});
-// Category.remove({},function(err,results) {});
 products = [];
 brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Throwback'];
 resolutions = ['1080p','1080l','720p','1440p','4k','8k'];
@@ -286,9 +285,6 @@ async.times(100, function(i, next) {
 function exit() {
 	mongoose.disconnect() 
 }
-    
-                    
-                    
                 </code></pre>
             </div>
         <!-- /.modal-content -->
@@ -315,6 +311,8 @@ function exit() {
             </div>
             <div class="modal-body">
                 <pre><code class="prettyPrint">
+// Michael Lynn <michael.lynn@mongodb.com
+// Generate fake sales 
 var Product = require('../models/product');
 var Order = require('../models/order');
 var User = require('../models/user');
@@ -417,6 +415,8 @@ db.collection('orders', function (err, orders_collection) {
             </div>
             <div class="modal-body">
                 <pre><code class="prettyPrint">
+// Michael Lynn <michael.lynn@mongodb.com
+// Generate fake products 
 var User = require('../models/user');
 var Product = require('../models/product');
 var mongoose = require('mongoose');

@@ -373,10 +373,17 @@ router.post('/order', function(req, res, next) {
 });
 router.get('/donut-chart', function(req, res, next) {
 	Event.aggregate([
+	// {
+	// 	"$match": {
+	// 		'action': 'purchase'
+	// 	}
+	// },
 	{
-		$group: { "_id": "$thing.category", "value": { $sum: 1 } }
+		"$group": { 
+			"_id": "$thing.category", "value": { "$sum": 1 } 
+		}
 	},{
-		$project: { "_id": -1, "value": 1}
+		"$project": { "_id": -1, "value": 1}
 	}], function(err,donuts) {
 		var data = [];
 		async.each(donuts, function(donut, next) {
@@ -390,7 +397,7 @@ router.get('/donut-chart', function(req, res, next) {
 })
 router.get('/purchases-by-yearmo', function(req,res,next) {
 	Event.aggregate([{
-		$match: {
+		"$match": {
 			'action': 'purchase'
 		}
 	},

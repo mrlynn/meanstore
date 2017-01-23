@@ -1268,7 +1268,12 @@ h2.title {
   text-align: center;
   width: 50px;
 }
-
+.model-content {
+  text-align: left;
+}
+.model-body {
+  text-align: left;
+}
 .product-information span label {
   color: #696763;
   font-family: 'Roboto', sans-serif;
@@ -1279,8 +1284,13 @@ h2.title {
 .share {
   margin-top: 15px;
 }
-
-
+.modal-body {
+    max-width: 100%;
+    overflow-x: auto;
+}
+.scoll-tree {
+    width:5000px;
+}
 .cart {
   background: #4f9d45;
   border: 0 none;

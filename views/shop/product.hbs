@@ -1,16 +1,16 @@
 <!-- shop/product.hbs -->
-<div class="product-layout col-md-9 col-md-offset-2">
+<div class="product-information col-md-9 col-md-offset-2">
     <div class="col-md-5">
         <div class="thumbnail">
-            <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">
+            {{!--<div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">--}}
                 <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
-            </div>
+            {{!--</div>--}}
         </div>
     </div>
     <div class="col-md-7">
-        <div class="product-area">
+        <div class="product-information">
             <div class="caption-full">
-                <h4 class="pull-right">${{product.price}}</h4>
+                <h4 class="pull-right">${{money product.price}}</h4>
                 <h4><a href="#">{{product.name}}</a></h4>
                 <p>{{product.title}}</p>
             </div>
@@ -61,39 +61,8 @@
                         <h3 class="text-success">Reviews</h3>
                         <hr/>
                         <ul class="comments">
-                            <li class="clearfix">
-                                <img src="/images/user_1.jpg" class="avatar" alt="">
-                                <div class="post-comments">
-                                    <p class="meta">Dec 18, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Etiam a sapien odio, sit amet
-                                    </p>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/images/user_2.jpg" class="avatar" alt="">
-                                <div class="post-comments">
-                                    <p class="meta">Dec 19, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Etiam a sapien odio, sit amet
-                                    </p>
-                                </div>
-
-                                <ul class="comments">
-                                    <li class="clearfix">
-                                        <img src="/images/user_3.jpg" class="avatar" alt="">
-                                        <div class="post-comments">
-                                            <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                Etiam a sapien odio, sit amet
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
+                            
+                    
                         </ul>
                     </div>
                 </div>
@@ -111,6 +80,7 @@
             </div>
         </div>
     </div>
+    <br><br><br>
     <div class="productrecommendations">
         <div class="col-md-3">
             <div class="panel-heading">

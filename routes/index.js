@@ -374,14 +374,17 @@ router.get('/category/Television', function(req, res, next) {
 		collection.aggregate([{
 			"$match": {category: "Television"}
 			},
+			{ "$unwind": "$Attributes"},
 			{
 				"$facet": {
 					price: [
 						{
 							$bucket: {
-								groupBy: "$price",
-								boundaries: [0, 200, 699, 1000, 1500],
-								default: "Over 1500",
+								groupBy: { 
+									"$divide": [ "$price", 100 ]
+								},
+								boundaries: [0, 200, 400, 500, 600, 700, 1000, 2000, 5000],
+								default: "Over 5000.00",
 								output: {"count": {$sum: 1}}
 							}
 						},
@@ -405,24 +408,27 @@ router.get('/category/Television', function(req, res, next) {
 							}
 						}
 					],
-					screenSize: [
+					ScreenSize: [
 						{
-							$bucketAuto: {
-								groupBy: "$Attributes.screenSize",
-								buckets: 5
-							}
+							"$match":{ "Attributes.Name": "ScreenSize" }
 						},
 						{
-							$project: {
-								size: "$_id",
-								_id: 0,
-								count: 1
+							"$sortByCount": "$Attributes.Value"
+						},
+						{
+							"$project": {
+								ScreenSize: "$_id",
+								count: 1,
+								_id: 0
 							}
 						}
 					],
 					resolution: [
 						{
-							"$sortByCount": "$Attributes.Resolution"
+							"$match": { "Attributes.Name": "Resolution" }
+						},
+						{
+							"$sortByCount": "$Attributes.Value"
 						},
 						{
 							"$project": {
@@ -432,13 +438,18 @@ router.get('/category/Television', function(req, res, next) {
 							}
 						}
 					],
-					screenTechnology: [
+					number_of_ports: [
 						{
-							"$sortByCount": "$specs.ScreenSize"
+							"$match": {
+								"Attributes.Name": "NumberofPorts"
+							}
+						},
+						{
+							"$sortByCount": "$Attributes.Value"
 						},
 						{
 							"$project": {
-								technology: "$_id",
+								ports: "$_id",
 								count: 1,
 								_id: 0
 							}
@@ -447,6 +458,8 @@ router.get('/category/Television', function(req, res, next) {
 				}
 			}
 		], function(err, results) {
+			console.log("Product-unwound: " + JSON.stringify(results));
+			console.log("Err-unwound: " + JSON.stringify(err));
 		Product.aggregate([{
 				$sortByCount: "$category"
 			}], function(err, allcats) {
@@ -1457,7 +1470,6 @@ router.get('/execute', function(req, res, next) {
 						}
 						/* Update Users Bought Array */
 						async.each(products, function(product, next) {
-							console.log("PRODUCT: " + JSON.stringify(product));
 							event = new Event({
 								namespace: 'products',
 								person: {
@@ -1480,6 +1492,17 @@ router.get('/execute', function(req, res, next) {
 								if (err) {
 									console.log("Error: " + err.message);
 									return -1;
+								}
+							});
+							Product.findOneAndUpdate({
+								_id: product.item._id
+							}, {
+								"$push": {
+									usersBought: req.user._id
+								}
+							}, function(err, newprod){
+								if (err) {
+									console.log("Error updating product with users bought: " + JSON.stringify(err));
 								}
 							})
 							User.findOneAndUpdate({

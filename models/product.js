@@ -65,7 +65,8 @@ var schema = new Schema({
 		Value: {
 			type: String,
 			required: false
-		}
+		},
+		_id: false
 	}],
 	options: [{
 		name: {
