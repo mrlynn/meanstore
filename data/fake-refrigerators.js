@@ -65,10 +65,19 @@ async.times(100, function(i, next) {
 		cost = Math.floor((Math.random() * price) + (price / 2));
 		pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
     	product_group = product_groups[pgroup];
+		title = faker.commerce.productAdjective() + ' ' + color + ' ' + name
+		slug = title.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+
 		product = new Product({
 			code: 'ref' + code,
 			name: name,
-			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
+			title: title,
+			slug: slug,
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',

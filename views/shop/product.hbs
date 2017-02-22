@@ -1,18 +1,20 @@
 <!-- shop/product.hbs -->
 <div class="product-information col-md-9 col-md-offset-2">
+        {{#each product}}
+
     <div class="col-md-5">
         <div class="thumbnail">
             {{!--<div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">--}}
-                <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
+                <img src="{{this.imagePath}}" class="thumbnail-image img-responsive">
             {{!--</div>--}}
         </div>
     </div>
     <div class="col-md-7">
         <div class="product-information">
             <div class="caption-full">
-                <h4 class="pull-right">${{money product.price}}</h4>
-                <h4><a href="#">{{product.name}}</a></h4>
-                <p>{{product.title}}</p>
+                <h4 class="pull-right">${{money this.price}}</h4>
+                <h4><a href="#">{{this.name}}</a></h4>
+                <p>{{this.title}}</p>
             </div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
@@ -42,7 +44,7 @@
                 <div role="tabpanel" class="tab-pane active" id="description">
                     <div class="product-tab-area">
                         <div class='description'>
-                            {{product.description}}
+                            {{this.description}}
                         </div>
                     </div>
                 </div>
@@ -50,7 +52,7 @@
                     <div class="product-tab-area">
 
                         <div class="features">
-                            {{#each product.Attributes}}
+                            {{#each this.Attributes}}
                             <li>{{this.Name}}: {{this.Value}}</li>
                             {{/each}}
                         </div>
@@ -80,6 +82,7 @@
             </div>
         </div>
     </div>
+    {{/each}}
     <br><br><br>
     <div class="productrecommendations">
         <div class="col-md-3">
@@ -94,6 +97,32 @@
                 </div>
                 {{/each}}
             </div>
+            <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+<button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#viewed">View Also Viewed Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="viewed" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{this}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
         </div>
         <div class="col-md-3">
             <div class="panel-heading">
@@ -107,6 +136,32 @@
                 </div>
                 {{/each}}
             </div>
+            <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+<button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#trending">View Trending Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="trending" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{this}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
         </div>
         <div class="col-md-3">
             <div class="panel-heading">
@@ -120,6 +175,36 @@
                 </div>
                 {{/each}}
             </div>
+
+<p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+<button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#popular">View Popularity Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="popular" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{this}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
         </div>
         <div class="col-md-3">
             <div class="panel-heading">
@@ -133,6 +218,32 @@
                 </div>
                 {{/each}}
             </div>
+            <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+<button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#similar">View Similar Products Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="similar" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+{{!--                     <textarea rows='15' class="form-control">{{this}}</textarea>
+ --}}                    <pre>{{this}}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
         </div>
     </div>
 </div>

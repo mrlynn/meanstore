@@ -2,57 +2,29 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var storeSchema = new Schema({
+    name: String,
+    storeId: String,
+    slug: String,
 	address: {
 		street: String,
 		city: String,
         state: String,
-        zipcode: String
+        zipcode: String,
+        _id: false
 	},
-    loc : { lng : Number , lat : Number },
-	hours: {
-        _id: false,
-        Sunday: {
-            Opened: Boolean,
-            Open: Date,
-            Close: Date
-        },
-        Monday: {
-            Open: Date,
-            Opened: Boolean,
-            Close: Date
-        },
-        Tuesday: {
-            Opened: Boolean,
-            Open: Date,
-            Close: Date
-        },
-        Wednesday: {
-            Opened: Boolean,
-            Open: Date,
-            Close: Date
-        },
-        Thursday: {
-            Open: Date,
-            Opened: Boolean,
-            Close: Date
-        },
-        Friday: {
-            Open: Date,
-            Opened: Boolean,
-            Close: Date
-        },
-        Saturday: {
-            Open: Date,
-            Opened: Boolean,
-            Close: Date
-        },
-    },
+    location: {
+      type: { type: String },
+	  coordinates: [ Number ]
+	},
+    vars: {},
     manager: {
+        _id: false,
         first_name: String,
         last_name: String,
         telephone: String,
-        mobile_phone: String
+        mobile_phone: String,
+        email: String
     }
 });
 
-module.exports = mongoose.model('Event', eventSchema);
+module.exports = mongoose.model('Store', storeSchema);

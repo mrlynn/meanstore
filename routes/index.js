@@ -26,7 +26,7 @@ const async = require('async');
 const chalk = require('chalk');
 var meanlogger = require('../local_modules/meanlogger');
 var MongoClient = require('mongodb').MongoClient
-var url = 'mongodb://localhost:27017/myproject';
+var url = 'mongodb://localhost:27017/hackathon';
 // Use connect method to connect to the Server
 
 
@@ -1738,14 +1738,15 @@ router.post('/search', function(req, res, next) {
 	});
 });
 
-router.get('/product/:id/', function(req, res, next) {
-	var productId = req.params.id;
+router.get('/product/:slug/', function(req, res, next) {
+	var slug = req.params.slug;
 	// if we have a cart, pass it - otherwise, pass an empty object
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
-	Product.findById(productId, function(err, product) {
+	Product.find( { slug: slug }, function(err,product) {
 		if (err) {
 			// replace with err handling
+			console.log("Error: " + JSON.stringify(err));
 			return res.redirect('/');
 		}
 		if (!product) {
@@ -1755,6 +1756,7 @@ router.get('/product/:id/', function(req, res, next) {
 		if (!req.user || req.user === 'undefined' || req.user == null) {
 			req.user = {};
 		}
+		console.log("Product: " + JSON.stringify(product));
 		event = new Event({
 			namespace: 'products',
 			person: {
@@ -1800,6 +1802,7 @@ router.get('/privacy', function(req,res,next) {
 		layout: 'eshop/blank'
 	});
 });
+
 router.get('/tos', function(req,res,next) {
 	res.render('tos', {
 		layout: 'eshop/blank'

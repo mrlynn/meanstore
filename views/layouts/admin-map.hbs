@@ -34,8 +34,33 @@
     <script src="/javascripts/plugins/morris/raphael.min.js"></script>
     <script src="/javascripts/plugins/morris/morris.min.js"></script>
     <script src="/javascripts/plugins/morris/morris-data.js"></script>
+    <script> 
+    function showStores() { 
+        $.get( "http://localhost:3001/api/stores", function( data ) { 
+            var lat=-20.1;
+            var lon=50.1; 
+            var myLatlng = new google.maps.LatLng(lat, lon); 
+            var mapProp = { 
+                center:myLatlng, zoom:5, mapTypeId:google.maps.MapTypeId.ROADMAP, mapTypeControl: false 
+            }; 
+        //Creating map object 
+            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp); 
+            // var obj = jQuery.parseJSON(data); $.each($.parseJSON(data), 
+            var obj = data; 
+            //{{!--$.each($.parseJSON(data), --}}
+            $.each(data,
+                function(idx, obj) { 
+                    var lat=obj.location.coordinates[0]; 
+                    var lon=obj.location.coordinates[1]; 
+                    var myLatlng = new google.maps.LatLng(lat, lon); 
+                    var marker = new google.maps.Marker({ position: myLatlng, map: map, title: obj.name }); 
+            }); 
+        }); 
+    } 
+</script>
+
 </head>
-<body>
+  <body onload='showStores()'>
     <div id="wrapper">
         {{> adminsidenav }}
         <div id="page-wrapper">
@@ -55,6 +80,6 @@
     <!-- Morris Charts JavaScript -->
 
 </body>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key={{GOOGLE_APIKEY}}&callback=myMap"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&key={{GOOGLE_APIKEY}}"></script>
 
 </html>

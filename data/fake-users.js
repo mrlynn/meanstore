@@ -49,9 +49,9 @@ for (var i=0; i < maxUsers; i++) {
 	var city = faker.address.city();
 	var state = faker.address.stateAbbr();
 	var zipcode = faker.address.zipCode();
-	geocoder.geocode(addr1 + ', ' + city + ', ' + state + ' ' + zipcode, function(err, data) {
-		console.log(JSON.stringify(data));
-		console.log('---');
+	// geocoder.geocode(addr1 + ', ' + city + ', ' + state + ' ' + zipcode, function(err, data) {
+	// 	console.log(JSON.stringify(data));
+	// 	console.log('---');
 	Product.findRandom(filter, fields, options, function(err,purchasedArray) {
 		if (err) {
 			console.log(err);
@@ -59,6 +59,7 @@ for (var i=0; i < maxUsers; i++) {
 		var items = []
 		for(item in purchasedArray) {
 			items.push(purchasedArray[item]._id);
+			
 		};
 		user = new User({
 			location: {
@@ -79,6 +80,8 @@ for (var i=0; i < maxUsers; i++) {
 			created: Date.now(),
 			purchased: items
 		},function(err,doc) {
+			
+			
 			if (err) {
 				console.log('error: ' + err);
 			}
@@ -87,12 +90,19 @@ for (var i=0; i < maxUsers; i++) {
 			if (err) {
 				console.log('error: ',err.message);
 			}
+			console.log("Items: " + JSON.stringify(items))
+			for(item in items) {
+				console.log("Updating items " + item);
+				Product.update(
+					{ _id: item }, 
+					{ $push: { usersBought: newuser._id } }
+				);
+			};
 			done++;
 			if (done>=maxUsers) {
 				exit();
 			}
 		});
-	});
 	});
 }
 

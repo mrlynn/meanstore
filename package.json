@@ -24,6 +24,8 @@
     "cors": "^2.8.1",
     "crypto": "0.0.3",
     "csurf": "^1.9.0",
+    "cytoscape": "^2.7.15",
+    "d3": "^4.5.0",
     "datatables.net": "^1.10.13",
     "datatables.net-bs": "^1.10.13",
     "debug": "~2.2.0",
