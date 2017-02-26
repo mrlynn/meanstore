@@ -1,0 +1,144 @@
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                {{>adminmetrics}}
+                <h1 class="page-header">
+                    {{adminPageTitle}}
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i> <a href="/admin">Dashboard > Product / User Relationships</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-bar-chart-o"></i> {{adminPageTitle}}
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- /.row -->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+                        <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
+                            {{successMsg}}
+                        </div>
+                        <div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
+                            {{errorMsg}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- main dashboard section -->
+                    <p data-placement="top" data-toggle="tooltip" title="View Stores Document Schema ">
+                        <button class="ui right floated btn btn-warning btn-lg" data-title="view" data-toggle="modal" data-target="#view-graph"> <span class="glyphicon glyphicon-eye-open"> </span> View Graph Query
+                        </button>
+                    </p>
+        <div class="modal fade" id="view-graph" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                             <div class="container">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav active"><a href="#viewed-a" data-toggle="tab">Query</a></li>
+                                    <li class="nav"><a href="#viewed-b" data-toggle="tab">Results</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="viewed-a">
+                                        <div class="form-group">
+                                            <pre>
+db.products.aggregate(
+
+	// Pipeline
+	[
+		// Stage 1
+		{
+			$graphLookup: {
+			    from: "orders",
+			    startWith: "$code", // connectToField value(s) that recursive search starts with
+			    connectFromField: "cart.code",
+			    connectToField: "cart.code",
+			    as: "also_purchased"
+			    //maxDepth: 0
+			    //depthField: "depthField" // optional - name of field in output documents
+			}
+		},
+
+		// Stage 2
+		{
+			$project: {
+			    code: 1,
+			    
+			    "also_purchased.user.email": 1,
+			    "also_purchased.cart.code": 1
+			}
+		},
+
+	]
+
+);
+</pre>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="viewed-b">
+                                        <pre>{{JSON recommendations.viewed.results}}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+                </div>
+                <!--row-->
+                <div class="row">
+                    <h3>The chart below illustrates the connections between users and products. When a user completes a purchase,
+                        the products purchased are added to the user record as well as to an orders document. By correlating
+                        products to users and showing these relationships, we can begin to see how we may beging to increase
+                        sales of products by presenting those products frequently purchased together to users as they view
+                        and purchase.</h3>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="container">
+                                <style>
+                                    #graph-container {
+                                        top: 0;
+                                        bottom: 0;
+                                        left: 0;
+                                        right: 0;
+                                        min-height: 400px;
+                                    }
+                                </style>
+                                <div id="graph-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- main dashboard section -->
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+
+        <script>
+            sigma.parsers.json('/data/ju6.json', {
+                container: 'graph-container'
+            });
+        </script>

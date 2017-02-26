@@ -100,10 +100,22 @@ module.exports = {
 							popular.push(doc);
 						};
 						recommendations = {
-							'similar': similar,
-							'trending': trending,
-							'viewed': viewed,
-							'popular': popular
+							'similar': {
+								results: similar,
+								query: ''
+							},
+							'trending': {
+								results: trending,
+								query: ''
+							},
+							'viewed': {
+								results: viewed,
+								query: ''
+							},
+							'popular': {
+								results: popular,
+								query: ''
+							}
 						}
 						//console.log(recommendations);
 						callback(null,recommendations);
