@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{title}}</title>
+    <!-- Bootstrap Core CSS -->
+<script async defer type="text/javascript" src="http://maps.google.com/maps/api/js?&sensor=false&key={{GOOGLE_APIKEY}}"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/stylesheets/mongostrap-theme.css">
+    \    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://use.fontawesome.com/0f323c4f82.js"></script>
+    
+    <link href="/stylesheets/sb-admin.css" rel="stylesheet">
+    <!-- Morris Charts CSS -->
+    <link href="/stylesheets/plugins/morris.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="/javascripts/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="/stylesheets/bootstrap-multiselect.css" type="text/css"/>
+    <script src="/javascripts/plugins/morris/raphael.min.js"></script>
+    <script src="/javascripts/plugins/morris/morris.min.js"></script>
+    <script src="/javascripts/plugins/morris/morris-data.js"></script>
+    <script> 
+        
+    function showStores() { 
+        $.getJSON( "http://localhost:3001/api/stores", function( data ) { 
+            var lat=39.820913027470006;
+            var lon=-97.470703125; 
+            var myLatlng = new google.maps.LatLng(lat, lon); 
+            var mapProp = { 
+                center:myLatlng, zoom:5, mapTypeId:google.maps.MapTypeId.ROADMAP, scrollwheel: false,mapTypeControl: false 
+            };
+
+
+            
+        //Creating map object 
+            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp); 
+            // var obj = jQuery.parseJSON(data); $.each($.parseJSON(data), 
+            var obj = data; 
+            //{{!--$.each($.parseJSON(data), --}}
+            $.each(data,
+            function(idx, data) { 
+                var myLatlng = new google.maps.LatLng(this.location.coordinates[0], this.location.coordinates[1]); 
+
+                var marker = new google.maps.Marker({ position: myLatlng, map: map, title: this.name }); 
+            }); 
+        }); 
+    } 
+</script>
+<script>
+      function initMap() {
+        var uluru = {lat: -25.363, lng: 131.044};
+        var map = new google.maps.Map(document.getElementById('googleMap'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+</head>
+  <!--<body onload='showStores()'>-->
+  <body>
+    <div id="wrapper">
+        {{> adminsidenav }}
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                {{{body}}}
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="/javascripts/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <!-- Morris Charts JavaScript -->
+                <script src='/javascripts/storeMap.js'></script>
+
+</body>
+</html>

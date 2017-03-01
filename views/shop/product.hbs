@@ -1,48 +1,39 @@
 <!-- shop/product.hbs -->
-<div class="product-layout col-md-9 col-md-offset-2">
+<div class="product-information col-md-9 col-md-offset-2">
+    {{#each product}}
+
     <div class="col-md-5">
         <div class="thumbnail">
-            <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">
-                <img src="{{product.imagePath}}" class="thumbnail-image img-responsive">
-            </div>
+            {{!--
+            <div class="vertical-center thumbnail-image-container top-pad-20 col-xs-6 col-md-3">--}}
+                <img src="{{this.imagePath}}" class="thumbnail-image img-responsive"> {{!--
+            </div>--}}
         </div>
     </div>
     <div class="col-md-7">
-        <div class="product-area">
+        <div class="product-information">
             <div class="caption-full">
-                <h4 class="pull-right">${{product.price}}</h4>
-                <h4><a href="#">{{product.name}}</a></h4>
-                <p>{{product.title}}</p>
+                <h4 class="pull-right">${{money this.price}}</h4>
+                <h4><a href="#">{{this.name}}</a></h4>
+                <p>{{this.title}}</p>
             </div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
-                    <a href="#description"
-                        aria-controls="description"
-                        role="tab"
-                        data-toggle="tab"
-                    >Description</a>
+                    <a href="#description" aria-controls="description" role="tab" data-toggle="tab">Description</a>
                 </li>
                 <li role="presentation">
-                    <a href="#features"
-                        aria-controls="features"
-                        role="tab"
-                        data-toggle="tab"
-                    >Features</a>
+                    <a href="#features" aria-controls="features" role="tab" data-toggle="tab">Features</a>
                 </li>
                 <li role="presentation">
-                    <a href="#reviews"
-                        aria-controls="reviews"
-                        role="tab"
-                        data-toggle="tab"
-                    >Reviews</a>
+                    <a href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab">Reviews</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="description">
                     <div class="product-tab-area">
                         <div class='description'>
-                            {{product.description}}
+                            {{this.description}}
                         </div>
                     </div>
                 </div>
@@ -50,7 +41,7 @@
                     <div class="product-tab-area">
 
                         <div class="features">
-                            {{#each product.Attributes}}
+                            {{#each this.Attributes}}
                             <li>{{this.Name}}: {{this.Value}}</li>
                             {{/each}}
                         </div>
@@ -61,39 +52,8 @@
                         <h3 class="text-success">Reviews</h3>
                         <hr/>
                         <ul class="comments">
-                            <li class="clearfix">
-                                <img src="/images/user_1.jpg" class="avatar" alt="">
-                                <div class="post-comments">
-                                    <p class="meta">Dec 18, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Etiam a sapien odio, sit amet
-                                    </p>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/images/user_2.jpg" class="avatar" alt="">
-                                <div class="post-comments">
-                                    <p class="meta">Dec 19, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Etiam a sapien odio, sit amet
-                                    </p>
-                                </div>
 
-                                <ul class="comments">
-                                    <li class="clearfix">
-                                        <img src="/images/user_3.jpg" class="avatar" alt="">
-                                        <div class="post-comments">
-                                            <p class="meta">Dec 20, 2014 <a href="#">JohnDoe</a> says : <i class="pull-right"><a href="#"><small>Reply</small></a></i></p>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                Etiam a sapien odio, sit amet
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -109,62 +69,227 @@
                     </p>
                 </form>
             </div>
+    </div>
+</div>
+{{/each}}
+<br><br><br>
+<div class="productrecommendations">
+    <div class="col-md-3">
+        <div class="panel-heading">
+            <h3>Also Viewed</h3>
+        </div>
+        <div class="panel-body">
+            {{#each recommendations.viewed.results}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this._id}}'><img src="{{this.image}}"> {{this.title}}
+                </a>
+            </div>
+            {{/each}}
+        </div>
+        <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+            <button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#viewed">View Also Viewed Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+        </p>
+        <!-- Add Dialog -->
+        <div class="modal fade" id="viewed" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                             <div class="container">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav active"><a href="#viewed-a" data-toggle="tab">Query</a></li>
+                                    <li class="nav"><a href="#viewed-b" data-toggle="tab">Results</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="viewed-a">
+                                        <div class="form-group">
+                                            <pre>{{JSON recommendations.viewed.query}}</pre>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="viewed-b">
+                                        <pre>{{JSON recommendations.viewed.results}}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
     </div>
-    <div class="productrecommendations">
-        <div class="col-md-3">
-            <div class="panel-heading">
-                <h3>Also Viewed</h3>
-            </div>
-            <div class="panel-body">
-                {{#each recommendations.viewed}}
-                <div class='small-thumbnail'>
-                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
-                    {{this.title}}</a>
-                </div>
-                {{/each}}
-            </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+            <h3>Trending </h3>
         </div>
-        <div class="col-md-3">
-            <div class="panel-heading">
-                <h3>Trending </h3>
+        <div class="panel-body">
+            {{#each recommendations.trending.results}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this._id}}'><img src="{{this.image}}"> {{this.title}}
+                </a>
             </div>
-            <div class="panel-body">
-                {{#each recommendations.trending}}
-                <div class='small-thumbnail'>
-                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
-                    {{this.title}}</a>
-                </div>
-                {{/each}}
-            </div>
+            {{/each}}
         </div>
-        <div class="col-md-3">
-            <div class="panel-heading">
-                <h3>Most Popular Viewed</h3>
-            </div>
-            <div class="panel-body">
-                {{#each recommendations.popular}}
-                <div class='small-thumbnail'>
-                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
-                    {{this.title}}</a>
+        <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+            <button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#trending">View Trending Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+        </p>
+        <!-- Add Dialog -->
+        <div class="modal fade" id="trending" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                             <div class="container">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav active"><a href="#trending-a" data-toggle="tab">Query</a></li>
+                                    <li class="nav"><a href="#trending-b" data-toggle="tab">Results</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="trending-a">
+                                        <div class="form-group">
+                                            <pre>{{JSON recommendations.trending.query}}</pre>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="trending-b">
+                                        <pre>{{JSON recommendations.trending.results}}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+                    </div>
                 </div>
-                {{/each}}
+                <!-- /.modal-content -->
             </div>
+            <!-- /.modal-dialog -->
         </div>
-        <div class="col-md-3">
-            <div class="panel-heading">
-                <h3>Similar Products</h3>
+    </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+            <h3>Most Popular Viewed</h3>
+        </div>
+        <div class="panel-body">
+            {{#each recommendations.popular.results}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this._id}}'><img src="{{this.image}}"> {{this.title}}
+                </a>
             </div>
-            <div class="panel-body">
-                {{#each recommendations.similar}}
-                <div class='small-thumbnail'>
-                    <a href='/product/{{this._id}}'><img src="{{this.image}}">
-                    {{this.title}}</a>
+            {{/each}}
+        </div>
+
+        <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+            <button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#popular">View Popularity Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+        </p>
+        <!-- Add Dialog -->
+        <div class="modal fade" id="popular" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="container">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav active"><a href="#popular-a" data-toggle="tab">Query</a></li>
+                                    <li class="nav"><a href="#popular-b" data-toggle="tab">Results</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="popular-a">
+                                        <div class="form-group">
+                                            <pre>{{JSON recommendations.popular.query}}</pre>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="popular-b">
+                                        <pre>{{JSON recommendations.popular.results}}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+                    </div>
                 </div>
-                {{/each}}
+                <!-- /.modal-content -->
             </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+
+    </div>
+    <div class="col-md-3">
+        <div class="panel-heading">
+            <h3>Similar Products</h3>
+        </div>
+        <div class="panel-body">
+            {{#each recommendations.similar.results}}
+            <div class='small-thumbnail'>
+                <a href='/product/{{this._id}}'><img src="{{this.image}}"> {{this.title}}
+                </a>
+            </div>
+            {{/each}}
+        </div>
+        <p data-placement="top" data-toggle="tooltip" title="View Popularity Query ">
+            <button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#similar">View Similar Products Query <span class="glyphicon glyphicon-eye-open"></span>
+</button>
+        </p>
+        <!-- Add Dialog -->
+        <div class="modal fade" id="similar" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View MongoDB Query</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <ul class="nav nav-tabs">
+                                <li class="nav active"><a href="#A" data-toggle="tab">Query</a></li>
+                                <li class="nav"><a href="#B" data-toggle="tab">Results</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="A">
+                                    <div class="form-group">
+                                        <pre>{{JSON recommendations.similar.query}}</pre>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="B">
+                                    <pre>{{JSON recommendations.similar.results}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
     </div>
 </div>
+</div>
 <input type="hidden" id="product_id" value="{{product._id}}">
-

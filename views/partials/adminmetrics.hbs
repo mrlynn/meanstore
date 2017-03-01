@@ -7,7 +7,9 @@
                         <i class="fa fa-check fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{stats.totalApprovedOrders}}</div>
+                        {{!--<div class="huge">{{stats.totalApprovedOrders}}</div>--}}
+                        <div class="huge">10223</div>
+                        
                         <div>Approved Orders</div>
                     </div>
                 </div>
@@ -29,7 +31,8 @@
                         <i class="fa fa-dollar fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{stats.totalAmountReceived}}</div>
+                        {{!--<div class="huge">{{stats.totalAmountReceived}}</div>--}}
+                        <div class="huge">339,010</div>
                         <div>Total Collected</div>
                     </div>
                 </div>
@@ -51,8 +54,9 @@
                         <i class="fa fa-dollar fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{stats.donationsAmount}}</div>
-                        <div>in Donations</div>
+                        {{!--<div class="huge">{{stats.donationsAmount}}</div>--}}
+                        <div class="huge">293.16</div>
+                        <div>Average Item Sale</div>
                     </div>
                 </div>
             </div>
@@ -70,11 +74,12 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-ticket fa-3x"></i>
+                        <i class="fa fa-arrow-exchange fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{stats.ticketsSold}}</div>
-                        <div>Tickets Sold</div>
+                        {{!--<div class="huge">{{stats.ticketsSold}}</div>--}}
+                        <div class="huge">4,300</div>
+                        <div>Product Returns</div>
                     </div>
                 </div>
             </div>
@@ -95,7 +100,8 @@
                         <i class="fa fa-user fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{stats.apparelSold}}</div>
+                        {{!--<div class="huge">{{stats.apparelSold}}</div>--}}
+                        <div class="huge">78,933</div>
                         <div>Apparel Sold</div>
                     </div>
                 </div>
@@ -114,11 +120,11 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-cutlery fa-3x"></i>
+                        <i class="fa fa-paper-plane fa-3x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{stats.banquetTickets}}</div>
-                        <div>Banquet Tickets</div>
+                        <div>Shipments</div>
                     </div>
                 </div>
             </div>
@@ -139,10 +145,23 @@
             </div>
         </div>
         <div class="panel panel-footer">
-
-            <button data-toggle="collapse" data-target="#query">Show Aggregation Query</button>
-            <div id="query" class="collapse">
-                <pre>
+            <p data-placement="top" data-toggle="tooltip" title="View Aggregation ">
+                <button class="ui left pull-left floated btn btn-warning btn-lg" data-title="view" data-toggle="modal" data-target="#view-chart-agg"> <span class="glyphicon glyphicon-eye-open"></span> View Aggregation Command
+                </button>
+                <span data-placement="top" data-toggle="tooltip" title="View Chart Data ">
+                <button class="ui right pull-right floated btn btn-warning btn-lg" data-title="view" data-toggle="modal" data-target="#view-chart-data"> <span class="glyphicon glyphicon-eye-open"></span>                View Aggregation Data</span>
+                </button>
+            </p>
+            <!-- Add Dialog -->
+            <div class="modal fade" id="view-chart-agg" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            <h4 class="modal-title custom_align" id="Heading">View Product</h4>
+                        </div>
+                        <div class="modal-body">
+                            <pre><code class="prettyPrint">
 db.events.aggregate([
     { "$group": {
         "_id": {
@@ -153,11 +172,28 @@ db.events.aggregate([
         }
     }
 ])
-                </pre>
+                    </code></pre>
+                        </div>
+                        <!-- /.modal-content -->
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit();" data-dismiss="modal" class="btn btn-warning btn-xs" style="width: 100%;"><span class="glyphicon glyphicon-remove"></span>Close</button>
+</div>
+</div>
+<!-- /.modal-dialog -->
+</div>
+</div>
+
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="view-chart-data" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View Product</h4>
             </div>
-            <button data-toggle="collapse" data-target="#data">Show Aggregation Data</button>
-            <div id="data" class="collapse">
-                <pre>
+            <div class="modal-body">
+                <pre><code class="prettyPrint">
 [ { x: '2016-8', purchases: 69 } ]
 [ { x: '2016-8', purchases: 69 },
   { x: '2015-12', purchases: 10 } ]
@@ -168,81 +204,151 @@ db.events.aggregate([
   { x: '2015-12', purchases: 10 },
   { x: '2016-7', purchases: 60 },
   { x: '2016-3', purchases: 74 } ]
-                </pre>
+                    </code></pre>
+            </div>
+            <!-- /.modal-content -->
+            <div class="modal-footer">
+                <button type="button" onClick="submit();" data-dismiss="modal" class="btn btn-warning btn-xs" style="width: 100%;"><span class="glyphicon glyphicon-remove"></span>Close</button>
             </div>
         </div>
-    </div>
-
-    <div class="col-lg-6 col-md-6">
-        <div class="panel panel-primary">
-            <div id="donut-chart">
-            </div>
-        </div>
-        <div class="panel panel-footer">
-
-            <button data-toggle="collapse" data-target="#query2">Show Aggregation Query</button>
-            <div id="query2" class="collapse">
-                <pre>
-db.events.aggregate([
-    {
-        $group: { "_id": "$action", "value": { $sum: 1 } }
-    },{
-        $project: { "_id": -1, "value": 1}
-    }
-])
-                </pre>
-            </div>
-            <button data-toggle="collapse" data-target="#data2">Show Aggregation Data</button>
-            <div id="data2" class="collapse">
-                <pre>
-[ { x: '2016-8', purchases: 69 } ]
-[ { x: '2016-8', purchases: 69 },
-  { x: '2015-12', purchases: 10 } ]
-[ { x: '2016-8', purchases: 69 },
-  { x: '2015-12', purchases: 10 },
-  { x: '2016-7', purchases: 60 } ]
-[ { x: '2016-8', purchases: 69 },
-  { x: '2015-12', purchases: 10 },
-  { x: '2016-7', purchases: 60 },
-  { x: '2016-3', purchases: 74 } ]
-                </pre>
-            </div>
-        </div>
+<!-- /.modal-dialog -->
     </div>
 </div>
+</div>
+</div>
+<div class="col-lg-6 col-md-6">
+    <div class="panel panel-primary">
+        <div id="donut-chart">
+        </div>
+    </div>
+    <div class="panel panel-footer">
+        <p data-placement="top" data-toggle="tooltip" title="View Aggregation ">
+            <button class="ui left pull-left floated btn btn-warning btn-lg" data-title="view" data-toggle="modal" data-target="#view-donut-agg"> <span class="glyphicon glyphicon-eye-open"></span> View Aggregation Command
+                </button>
+            <span data-placement="top" data-toggle="tooltip" title="View Chart Data ">
+                <button class="ui right pull-right floated btn btn-warning btn-lg" data-title="view" data-toggle="modal" data-target="#view-donut-data"> <span class="glyphicon glyphicon-eye-open"></span>            View Aggregation Data</span>
+            </button>
+        </p>
+        <div class="modal fade" id="view-donut-agg" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        <h4 class="modal-title custom_align" id="Heading">View Aggregation Data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <pre><code class="prettyPrint">
+
+db.events.aggregate([
+	{
+	 	"$match": {
+	 		'action': 'purchase'
+	 	}
+	},
+	{
+		"$group": { 
+			"_id": "$thing.category", "value": { "$sum": 1 } 
+		}
+	},{
+		"$project": { "_id": -1, "value": 1}
+    }
+])
+
+                    </code></pre>
+                    </div>      
+                    <!-- /.modal-content -->
+                    <div class="modal-footer">
+                        <button type="button" onClick="submit();" data-dismiss="modal" class="btn btn-warning btn-xs" style="width: 100%;"><span class="glyphicon glyphicon-remove"></span>Close</button>
+                    </div>
+                </div>
+
+<!-- /.modal-dialog -->
+            </div>
+        </div>
+<!-- Add Dialog -->
+<div class="modal fade" id="view-donut-data" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View Order Document</h4>
+            </div>
+            <div class="modal-body">
+                <pre><code class="prettyPrint">
+                
+[
+    {
+        "label":"Printer",
+        "value":14
+    },{
+        "label":"Refrigerator",
+        "value":18
+    },{
+        "label":"Round-up",
+        "value":7
+    },{
+        "label":"Camera",
+        "value":24
+    },{
+        "label":"Television",
+        "value":41
+    },{
+        "label":"Apparel",
+        "value":15
+    },{
+        "label":null,"value":20
+    }
+]
+                 </code> </pre>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" onClick="submit();" class="btn btn-warning btn-lg" data-dismiss="modal" style="width: 100%;"><span class="glyphicon glyphicon-remove"></span>Close</button>
+            </div>
+
+        </div>
+<!-- /.modal-content -->
+    </div>
+<!-- /.modal-dialog -->
+</div>
+
+
+</div>
+</div>
+
+</div>
 <script>
-$( document ).ready(function() {
-        var json = null;
-        $.ajax({
-            'async': false,
-            'global': false,
-            'url': 'http://localhost:3000/api/purchases-by-yearmo',
-            'dataType': "json",
-            'success': function (data) {
-                json = data;
-                Morris.Area({
-                  element: 'chart001',
-                  data: json,
-                  xkey: 'x',
-                  ykeys: ['purchases'],
-                  labels: ['Purchases']
-                }).on('click', function(i, row){
-                  console.log(i, row);
-                });
-            }
-        });
-        $.ajax({
-            'async': false,
-            'global': false,
-            'url': 'http://localhost:3000/api/donut-chart',
-            'dataType': 'json',
-            'success': function(data) {
-                json = data;
-                Morris.Donut({
-                  element: 'donut-chart',
-                  data: json
-                });
-            }
-        })
-    });
+                                               $(document).ready(function () {
+                                                   var json = null;
+                                                   $.ajax({
+                                                       'async': false,
+                                                       'global': false,
+                                                       'url': 'http://localhost:3001/api/purchases-by-yearmo',
+                                                       'dataType': "json",
+                                                       'success': function (data) {
+                                                           json = data;
+                                                           Morris.Area({
+                                                               element: 'chart001',
+                                                               data: json,
+                                                               xkey: 'x',
+                                                               ykeys: ['purchases'],
+                                                               labels: ['Purchases']
+                                                           }).on('click', function (i, row) {
+                                                               console.log(i, row);
+                                                           });
+                                                       }
+                                                   });
+                                                   $.ajax({
+                                                       'async': false,
+                                                       'global': false,
+                                                       'url': 'http://localhost:3001/api/donut-chart',
+                                                       'dataType': 'json',
+                                                       'success': function (data) {
+                                                           json = data;
+                                                           Morris.Donut({
+                                                               element: 'donut-chart',
+                                                               data: json
+                                                           });
+                                                       }
+                                                   })
+                                               });
 </script>

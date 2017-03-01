@@ -5,19 +5,36 @@
 					<div class="col-sm-6 ">
 						<div class="contactinfo">
 							<ul class="nav nav-pills">
-{{!-- 								<li><a href=""><i class="fa fa-phone"></i>(215) 123-4567</a></li>
- --}}								<li><a href=""><i class="fa fa-envelope"></i>mongodbsa@gmail.com</a></li>
+{{!-- 								<li><a href=""><i class="fa fa-phone"></i>(215) 923-7900</a></li>
+ --}}								<li><a href="mailto:info@meanstores.com"><i class="fa fa-envelope"></i>info@meanstores.com</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-6">
+
 						<div class="social-icons pull-right">
+							<ul class="nav navbar-nav">
+								{{#if login}}
+								<li><a href="/user/profile"><i class="fa fa-user"></i> {{user.first_name}} {{user.last_name}}</a></li>
+								{{/if}}
+								<li><a href="/shopping-cart"><i class="fa fa-shopping-cart"></i> Cart</i>
+					            {{#if session.cart.totalQty }}
+					            	<span class="badge btn-success">{{ session.cart.totalQty }}</span>
+					        	{{/if}}</a></li>
+								{{#if login}}
+									<li><a href="/user/logout"><i class="fa fa-lock"></i> Logout</a></li>
+								{{else}}
+									<li><a href="/user/signin"><i class="fa fa-lock"></i> Login</a></li>
+								{{/if}}
+							</ul>
+						</div>
+						{{!--<div class="social-icons pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="http://facebook.com/mrlynn"><i class="fa fa-facebook"></i></a></li>
 								<li><a href="http://twitter.com/mlynn"><i class="fa fa-twitter"></i></a></li>
 								<li><a href="http://linkedin.com/mlynn"><i class="fa fa-linkedin"></i></a></li>
 							</ul>
-						</div>
+						</div>--}}
 					</div>
 				</div>
 			</div>
@@ -28,7 +45,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="/"><img src="images/logo.png" alt="" /></a>
+							<a href="/"><img src="/images/meanmart_logo.png" alt="" /></a>
 						</div>
 						{{!-- <div class="btn-group pull-right">
 							<div class="btn-group">
@@ -53,24 +70,6 @@
 								</ul>
 							</div>
 						</div> --}}
-					</div>
-					<div class="col-sm-8">
-						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								{{#if login}}
-								<li><a href="/user/profile"><i class="fa fa-user"></i> Account</a></li>
-								{{/if}}
-								<li><a href="/shopping-cart"><i class="fa fa-shopping-cart"></i> Cart</i>
-					            {{#if session.cart.totalQty }}
-					            	<span class="badge btn-success">{{ session.cart.totalQty }}</span>
-					        	{{/if}}</a></li>
-								{{#if login}}
-									<li><a href="/user/logout"><i class="fa fa-lock"></i> Logout</a></li>
-								{{else}}
-									<li><a href="/user/signin"><i class="fa fa-lock"></i> Login</a></li>
-								{{/if}}
-							</ul>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -107,7 +106,9 @@
                                         <li><a href="/overview">Overview of MEANMart</a></li>
                                     </ul>
                                 </li> 
-								<li><a href="contact-us.html">Contact</a></li>
+								{{!--<li><a href="http://yourhost.com/contact">Contact</a></li>
+								<li><a href="http://www.yourhost.com/round-up-faq/">FAQ/Help</a></li>--}}
+								
 							</ul>
 						</div>
 					</div>

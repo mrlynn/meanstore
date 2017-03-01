@@ -27,6 +27,7 @@ mongoose.connection.on('error', () => {
 products = [];
 brands = ['Sony','LG','Generic','PROSCAN','Apple','Dell','Flimsy','Freds','Throwback'];
 resolutions = ['1080p','1080l','720p','1440p','4k','8k'];
+screensizes = [26,29,32,36,42,44,46,52,55,60,72];
 product_groups = ['Flat Screen','Cathode Ray Tube','LCD','HDTV','Curved'];
 
 var done = 0;
@@ -48,7 +49,8 @@ async.times(100, function(i, next) {
 		brandNum = Math.floor((Math.random() * brands.length-1) + 1);
 		resNum = Math.floor((Math.random() * resolutions.length-1) + 1);
 		resolution = resolutions[resNum];
-
+		scrnNum = Math.floor((Math.random() * screensizes.length-1) + 1);
+		screensize = screensizes[scrnNum];
 		brand = brands[brandNum];
 		imagePath = '/img/' + brand.toLowerCase() + '-television.jpg'
 		name = brand;
@@ -59,6 +61,13 @@ async.times(100, function(i, next) {
 		console.log("Cost: " + cost);
 		pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
 	    product_group = product_groups[pgroup];
+		title = faker.commerce.productAdjective() + ' ' + color + ' ' + name
+		slug = title.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
 		product = new Product({
 			code: 'tel' + code,
 			name: name,
@@ -66,11 +75,13 @@ async.times(100, function(i, next) {
                 onHand: 10,
                 disableAtZero: Math.round(Math.random()) ? true : false,
             },
-			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name + ' ' + 'Television',
+			title: title,
+			slug: slug,
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',
             price: price,
+			brand: brand,
             cost: cost,
 			sale_attributes: {
                 featured: Math.round(Math.random()) ? true : false,
@@ -88,13 +99,13 @@ async.times(100, function(i, next) {
 				Name: 'brand',
 				Value: brand
 			},{
-				Name: "Screen Size",
-				Value: Math.floor((Math.random() * 75-1) + 1)
+				Name: "ScreenSize",
+				Value: screensize
 			},{
 				Name: 'Resolution',
 				Value: resolution
 			},{
-				Name: 'Number of Ports',
+				Name: 'NumberofPorts',
 				Value: Math.floor((Math.random() * 5-1) + 1)
 			},{
 				Name: 'Price',

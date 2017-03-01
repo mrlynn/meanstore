@@ -17,6 +17,7 @@ var schema = new Schema({
 	tags: [{
 		type: String
 	}],
+	brand: String,
 	status: {
 		type: String
 	},
@@ -29,6 +30,10 @@ var schema = new Schema({
 		required: true
 	},
 	title: {
+		type: String,
+		required: false
+	},
+	slug: {
 		type: String,
 		required: false
 	},
@@ -64,7 +69,8 @@ var schema = new Schema({
 		Value: {
 			type: String,
 			required: false
-		}
+		},
+		_id: false
 	}],
 	options: [{
 		name: {

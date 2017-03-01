@@ -1,0 +1,21 @@
+{
+  "name": "Tourist.js",
+  "version": "0.1.1",
+  "main": [
+    "./tourist.js",
+    "./tourist.min.js",
+    "./tourist.css"
+  ],
+  "dependencies": {},
+  "ignore": [
+    ".gitignore",
+    ".travis.yml",
+    "LICENSE",
+    "Gruntfile.js",
+    "**/*.md",
+    "**/*.json",
+    "src/",
+    "examples/",
+    "test/"
+  ]
+}

@@ -61,6 +61,13 @@ async.times(100, function(i, next) {
 		name = faker.commerce.productName() + ' Printer';
 		price = Math.floor((Math.random() * 100000 - 1) + 1);
 		cost = Math.floor((Math.random() * price) + (price / 2));
+		title = faker.commerce.productAdjective() + ' ' + color + ' ' + name
+		slug = title.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
 		product = new Product({
 			code: 'pri' + code,
 			name: name,
@@ -68,7 +75,8 @@ async.times(100, function(i, next) {
                 onHand: 10,
                 disableAtZero: Math.round(Math.random()) ? true : false,
             },
-			title: faker.commerce.productAdjective() + ' ' + color + ' ' + name,
+			title: title,
+			slug: slug,
 			description: faker.lorem.sentence(),
 			taxable: 'Yes',
 			shippable: 'Yes',

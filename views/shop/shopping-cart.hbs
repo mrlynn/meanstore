@@ -2,12 +2,6 @@
 	<div class="row">
 		<div class="col-md-12">
 			{{#if products}}
-			<div id="charge-error" class="alert alert-danger {{#if noErrorMsg}}hidden{{/if}}">
-			{{errorMsg}}
-			</div>
-			<div id="charge-success" class="alert alert-success {{#if noMessage}}hidden{{/if}}">
-				{{successMsg}}
-			</div>
 			<ol class="breadcrumb">
 				<li><a href="/">Home</a></li>
 				<li>Shopping Cart</li>
@@ -23,10 +17,10 @@
 	<div class="col-lg-12 col-md-12">
 		<div class="panel-heading"><h3>Items in Cart</h3></div>
 		<div class="panel-body">
-			{{!-- <p data-placement="top" data-toggle="tooltip" title="View MongoDB Document ">
+			 <p data-placement="top" data-toggle="tooltip" title="View MongoDB Document ">
 				<button class="btn btn-warning btn-lg" data-title="Add" data-toggle="modal" data-target="#add">View Shopping Cart JSON <span class="glyphicon glyphicon-search"></span>
 				</button>
-			</p> --}}
+			</p> 
 			<!-- Add Dialog -->
 			<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
 				<div class="modal-dialog">
@@ -36,13 +30,12 @@
 							<h4 class="modal-title custom_align" id="Heading">View MongoDB Document</h4>
 						</div>
 						<div class="modal-body">
-							<div class="form-group">
-								{{!--                     <textarea rows='15' class="form-control">{{cartJSON}}</textarea>
-							--}}                    <pre>{{JSON cartJSON}}</pre>
-						</div>
+							<div class="modal-body">
+								<pre><code class="prettyPrint">{{JSON cartJSON}}</code></pre>
+							</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
+						<button type="button"  data-dismiss="modal" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Close</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -113,9 +106,9 @@
 								<div class="btn-group pull-right">
 									<button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
 									<ul class="dropdown-menu">
-										<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>
-										<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>
-										<li><a href="/empty-cart">Remove All</a></li>
+										{{!--<li><a href="/reduce-qty/{{this.item._id}}">Reduce by 1</a></li>--}}
+										{{!--<li><a href="/empty-cart">Remove all {{this.item.name}}</a></li>--}}
+										<li><a href="/empty-cart">Clear Cart</a></li>
 									</ul>
 								</div>
 							</td>
@@ -243,7 +236,13 @@
 <div class="container">
 <div class="row">
 <div class="col-sm-12 col-md-12"><p>
+	<p><br><br><br>
 <h2>No items in Cart</h2>
+	<p><br><br><br>
+	<p><br><br><br>
+	<p><br><br><br>
+	<p><br><br><br>
+
 </p>
 </div>
 </div>

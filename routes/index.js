@@ -25,10 +25,15 @@ const dotenv = require('dotenv');
 const async = require('async');
 const chalk = require('chalk');
 var meanlogger = require('../local_modules/meanlogger');
+var MongoClient = require('mongodb').MongoClient
+var url = 'mongodb://localhost:27017/hackathon';
+// Use connect method to connect to the Server
 
-dotenv.load({
-	path: '.env.hackathon'
-});
+
+
+// dotenv.load({
+// 	path: '.env.hackathon'
+// });
 
 var title = process.env.title;
 
@@ -63,133 +68,14 @@ router.get('/whypaypal', function(req, res, next) {
 	res.render('shop/whypaypal');
 });
 
-router.get('/testing', function(req, res, next) {
-
-	var successMsg = req.flash('success')[0];
-	var errorMsg = req.flash('error')[0];
-	var tutorial = req.params.tutorial;
-	if (tutorial == 1) {
-		req.session.tutorial = true;
-	} else {
-		req.session.tutorial = false;
-	}
-	var categoryrecord = {
-		"_id": "ObjectId('58485813edf44d95fb117223')",
-		"name": "Television",
-		"slug": "Television",
-		"attributes": [],
-		"ancestors": [],
-		"__v": 0
-	};
-	Product.aggregate(
-		[{
-			$group: {
-				_id: "$Product_Group",
-				count: {
-					$sum: 1
-				}
-			}
-		}, {
-			$sort: {
-				_id: 1
-			}
-		}],
-		function(err, Product_Group) {
-
-			if (frontPageCategory) {
-				categCondition = {
-					"$match": {
-						"$and": [{
-								"status": {
-									$ne: 'deleted'
-								}
-							},
-							{
-								"category": frontPageCategory
-							},
-							{
-								$or: [{
-									"inventory.onHand": {
-										$gt: 0
-									}
-								}, {
-									"inventory.disableOnZero": false
-								}]
-							}
-						]
-					}
-				}
-			} else {
-				// categCondition = { $sample: { size: 40 } };
-				categCondition = {
-					"$match": {
-						"$and": [{
-							"status": {
-								"$ne": 'deleted'
-							}
-						}, {
-							$or: [{
-								"inventory.onHand": {
-									"$gt": 0
-								}
-							}, {
-								"inventory.disableOnZero": false
-							}]
-						}]
-					}
-				}
-			}
-			// console.log("categCondition: " + JSON.stringify(categCondition));
-
-			// Product.find(categCondition, function(err, docs) {
-
-			Product.aggregate([
-				categCondition,
-				{
-					"$sample": {
-						size: 40
-					}
-				}
-			], function(err, docs) {
-				if (err) {
-					products = {}
-				}
-				productChunks = [];
-				productJSON = [];
-				chunkSize = 4;
-				for (var i = (4 - chunkSize); i < docs.length; i += chunkSize) {
-					productChunks.push(docs.slice(i, i + chunkSize));
-				}
-
-				res.render('shop/eshop', {
-					layout: 'eshop/testing',
-					title: title,
-					navcats: req.app.get('navcats'),
-					navgroups: req.app.get('navgroups'),
-					salegroups: req.app.get('salegroups'),
-					categoryrecord: JSON.stringify(categoryrecord),
-					showRecommendations: eval(res.locals.showRecommendations),
-					allcategories: res.locals.allcategories,
-					keywords: Config.keywords,
-					products: productChunks,
-					recommended: docs,
-					Product_Group: Product_Group,
-					user: req.user,
-					errorMsg: errorMsg,
-					noErrorMsg: !errorMsg,
-					successMsg: successMsg,
-					viewDocuments: viewDocuments,
-					tutorial: tutorial,
-					noMessage: !successMsg,
-					viewTour: viewTour,
-					isLoggedIn: req.isAuthenticated()
-				});
-			});
-		});
-});
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
+	if (!req.session.category===null) {
+		return res.redirect('/category/' + req.session.category);
+	}
+	if (!req.session.group===null) {
+		return res.redirect('/group/' + req.session.group);
+	}
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
 	var tutorial = req.params.tutorial;
@@ -216,7 +102,7 @@ router.get('/', function(req, res, next) {
 			}
 		}, {
 			$sort: {
-				_id: 1
+				order: 1
 			}
 		}],
 		function(err, Product_Group) {
@@ -405,6 +291,7 @@ router.get('/sale', function(req, res, next) {
 /* GET home page. */
 router.get('/group/:slug?', function(req, res, next) {
 	var group_slug = req.params.slug;
+	req.session.group = req.params.slug; // Save Group for later
 	var q = req.query.q;
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
@@ -454,8 +341,256 @@ router.get('/group/:slug?', function(req, res, next) {
 });
 
 /* GET home page. */
+router.get('/category/Television', function(req, res, next) {
+	var category_slug = req.params.slug;
+	req.session.category = req.params.slug;
+	var q = req.query.q;
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	var url = 'mongodb://localhost:27017/hackathon';
+	navcats = {};
+	navgroups = {};
+	if (req.params.q) {
+		search = {
+			$match: {
+				$and: [{
+						$text: {
+							$search: q
+						}
+					}
+					// { category: new RegEx(category_slug, 'i')}
+				]
+			}
+		}
+	} else {
+		search = {
+			$match: {
+				// category: new RegExp(category_slug, 'i')
+			}
+		}
+	}
+	MongoClient.connect(url, function(err, db) {
+	var collection = db.collection( 'products' );
+		collection.aggregate([{
+			"$match": {category: "Television"}
+			},
+			{ "$unwind": "$Attributes"},
+			{
+				"$facet": {
+					price: [
+						{
+							$bucket: {
+								groupBy: { 
+									"$divide": [ "$price", 100 ]
+								},
+								boundaries: [0, 200, 400, 500, 600, 700, 1000, 2000, 5000],
+								default: "Over 5000.00",
+								output: {"count": {$sum: 1}}
+							}
+						},
+						{
+							"$project": {
+								lowerPriceBound: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					brands: [
+						{
+							"$sortByCount": "$brand"
+						},
+						{
+							"$project": {
+								brand: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					ScreenSize: [
+						{
+							"$match":{ "Attributes.Name": "ScreenSize" }
+						},
+						{
+							"$sortByCount": "$Attributes.Value"
+						},
+						{
+							"$project": {
+								ScreenSize: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					resolution: [
+						{
+							"$match": { "Attributes.Name": "Resolution" }
+						},
+						{
+							"$sortByCount": "$Attributes.Value"
+						},
+						{
+							"$project": {
+								resolution: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					],
+					number_of_ports: [
+						{
+							"$match": {
+								"Attributes.Name": "NumberofPorts"
+							}
+						},
+						{
+							"$sortByCount": "$Attributes.Value"
+						},
+						{
+							"$project": {
+								ports: "$_id",
+								count: 1,
+								_id: 0
+							}
+						}
+					]
+				}
+			}
+		], function(err, results) {
+			console.log("Product-unwound: " + JSON.stringify(results));
+			console.log("Err-unwound: " + JSON.stringify(err));
+		Product.aggregate([{
+				$sortByCount: "$category"
+			}], function(err, allcats) {
+				Product.aggregate([
+					search, {
+						$sortByCount: "$category"
+					}
+				], function(err, navcats) {
+					Category.findOne({
+						// slug: new RegExp(category_slug, 'i')
+						$or: [{
+							'slug': new RegExp(category_slug, 'i')
+						}, {
+							'name': new RegExp(category_slug, 'i')
+						}],
+
+					}, function(err, category) {
+						if (err) {
+							console.log("Error finding category " + category_slug);
+							req.flash('error', 'Cannot find category');
+							return res.redirect('/');
+						}
+						if (!category) {
+							console.log("Error finding category " + category_slug);
+							req.flash('error', 'Cannot find category');
+							return res.redirect('/');
+						}
+						Product.aggregate([search, {
+							$sortByCount: "$Product_Group"
+						}], function(err, navgroups) {
+							if (q) {
+								srch = {
+									$text: {
+										search: q
+									}
+								}
+							} else {
+								srch = {}
+							}
+							/* find all products in category selected */
+							categCondition = {
+								$match: {
+									$and: [{
+											$or: [{
+												'category': 'Television'
+											}, {
+												'category': new RegExp(category.name, 'i')
+											}]
+										},
+										{
+											status: {
+												$ne: 'deleted'
+											}
+										},
+										{
+											$or: [{
+												"inventory.onHand": {
+													$gt: 0
+												}
+											}, {
+												"inventory.disableOnZero": false
+											}]
+										}
+									]
+								}
+							}
+							categCondition = {
+								$and: [{
+											$or: [{
+												'category': new RegExp(category.slug, 'i')
+											}, {
+												'category': new RegExp(category.name, 'i')
+											}]
+										},
+										{
+											status: {
+												$ne: 'deleted'
+											}
+										},
+										{
+											$or: [{
+												"inventory.onHand": {
+													$gt: 0
+												}
+											}, {
+												"inventory.disableOnZero": false
+											}]
+										}
+									]
+							}
+							Product.find({category: "Television"},function(err, products) {
+								if (err || !products || products === 'undefined') {
+									console.log("Error: " + err.message);
+									req.flash('error', 'Problem finding products');
+									res.redirect('/');
+								}
+								if (category.format != 'table') {
+									productChunks = [];
+									chunkSize = 4;
+									for (var i = (4 - chunkSize); i < products.length; i += chunkSize) {
+										productChunks.push(products.slice(i, i + chunkSize))
+									};
+								}
+								res.render('shop/eshop', {
+									layout: 'eshop/television',
+									navcats: navcats,
+									results: results,
+									navgroups: navgroups,
+									viewDocuments: viewDocuments,
+									category: category,
+									products: productChunks,
+									productChunks: productChunks,
+									user: req.user,
+									q: q,
+									errorMsg: errorMsg,
+									noErrorMsg: !errorMsg,
+									successMsg: successMsg,
+									noMessage: !successMsg,
+									isLoggedIn: req.isAuthenticated()
+								});
+							});
+						});
+					});
+				})
+			})
+		})
+	})
+})
 router.get('/category/:slug', function(req, res, next) {
 	var category_slug = req.params.slug;
+	req.session.category = req.params.slug;
 	var q = req.query.q;
 	var successMsg = req.flash('success')[0];
 	var errorMsg = req.flash('error')[0];
@@ -479,6 +614,7 @@ router.get('/category/:slug', function(req, res, next) {
 		}
 	}
 	/* Create a list of categories and product counts within CAMERAS (100) */
+
 	Product.aggregate([{
 		$sortByCount: "$category"
 	}], function(err, allcats) {
@@ -621,9 +757,9 @@ router.get('/category/:slug', function(req, res, next) {
 
 router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
 	var ticket_name = req.body.ticket_name || null;
 	var ticket_email = req.body.ticket_email || null;
-	var errorMsg = req.flash('error')[0];
 	var price = req.body.price || null;
 	var type = req.body.Product_Group || null;
 
@@ -633,13 +769,14 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 	if (type == 'TICKET') {
 		req.checkBody("ticket_email", "Enter a valid email address.").isEmail();
 	}
+
 	if (type == 'DONATION') {
 		if (price >= 1000) {
 			errors = 1;
 			req.flash('error', 'Unable to accept donations greater than $1000.00');
 			return res.redirect('/');
 		}
-		if (price < 0) {
+		if (price < 1||price==0) {
 			req.flash('error', 'Unable to process negative donations.');
 			return res.redirect('/');
 		}
@@ -681,9 +818,22 @@ router.post('/add-to-cart', isLoggedIn, function(req, res, next) {
 			cart.totalShipping = 0;
 			req.session.cart = cart;
 			req.flash('success', 'Item successfully added to cart. ');
+			if (!req.session.group===null) {
+				res.redirect('/group/' + req.session.group);
+			} else {
+				if (!req.session.category===null) {
+					res.redirect('/category/' + req.session.category);
+				}
+			}
+			if (!req.session.category===null) {
+				res.redirect('/category/' + req.session.category);
+			} else {
+				if (!req.session.group === null) {
+					res.redirect('/group/' + req.session.group);
+				}
+			}
 			res.redirect('/');
 		}
-
 		// });
 	});
 });
@@ -765,7 +915,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 		});
 	}
 	var cart = new Cart(req.session.cart);
-	var cartJSON = JSON.stringify(cart);
+	var cartJSON = cart;
 	var totalTax = parseFloat(Number(cart.totalTax).toFixed(2));
 	var totalPrice = parseFloat(Number(cart.totalPrice).toFixed(2));
 	var totalShipping = parseFloat(Number(cart.totalShipping).toFixed(2));
@@ -776,7 +926,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 
 	recommendations.GetRecommendations(cart, function(err, recommendations) {
 			if (err) {
-				errorMsg = req.flash('error :', err.message);
+				errorMsg = req.flash('error', err.message);
 			}
 			if (!recommendations && res.locals.showRecommendations) {
 				recommendations = [{
@@ -793,6 +943,7 @@ router.get('/shopping-cart', isLoggedIn, function(req, res, next) {
 					imagePath: '/images/sony-camera.jpg'
 				}]
 			}
+			console.log("error: " + errorMsg);
 			res.render('shop/shopping-cart', {
 				layout: 'eshop/blank',
 				products: cart.generateArray(),
@@ -1266,6 +1417,7 @@ router.get('/like/:id', isLoggedIn, function(req, res, next) {
 });
 
 router.get('/execute', function(req, res, next) {
+	console.log("Completing Order: " + res.locals.fromEmail);
 	var paymentId = req.query.paymentId;
 	var token = req.query.token;
 	var PayerID = req.query.PayerID
@@ -1318,7 +1470,6 @@ router.get('/execute', function(req, res, next) {
 						}
 						/* Update Users Bought Array */
 						async.each(products, function(product, next) {
-							console.log("PRODUCT: " + product);
 							event = new Event({
 								namespace: 'products',
 								person: {
@@ -1341,6 +1492,17 @@ router.get('/execute', function(req, res, next) {
 								if (err) {
 									console.log("Error: " + err.message);
 									return -1;
+								}
+							});
+							Product.findOneAndUpdate({
+								_id: product.item._id
+							}, {
+								"$push": {
+									usersBought: req.user._id
+								}
+							}, function(err, newprod){
+								if (err) {
+									console.log("Error updating product with users bought: " + JSON.stringify(err));
 								}
 							})
 							User.findOneAndUpdate({
@@ -1368,13 +1530,34 @@ router.get('/execute', function(req, res, next) {
 									console.log("Unable to update user - " + err.message);
 									return -1;
 								}
-								if (!process.env.fromEmail === null) {
+								Product.findOneAndUpdate({
+									_id: product.item._id,
+									"inventory.disableAtZero": true
+								},{
+									'$inc': {'inventory.onHand': -1},
+								}, function(err,product) {
+									if (err) {
+										console.log("Problem decrementing inventory.");
+									}
+								});
+								var mailOptions = {
+										to: res.locals.fromEmail,
+										from: req.user.email,
+										subject: "User Completed Purchase: " + req.user.first_name + ' ' + req.user.last_name,
+										text: req.user.first_name + ' ' + req.user.last_name + '\n' + req.user.email + '\n' + req.user.addr1 + '\n' + req.user.city + ', ' + req.user.state + ' ' + req.user.zipcode + '\n' + req.user.telephone + '\n\n' + newUser
+									};
+									transporter.sendMail(mailOptions, function(err) {
+										if (err) {
+											console.log(err.message);
+										}
+									});
+								if (res.locals.fromEmail) {
 									var mailOptions = {
 										to: newUser.email,
 										from: process.env.fromEmail,
 										subject: process.env.mailSubject,
 										text: 'We successfully processed an order with this email address.  If you have recieved this in error, please contact the SEPIA office at info@sepennaa.org.  Thank you for your order.\n\n' +
-											'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n'
+											'To review your purchase, please visit http://' + req.headers.host + '/user/profile/\n\n' + JSON.stringify(newOrder)
 									};
 									meanlogger.log('dollar', 'Completed Purchase', req.user);
 									transporter.sendMail(mailOptions, function(err) {
@@ -1382,6 +1565,8 @@ router.get('/execute', function(req, res, next) {
 											console.log(err.message);
 										}
 									});
+								} else {
+									console.log("fromEmail not set - no email verification will be sent.");
 								}
 							});
 						})
@@ -1553,18 +1738,25 @@ router.post('/search', function(req, res, next) {
 	});
 });
 
-router.get('/product/:id/', function(req, res, next) {
-	var productId = req.params.id;
+router.get('/product/:slug/', function(req, res, next) {
+	var slug = req.params.slug;
 	// if we have a cart, pass it - otherwise, pass an empty object
-
-	Product.findById(productId, function(err, product) {
+	var successMsg = req.flash('success')[0];
+	var errorMsg = req.flash('error')[0];
+	Product.find( { slug: slug }, function(err,product) {
 		if (err) {
 			// replace with err handling
+			console.log("Error: " + JSON.stringify(err));
 			return res.redirect('/');
+		}
+		if (!product) {
+			req.flash('error','Product is not found.');
+			res.redirect('/');
 		}
 		if (!req.user || req.user === 'undefined' || req.user == null) {
 			req.user = {};
 		}
+		console.log("Product: " + JSON.stringify(product));
 		event = new Event({
 			namespace: 'products',
 			person: {
@@ -1594,11 +1786,11 @@ router.get('/product/:id/', function(req, res, next) {
 					return res.redirect('/');
 				}
 				res.render('shop/product', {
-					layout: 'fullpage.hbs',
+					layout: 'eshop/blank',
 					recommendations: recommendations,
 					product: product,
-					errorMsg: "Product not found.",
-					noErrorMsg: 0
+					errorMsg: errorMsg,
+					noErrorMsg: !errorMsg
 				});
 			});
 		});
@@ -1610,6 +1802,7 @@ router.get('/privacy', function(req,res,next) {
 		layout: 'eshop/blank'
 	});
 });
+
 router.get('/tos', function(req,res,next) {
 	res.render('tos', {
 		layout: 'eshop/blank'
@@ -1726,9 +1919,9 @@ router.get('/overview', function(req, res, next) {
 		}
 		res.render('overview', {
 			layout: 'eshop/blank',
-			user: JSON.stringify(userrecord),
+			user: req.user,
 			product: doc,
-			order: JSON.stringify(orderrecord)
+			order: orderrecord
 		});
 	});
 })

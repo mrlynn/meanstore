@@ -10,6 +10,8 @@ var Activity = require('../models/activity');
 var Event = require('../models/events');
 var async = require('async');
 var Order = require('../models/order');
+var Store = require('../models/store');
+var sigma = require('sigma');
 var passport = require('passport');
 var moment = require('moment');
 var mongoose = require('mongoose');
@@ -27,7 +29,56 @@ var fileUpload = require('express-fileupload');
 // var csrfProtection = csrf();
 
 // router.use(csrfProtection);
+/* Get Stores for geo map */
+router.get('/stores', function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+	successMsg = req.flash('success')[0];
+    var tot = totalSales(function(err,next) {
+    	if (err) {
+    		console.log(err.message);
+    		return res.error('err');
+    	}
+    });
+    Store.find({}, function(err, docs) {
+        res.render('admin/stores', {
+            layout: 'admin-map.hbs',
+            stores: docs,
+            errorMsg: errorMsg,
+            successMsg: successMsg,
+            noErrorMsg: !errorMsg,
+            noMessage: !successMsg,
+            totalSales: tot,
+            GOOGLE_APIKEY: process.env.GOOGLE_APIKEY,
+            orders: docs,
+            noErrors: 1
+        });
+    });
+})
+/* Get Relations for graph map */
+router.get('/relations', function(req, res, next) {
+    errorMsg = req.flash('error')[0];
+    var adminPageTitle = "Relationships";
+    var adminPageUrl = "/admin/relations";
+	successMsg = req.flash('success')[0];
+    var tot = totalSales(function(err,next) {
+    	if (err) {
+    		console.log(err.message);
+    		return res.error('err');
+    	}
+    });
 
+    res.render('admin/relations', {
+        layout: 'admin-relations.hbs',
+        adminPageTitle: adminPageTitle,
+        adminPageUrl: adminPageUrl,
+        errorMsg: errorMsg,
+        successMsg: successMsg,
+        noErrorMsg: !errorMsg,
+        noMessage: !successMsg,
+        totalSales: tot,
+        noErrors: 1
+    });
+})
 /* GET home page. */
 router.get('/',  isAdmin, function(req, res, next) {
 	errorMsg = req.flash('error')[0];
@@ -888,8 +939,8 @@ var totalSales = function() {
     }, function(err, doc) {
     	if (err) {
     		console.log("err: " + err.message);
+            return err;
     	}
-        console.log('Total ', doc[0].Total);
 		return doc;
 
     });

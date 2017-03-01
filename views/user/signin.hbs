@@ -1,50 +1,72 @@
-<div class="container signin-page">
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<h1>Sign In</h1>
-			<div class="row">
-	            <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-	                <div id="success" class="alert alert-success" {{#if noMessage}}hidden{{/if}}>
-	                {{successMsg}}
-	            	</div>
-	            	<div id="danger" class="alert alert-danger" {{#if noErrorMsg}}hidden{{/if}}>
-	           		{{errorMsg}}
-	       			</div>
-	       		</div>
-	       	</div>
-			<form action="/user/signin" method="POST">
-				<div class="form-group">
-					<label for="email">Email</label>
-					<input type="text" id="email" name="email" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input type="password" id="password" name="password" class="form-control">
-				</div>
-				<input type="hidden" name="_csrf" value="{{ csrfToken }}">
-				<button class="btn btn-default" type="submit">Sign In</button>
-			</form>
-			<p class="pull-left">Need an account? <a href="/user/signup">Sign Up</a></p>
-			<p class="pull-right">Forgot? <a href="/user/forgot">Reset</a></p>
-		</div>
-	</div>
-	<p>{{#if authFacebook}}
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<a href="/user/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i> Sign in with Facebook</a>		
-		</div>
-	</div>
-	<p>
-	{{/if}}
-	{{#if authGoogle}}
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<a href="/user/google" class="btn btn-block btn-social btn-google-plus">
-	        <i class="fa fa-google-plus"></i> Sign in with Google
-	      	</a>
-		</div>
-	</div>
-	</p>
-	{{/if}}
-	<o><o>
+
+<div class="container-fluid">
+    <div class="row top-buffer-20">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Login</strong></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <!-- Email Login -->
+                        <div class="col-sm-6 col-md-6">
+                        <section id="accountActionForm" class="top-buffer-20 bottom-buffer-20">
+                            <form class="form-horizontal" role="form" method="post" action="/user/signin">
+                                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                                <div class="form-group">
+                                    <label for="email" class="col-sm-3 control-label">Email </label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" name="email" placeholder="Email" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-sm-3 control-label">Password </label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" name="password" placeholder="Password" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-9">
+                                        {{!--<div class="checkbox">
+                                            <label class="">
+                                                <input type="checkbox" class="" name="inputRemember" checked="checked">Remember me
+                                            </label>
+                                        </div>--}}
+                                    </div>
+                                </div>
+                                <div class="form-group last">
+                                    <div class="col-sm-offset-3 col-sm-9"><button type="submit" class="btn btn-success">Login</button>&nbsp;
+                                    <p class="pull-right">Forgot? <a type="button" class="btn btn-default" href="/user/forgot">Reset</a></p>
+                                </div>
+								
+                            </div>
+                        </form>
+						
+                        </section>    
+                        </div>
+                        <!-- Social Login -->
+                        <div class="col-sm-5 col-sm-offset-1 col-md-5 col-md-offset-1 top-buffer-20">
+                            <a class="btn btn-block btn-social btn-google-plus" href="/user/google">
+                                <i class="fa fa-google-plus"></i> Sign in with Google
+                            </a>
+                            <div class="hr">
+                                <div class="inner"><p class="text-info" align="center">or</div>
+                            </div>
+
+                            <a class="btn btn-block btn-social btn-facebook" href="/user/facebook">
+                                <i class="fa fa-facebook"></i> Sign in with Facebook
+                            </a>
+                            <p class="text-info top-buffer-10" align="center"><i class="fa fa-info-circle"></i>&nbsp;We will never post on your walls.</p>
+                        </div>
+                        <br>
+                    </div>
+					<div class="col-sm-12">
+						<hr>
+									<p class="text" align="center"><p class="text-info top-buffer-5" align="center">Need an account? <a href="/user/signup" type="button" class="btn btn-info">Sign Up</a></p>
+</p>
+					</div>
+                </div>
+                <div class="panel-footer" align="center"></div>
+            </div>
+
+        </div>
+    </div>
 </div>

@@ -19,14 +19,18 @@
                             <a href="{{this.imagePath}}" rel="prettyPhoto" title="{{this.title}}" >
                                 <img src="{{this.imagePath}}" width="100" alt="{{this.title}}" />
                             </a>
-    						<p>{{this.title}}</p>
-                            <h4>{{this.code}}</h4>
-                            {{#if ../../isLoggedIn}}
+                            <a href="/product/{{this.slug}}"><p><h2>{{this.title}}</h2></p>
+                            <p>{{this.description}}</p>
+                            <h4>{{this.code}}</h4></a>
+                            {{#if this.inventory.disableAtZero}}
+                                <p>({{this.inventory.onHand}}) Available</p>
+                            {{/if}}
+                            {{!--{{#if ../../isLoggedIn}}
                                 <a href="/like/{{this._id}}" data-toggle="tooltip" title="{{this.likes.length}} likes" class="btn btn-default btn-small">
                                 <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}</a>
                             {{else}}
                                 <span class="glyphicon glyphicon-heart"></span> {{ this.likes.length }}
-                            {{/if}}
+                            {{/if}}--}}
  					        {{#if this.isDonation }}
                                 {{#if this.options }}
                                 <h3>Select:</h3>
@@ -39,7 +43,7 @@
                                 {{#if ../../isLoggedIn}}
                                     <form action='/add-to-cart' method='POST'>
                                         <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
-                                        <input type='hidden' id='type' name='type' value='DONATION'>
+                                        <input type='hidden' id='type' name='Product_Group' value='DONATION'>
                                         <label for="price">Amount</label>
                                         <input type='text' class='text-right form-control input-sm' name='price' value='{{money this.price}}'>
                                         <p class="text-center">
@@ -66,6 +70,7 @@
                                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                             <input type='hidden' id='price' name='price' value='{{ this.price }}'>
                                             <input type='hidden' id='type' name='type' value='APPAREL'>
+                                            <input type='hidden' id='type' name='Product_Group' value='APPAREL'>
                                             {{#if this.options }}
                                             <h3>Select:</h3>
                                             <select class="form-control input-sm" name="option">
@@ -95,12 +100,15 @@
                                             <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                             <input type='hidden' id='price' name='price' value='{{money this.price }}'>
                                             <input type='hidden' id='type' name='type' value='TICKET'>
+                                            <input type='hidden' id='type' name='Product_Group' value='TICKET'>
+                                            {{#if ../../isLoggedIn}}
                                             <div class='form-group'>
                                                 <label for='Name'>Name for Ticket</label>
                                                 <input class='form-control input-sm' type='text' name='ticket_name' value="{{../../user.first_name}}">
                                                 <label for='Name'>Email</label>
                                                 <input class='form-control input-sm' type='text' name='ticket_email' value="{{../../user.email}}">
                                             </div>
+                                            {{/if}}
                                             {{#if this.options }}
                                             <h3>Select:</h3>
                                             <select class="form-control input-sm" name="option">
@@ -130,6 +138,7 @@
                                                 <input type='hidden' id='id' name='productId' value='{{ this._id }}'>
                                                 <input type='hidden' id='price' name='price' value='{{ money this.price }}'>
                                                 <input type='hidden' id='type' name='type' value='SIMPLE'>
+                                                <input type='hidden' id='type' name='Product_Group' value='SIMPLE'>
                                                 {{#if this.options }}
                                                     <h3>Select</h3>
                                                     <select class="form-control input-sm" name="option">
@@ -156,6 +165,26 @@
                                     {{/if}} <!-- if this.isTicket -->
                                 {{/if}} <!-- if this.isApparel -->
                             {{/if}} <!-- if this.isVariable -->
+                            <p data-placement="top" data-toggle="tooltip" title="View Document ">
+        <button class="ui right floated btn btn-warning btn-xs" data-title="view" data-toggle="modal" data-target="#view-{{this._id}}"> <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+</p>
+<!-- Add Dialog -->
+<div class="modal fade" id="view-{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="view" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">View Product</h4>
+            </div>
+            <div class="modal-body text-left">
+                <pre><code class="prettyPrint">{{JSON this}}</code></pre>
+            </div>
+        <!-- /.modal-content -->
+        </div>
+    <!-- /.modal-dialog -->
+    </div>
+</div>
     					</div>
                          {{#if this.sale_attributes.new}}
                             <img src="/images/home/new.png" width=42 class="new" alt="">

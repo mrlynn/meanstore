@@ -23,7 +23,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -39,7 +39,7 @@ var products = [
         code: 'RU201702',
         shippable: 'No',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: true,
           onHand: 350
         },
         taxable: 'No',
@@ -48,7 +48,7 @@ var products = [
         imagePath: '/images/banquet.jpg',
         name: 'Banquet',
         title: 'Banquet Registration',
-        description: 'Attendance Ticket for 2017 Round-up',
+        description: 'Attendance Ticket for 2017 Round-up Banquet',
         price: 3500,
         Product_Group: 'TICKET',
         options: [{
@@ -70,7 +70,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -89,7 +89,7 @@ var products = [
         category: 'Round-up',
         order: 99,
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/heart.png',
@@ -106,19 +106,16 @@ var products = [
         category: 'Round-up',
         order: 2,
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/tee-shirt.jpg',
         name: 'teeshirt-small',
         title: 'Tee-Shirt (XS,S,M,L,XL)',
         description: 'Small through XL tee-shirt with Round-up Logo.   Choose specific size when you arrive.',
-        price: 1400,
+        price: 1200,
         Product_Group: 'APPAREL',
         options: [{
-            name: 'X Small',
-            value: 'XS'
-        }, {
             name: 'Small',
             value: 'S'
         }, {
@@ -137,7 +134,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         category: 'Round-up',
@@ -146,7 +143,7 @@ var products = [
         name: 'Teeshirt-large',
         title: 'Tee-Shirt (2XL,3XL,4XL)',
         description: '2XL through 3XL tee-shirt with Round-up Logo.  Choose specific size when you arrive.',
-        price: 1800,
+        price: 1400,
         Product_Group: 'APPAREL',
         options: [{
             name: '2XL',
@@ -166,19 +163,16 @@ var products = [
         category: 'Round-up',
         order: 4,
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/hoodie.jpg',
         name: 'Hoodie-small',
         title: 'Hooded Sweatshirt',
         description: 'Hooded Sweatshirt with Round-up Logo. Sizes XS through XL.  Choose specific size when you arrive.',
-        price: 2500,
+        price: 2200,
         Product_Group: 'APPAREL',
         options: [{
-            name: 'X Small',
-            value: 'XS'
-        }, {
             name: 'Small',
             value: 'S'
         }, {
@@ -199,7 +193,7 @@ var products = [
         taxable: 'No',
         imagePath: '/images/hoodie.jpg',
         inventory: {
-          disableOnZero: false,
+          disableAtZero: false,
           onHand: 100
         },
         name: 'Hoodie-large',
@@ -225,7 +219,7 @@ var products = [
         shippable: 'No',
         taxable: 'No',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         imagePath: '/images/ticket.jpg',
@@ -239,7 +233,7 @@ var products = [
     new Product({
         code: 'RU201711',
         inventory: {
-          disableOnZero: true,
+          disableAtZero: false,
           onHand: 100
         },
         shippable: 'No',
@@ -253,6 +247,23 @@ var products = [
         price: 0,
         Product_Group: 'DONATION'
     }),
+    new Product({
+        code: 'RU201712',
+        shippable: 'No',
+        taxable: 'No',
+        inventory: {
+          disableAtZero: false,
+          onHand: 100
+        },
+        category: 'Round-up',
+        order: 99,
+        imagePath: '/images/coffeemug.png',
+        name: 'Coffee Mug',
+        title: '2017 Round-up Ceramic Mug',
+        description: 'Think of the great times you had at Round-up every time you drink your coffee or tea.',
+        price: 2500,
+        Product_Group: 'SIMPLE'
+    })
 ]
 var done = 0;
 for (var i = 0; i < products.length; i++) {

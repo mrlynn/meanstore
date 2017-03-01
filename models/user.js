@@ -6,6 +6,10 @@ var random = require('mongoose-simple-random');
 var userSchema = new Schema({
 	resetPasswordToken: String,
   	resetPasswordExpires: Date,
+	location: {
+      type: { type: String },
+	  coordinates: [ Number ]
+	},
 	email: {
 		type: String,
 		required: false
@@ -47,6 +51,16 @@ var userSchema = new Schema({
 		type: String,
 		required: false
 	},
+	website: {
+		type: String,
+		required: false
+	},
+	sober_date: {
+		type: Date
+	},
+	home_group: {
+		type: String
+	},
 	role: {
 		type: String,
 		required: false,
@@ -83,6 +97,7 @@ var userSchema = new Schema({
 	facebook: String,
 	twitter: String,
 	google: String,
+	WordpressId: String,
 	profile: {
 	    name: String,
 	    gender: String,
@@ -126,5 +141,6 @@ userSchema.methods.encryptPassword = function(password) {
 userSchema.methods.validPassword = function(password) {
 	return bcrypt.compareSync(password, this.password);
 }
+userSchema.index({ loc : '2dsphere' });
 
 module.exports = mongoose.model('User', userSchema);

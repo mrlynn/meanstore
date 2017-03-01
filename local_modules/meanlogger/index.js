@@ -8,7 +8,6 @@ var Order = require('../../models/order');
 var User = require('../../models/user');
 
 module.exports = {
-
 	log: function(activity,msg,user) {
 		var activitydoc = {
 			user: {

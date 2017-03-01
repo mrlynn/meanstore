@@ -17,12 +17,12 @@ var taxCalc = require('../local_modules/tax-calculator');
 var meanlogger = require('../local_modules/meanlogger');
 var json2csv = require('json2csv');
 
-Category.find({}, function(err,categories) {
-	if (err) {
-		req.session.error('error','Error retrieiving categories');
-		res.redirect('/');
-	}
-});
+// Category.find({}, function(err,categories) {
+// 	if (err) {
+// 		req.session.error('error','Error retrieiving categories');
+// 		res.redirect('/');
+// 	}
+// });
 
 /**
  * Present statistics for various database objects

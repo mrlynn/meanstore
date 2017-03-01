@@ -7,6 +7,7 @@ var Event = require('../models/events');
 var async = require('async');
 var Order = require('../models/order');
 var User = require('../models/user');
+var Store = require('../models/store');
 var Payment = require('../models/payment');
 var Ticket = require('../models/ticket');
 var mongoose = require('mongoose');
@@ -16,46 +17,107 @@ var Config = require('../config/config.js');
 var taxCalc = require('../local_modules/tax-calculator');
 var meanlogger = require('../local_modules/meanlogger');
 
-Category.find({}, function(err,categories) {
-	if (err) {
-		req.session.error('error','Error retrieiving categories');
-		res.redirect('/');
-	}
-});
 
 router.get('/buckauto', function(req, res, next) {
+	var options = { server: { socketOptions: { keepAlive: 1 } } };
+	// var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
 	var url = 'mongodb://localhost:27017/hackathon';
 	MongoClient.connect(url, (err, db) => {
-	Product.aggregate([{
-		"$bucketAuto": {
-			"$groupBy": "$price",
-			"buckets": 4
-		}
-	}],function(err,product) {
-		if (err) {
-			console.log("Error: " + err.message);
-			res.send(500, "Problem fetching products");
-		}
-		res.json(product);
-	})
-});
+		Product.aggregate([{
+			"$bucketAuto": {
+				"$groupBy": "$price",
+				"buckets": 4
+			}
+		}],function(err,product) {
+			if (err) {
+				console.log("Error: " + err.message);
+				res.send(500, "Problem fetching products");
+			}
+			res.json(product);
+		})
+	});
 });
 
 /**
  * Present statistics for various database objects
  * @constructor
  */
-router.get('/stats', function(req, res, next) {
+router.get('/graph/:userId', function(req, res, next) {
+	var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
 	var url = 'mongodb://localhost:27017/hackathon';
+	console.log("URL: " + url)
 	MongoClient.connect(url, (err, db) => {
+		products = db.collection('products');
+		
+		products.aggregate([
+			{$match: {_id: '58a4aa9c6a6fd84826e79cdd'}},
+			{$lookup: {
+				from: 'users',
+				localField: 'usersBought',
+				foreignField: '_id',
+				as: 'user_who_purchased'
+			}},
+			{$unwind: '$user_who_purchased'},
+			{$lookup: {
+				from: 'products',
+				localField: 'user_who_purchased.purchased',
+				foreignField: '_id', as: 'related_item'
+			}},
+			{$unwind: "$related_item"},
+			{$group: {_id: "$related_item"}}
+		],function(err, results) {
+			console.dir(results);
+			res.json(results);
+			db.close();
+		});
 
-    db.stats((err, stats) => {
-
-        console.dir(stats);
-        res.json(stats);
-        db.close();
-    });
+		// products.aggregate([
+		// 	{$match: {_id: '58a4aa9c6a6fd84826e79cdd'}},
+		// 	{$lookup: {
+		// 		from: 'users',
+		// 		localField: 'usersBought',
+		// 		foreignField: '_id',
+		// 		as: 'user_who_purchased'
+		// 	}},
+		// 	{$unwind: '$user_who_purchased'},
+		// 	{$lookup: {
+		// 		from: 'products',
+		// 		localField: 'user_who_purchased.purchased',
+		// 		foreignField: '_id', as: 'related_item'
+		// 	}},
+		// 	{$unwind: "$related_item"},
+		// 	{$group: {_id: "$related_item"}}
+		// ],function(err, results) {
+		// 	console.dir(results);
+		// 	res.json(results);
+		// 	db.close();
+		// });
+	});
+})
+/**
+ * Present statistics for various database objects
+ * @constructor
+ */
+/* GET user */
+router.get('/stores', function(req, res, next) {
+	Store.find({},function(err,stores) {
+		res.json(stores);
+	})
 });
+/**
+ * Present statistics for various database objects
+ * @constructor
+ */
+router.get('/stats', function(req, res, next) {
+	var url = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
+	MongoClient.connect(url, (err, db) => {
+		db.stats((err, stats) => {
+
+			console.dir(stats);
+			res.json(stats);
+			db.close();
+		});
+	});
 })
 
 /**
@@ -105,6 +167,7 @@ router.delete('/categories/:id', function(req, res, next) {
 		res.json(category);
 	})
 });
+
 
 /**
  * GET facets for category
@@ -378,10 +441,17 @@ router.post('/order', function(req, res, next) {
 });
 router.get('/donut-chart', function(req, res, next) {
 	Event.aggregate([
+	// {
+	// 	"$match": {
+	// 		'action': 'purchase'
+	// 	}
+	// },
 	{
-		$group: { "_id": "$thing.category", "value": { $sum: 1 } }
+		"$group": { 
+			"_id": "$thing.category", "value": { "$sum": 1 } 
+		}
 	},{
-		$project: { "_id": -1, "value": 1}
+		"$project": { "_id": -1, "value": 1}
 	}], function(err,donuts) {
 		var data = [];
 		async.each(donuts, function(donut, next) {
@@ -395,7 +465,7 @@ router.get('/donut-chart', function(req, res, next) {
 })
 router.get('/purchases-by-yearmo', function(req,res,next) {
 	Event.aggregate([{
-		$match: {
+		"$match": {
 			'action': 'purchase'
 		}
 	},
@@ -421,6 +491,7 @@ router.get('/purchases-by-yearmo', function(req,res,next) {
 	            })
 	        })
 	    }
+		console.log(JSON.stringify(data));
     res.json(data);
     });
 });

@@ -14,7 +14,9 @@ MongoClient.connect(url, function(err, db) {
 
 // recommendations = {
 // 	similar: {
-// 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11']
+//		results: 
+// 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11'],
+//		query: 
 // 	},
 // 	trending: {
 // 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11']
@@ -23,6 +25,9 @@ MongoClient.connect(url, function(err, db) {
 // 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11']
 // 	},
 // 	alsoViewed: {
+// 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11']
+// 	},
+// 	alsoBought: {
 // 		['582b08b0981bf41f3dda6d21','582b08b0981bf41f3dda6d19','582b08b0981bf41f3dda6d11']
 // 	}
 // }
@@ -95,10 +100,22 @@ module.exports = {
 							popular.push(doc);
 						};
 						recommendations = {
-							'similar': similar,
-							'trending': trending,
-							'viewed': viewed,
-							'popular': popular
+							'similar': {
+								results: similar,
+								query: ''
+							},
+							'trending': {
+								results: trending,
+								query: ''
+							},
+							'viewed': {
+								results: viewed,
+								query: ''
+							},
+							'popular': {
+								results: popular,
+								query: ''
+							}
 						}
 						//console.log(recommendations);
 						callback(null,recommendations);

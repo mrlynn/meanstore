@@ -1,7 +1,7 @@
 var express = require('express');
+var nodalytics = require('nodalytics');
 var path = require('path');
 var favicon = require('serve-favicon');
-// var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
@@ -22,6 +22,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var fs = require('fs');
 var cors = require('cors');
+var Prism = require('prismjs');
+var marked = require('marked');
 var userRoutes = require('./routes/user');
 var adminRoutes = require('./routes/admin');
 var bookRoutes = require('./routes/books');
@@ -62,27 +64,35 @@ var categoryrecord = {
   "__v": 0
 };
 
-// try {
-//   var configJSON = fs.readFileSync(__dirname + "/config/pp-config.json");
-//   var config = JSON.parse(configJSON.toString());
-// } catch (e) {
-//   console.error("File config.json not found or is invalid: " + e.message);
-//   process.exit(1);
-// }
 var app = express();
-dotenv.load({ path: '.env.hackathon' });
+if (process.env.NODE_ENV) {
+  // console.log("USING .env.hackathon-" + process.env.NODE_ENV);
+  dotenv.load({ path: '.env.hackathon-' + process.env.NODE_ENV });
+} else {
+  console.log("USING .env.hackathon" );
+  dotenv.load({ path: '.env.hackathon' });
+}
 
+var options = {
+  db: { native_parser: true },
+  user: process.env.MONGO_USER,
+  pass: process.env.MONGO_PASS,
+  authSource: 'admin'
+}
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+// mongoose.connect(process.env.MONGODB_URI,options);
+if (process.env.MONGO_USER) {
+  // console.log("USING MONGO_USER " + process.env.MONGO_USER);
+  var URI = 'mongodb://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASS + '@localhost:27017/hackathon';
+  mongoose.connect(URI, options);
+} else {
+  mongoose.connect('mongodb://localhost:27017/hackathon');
+}
 mongoose.connection.on('error', () => {
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  logger.log('error','%s MongoDB connection error. Please make sure MongoDB is running.');
+  console.log('%s MongoDB connection error in app.js Please make sure MongoDB is running.', chalk.red('✗'));
   process.exit();
 });
 require('./config/passport');
-
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
 
 var hbs = expressHbs.create({
     helpers: {
@@ -133,13 +143,14 @@ app.use(validator({
         return param >= num;
   }
 }));
+
 app.use(cookieParser());
 app.use(breadcrumbs.init());
 app.use(errorHandler());
 app.use(mongoSanitize({
   replaceWith: '_'
 }));
-// docs(app, mongoose); // 2nd param is optional
+docs(app, mongoose); // 2nd param is optional
 // Set Breadcrumbs home information
 app.use(breadcrumbs.setHome());
 
@@ -150,7 +161,8 @@ app.use(session({
     // Re-use our existing mongoose connection to mongodb.
     store: new MongoStore({mongooseConnection: mongoose.connection}),
     // 3 hours - connect mongo will hover up old sessions
-    cookie: { maxAge: 180 * 60 * 1000 }
+    cookie: { maxAge: 180 * 60 * 1000 },
+    secure: false
 }));
 
 app.use(flash());
@@ -158,9 +170,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Create global logged in variable login to indicate whether the user is logged in or not.
-// app.use(csrf());
 
 app.use(function(req,res,next) {
     // if (typeof res.locals.allcats == 'undefined') {
@@ -172,6 +181,11 @@ app.use(function(req,res,next) {
         }
         app.set('navcats',navcats);
         // console.log("Navcats in app.js " + JSON.stringify(navcats));
+        if (process.env.theme) {
+          res.locals.themeurl = '/stylesheets/themes/' + process.env.theme + '.css'
+        } else {
+          res.locals.themeurl = '/stylesheets/main.css'
+        }
         res.locals.navcats = navcats;
         res.locals.login = req.isAuthenticated();
         if (res.locals.login) {
@@ -210,11 +224,13 @@ app.use(function(req,res,next) {
             res.locals.viewDocuments = (process.env.viewDocuments===true);
             res.locals.title = process.env.title;
             res.locals.pageNotes = process.env.pageNotes;
+            res.locals.fromEmail = process.env.fromEmail;
+            res.locals.viewTour = process.env.viewTour;
             var parsed = url.parse(req.url);
             var pageName = path.basename(parsed.pathname);
             res.locals.pageName = pageName.toLowerCase();
             res.locals.req = req;
-            // res.locals._csrf = req.csrfToken();
+            //res.locals._csrf = req.csrfToken();
             var ipInfo = getIP(req);
             next();
           });
@@ -222,20 +238,29 @@ app.use(function(req,res,next) {
     });
 });
 app.use(fileUpload());
-
-// app.use('/facet', facetRoutes);
+app.use(nodalytics(process.env.GA_TRACKING_ID));
 app.use('/exporter', exporter);
-
 app.use('/api', api);
-// app.use('/books', bookRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 app.use('/category', routes);
 app.use('/', routes);
+
 // catch 404 and forward to error handler
 
 app.get('*', function(req, res){
-  res.send('what???', 404);
+  // res.status(404).send('what???', 404);
+  var errorMsg = '';
+  var successMsg = '';
+
+  res.status(404).render('shop/404', {
+		layout: 'eshop/blank',
+		// csrfToken: req.csrfToken(),
+		noErrorMsg: !errorMsg,
+    errorMsg: errorMsg,
+		successMsg: successMsg,
+		noMessage: !successMsg,
+	});
 });
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
