@@ -147,10 +147,6 @@
 							<label>Home Group</label>
 							<input type="text" value="{{user.home_group}}" name="home_group" placeholder="Enter Home Group Here.." class="form-control">
 						</div>
-						<div class="col-sm-6 form-group">
-							<label>Sobriety Date</label>
-							<input type="text" value="{{formatDate user.sober_date  "MM/DD/YYYY"}}" name="sober_date" placeholder="mm/dd/yyyy" class="form-control">
-						</div>
 					</div>				
 					<input type="hidden" name="_csrf" value="{{ csrfToken }}">
 					<input type="hidden" name="csrfToken" value="{{csrfToken}}">

@@ -55,9 +55,6 @@ var userSchema = new Schema({
 		type: String,
 		required: false
 	},
-	sober_date: {
-		type: Date
-	},
 	home_group: {
 		type: String
 	},
