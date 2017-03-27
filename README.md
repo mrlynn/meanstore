@@ -166,3 +166,7 @@ This will expose the entire product catalog collection.
  * [MongoDB Documentation](http://mongodb.org/)
  * [Star us on GitHub](https://github.com/mrlynn/meanstore)
  * [Tweet me](http://twitter.com/mlynn)
+
+## Notes on Installation
+ * I received an error during installation... something about node-gyp or faker... 
+ - You may safely ignore these errors.
