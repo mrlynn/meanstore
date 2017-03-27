@@ -29,7 +29,7 @@ function prep_env() {
 
 	echo "Cloning meanstore repository..."
 	sudo apt-get install -y git
-	git clone -b meanmart https://github.com/mrlynn/meanstore.git
+	git clone https://github.com/mrlynn/meanstore.git
 	cd /home/vagrant/meanmart/meanstore
 
 	mkdir -p log/hackathon
