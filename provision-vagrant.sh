@@ -124,7 +124,6 @@ function startup_mongodb() {
 function install_nodejs() {
 	echo "Installing NodeJS..."
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-	sudo apt-get update
 	sudo apt-get install -y nodejs
 	echo "DONE: Installing NodeJS"
 
@@ -140,6 +139,7 @@ function generate_data() {
 	node data/fake-apparel.js
 	node data/fake-users.js
 	node data/fake-events.js
+	node data/fake-stores.js
 	node data/category-seeder.js
 	pm2 start startup.json
 	echo "DONE: Generating data"
