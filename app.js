@@ -18,7 +18,6 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
-var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var fs = require('fs');
 var cors = require('cors');
