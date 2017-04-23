@@ -12,6 +12,8 @@ git clone https://github.com/mrlynn/meanstore.git
 cd meanstore
 vagrant up
 ```
+At this point, the application should be up and running and can be accessed from your laptop/desktop by opening the url http://localhost:30001
+
 ## Installation via local
 
 ```
@@ -168,5 +170,5 @@ This will expose the entire product catalog collection.
  * [Tweet me](http://twitter.com/mlynn)
 
 ## Notes on Installation
- * I received an error during installation... something about node-gyp or faker... 
+ * I received an error during installation... something about node-gyp or faker...
  - You may safely ignore these errors.
