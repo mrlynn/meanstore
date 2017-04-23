@@ -4,7 +4,14 @@ var Category = require('../models/category');
 var mongoose = require('mongoose');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient
+var winston = require("winston");
 
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 var faker = require('faker');
 mongoose.Promise = global.Promise;
 

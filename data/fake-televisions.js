@@ -3,7 +3,14 @@ var User = require('../models/user');
 var Category = require('../models/category');
 var mongoose = require('mongoose');
 var async = require('async');
+var winston = require("winston");
 
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 var faker = require('faker');
 mongoose.Promise = global.Promise;
 
@@ -130,5 +137,5 @@ async.times(100, function(i, next) {
 });
 
 function exit() {
-	mongoose.disconnect() 
+	mongoose.disconnect()
 }

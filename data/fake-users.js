@@ -6,6 +6,14 @@ var Config = require('../config/config');
 var geocoder = require('geocoder');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+var winston = require("winston");
+
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 dotenv.load({
     path: '.env.hackathon'
 });
@@ -59,7 +67,7 @@ for (var i=0; i < maxUsers; i++) {
 		var items = []
 		for(item in purchasedArray) {
 			items.push(purchasedArray[item]._id);
-			
+
 		};
 		user = new User({
 			location: {
@@ -80,8 +88,8 @@ for (var i=0; i < maxUsers; i++) {
 			created: Date.now(),
 			purchased: items
 		},function(err,doc) {
-			
-			
+
+
 			if (err) {
 				console.log('error: ' + err);
 			}
@@ -94,7 +102,7 @@ for (var i=0; i < maxUsers; i++) {
 			for(item in items) {
 				console.log("Updating items " + item);
 				Product.update(
-					{ _id: item }, 
+					{ _id: item },
 					{ $push: { usersBought: newuser._id } }
 				);
 			};

@@ -3,7 +3,14 @@ var User = require('../models/user');
 var Category = require('../models/category');
 var faker = require('faker');
 var async = require('async');
+var winston = require("winston");
 
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 
 var mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -26,10 +33,10 @@ categories = ['Office','Home'];
 brands = ['Kenmore','Whirlpool','Electrolux','Samsung','Hitachi','Frigidare'];
 freezer_options = ['Ice Maker','Counter Depth','EnergyStar Certified'];
 product_groups = ['French Door','Bottom Freezer','Side by Side','Top Freezer']
-    
+
 var done = 0;
 async.times(100, function(i, next) {
-	
+
 	var code = 1000 + i;
 	var color = faker.commerce.color();
 	color = color.toUpperCase();
@@ -43,7 +50,7 @@ async.times(100, function(i, next) {
 	imagePath = '/img/' + brand.toLowerCase() + '-refrigerator.jpg'
 	name = faker.commerce.productName() + ' Refrigerator';
 	price = faker.commerce.price();
-	cost = Math.floor(Math.random() * price) + (price / 2)  
+	cost = Math.floor(Math.random() * price) + (price / 2)
 
 	var numUsers = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
 	User.aggregate([{ $sample: { size: numUsers }},{$project: { _id: 1 }}], function(err,usersArray) {
