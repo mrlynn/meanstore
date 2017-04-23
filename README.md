@@ -14,6 +14,8 @@ vagrant up
 ```
 At this point, the application should be up and running and can be accessed from your laptop/desktop by opening the url http://localhost:30001
 
+### Note: If the application does not come up in your browser, vagrant ssh to your instance, and restart the application.  Ensure that MongoDB is running ###
+
 ## Installation via local
 
 ```
