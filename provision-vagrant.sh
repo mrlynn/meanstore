@@ -138,7 +138,6 @@ function generate_data() {
 	node data/fake-cameras.js
 	node data/fake-printers.js
 	node data/fake-apparel.js
-	node data/fake-users.js
 	node data/fake-events.js
 	node data/fake-stores.js
 	node data/category-seeder.js
