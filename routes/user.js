@@ -25,14 +25,7 @@ var csrfProtection = csrf({
 var smtpConfig = require('../config/smtp-config.js');
 
 router.post('/update-profile', csrfProtection, function (req, res, next) {
-	req.checkBody('sober_date', 'Invalid date').optional({
-		checkFalsy: true
-	}).isDate();
-	var errors = req.validationErrors();
-	if (errors) {
-		req.flash('error', 'Invalid date entered for Sobriety date.  Please use mm/dd/yyyy format.');
-		return res.redirect('/user/profile');
-	}
+
 	User.update({
 			_id: req.user._id
 		}, req.body)
