@@ -7,6 +7,14 @@ var faker = require('faker');
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
+var winston = require("winston");
+
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'hackathon.log' })
+    ]
+});
 dotenv.load({
 	path: '.env.hackathon'
 });

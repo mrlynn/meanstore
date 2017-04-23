@@ -39,6 +39,7 @@ function prep_env() {
 
 	cp config/pp-config.js.example config/pp-config.js
 	cp config/smtp-config.js.example config/smtp-config.js
+	cp .env.hackathon.example .env.hackathon
 	echo "Installing Node Libraries..."
 	npm install
 	npm install -g pm2
@@ -68,7 +69,7 @@ function prep_env() {
 	echo "|.|..............|.||.|..............|.||.|..............|.||.|..............|.|"
 	echo "|.'--------------'.||.'--------------'.||.'--------------'.||.'--------------'.|"
 	echo ".'----------------'..'----------------'..'----------------'..'----------------'"
-	echo 
+	echo
 	echo "DONE: Setting up MEANMart Application"
 
 }
