@@ -47,7 +47,7 @@ async.times(100,function(i,next) {
             console.log(err);
             return -1;
         }
-        if (!user) {
+        if (!user || user===undefined) {
             console.log("user not found");
             return -1;
         }
