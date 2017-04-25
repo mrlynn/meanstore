@@ -16,6 +16,17 @@ At this point, the application should be up and running and can be accessed from
 
 ### Note: If the application does not come up in your browser, vagrant ssh to your instance, and restart the application.  Ensure that MongoDB is running ###
 
+```
+vagrant ssh # access the vagrant instance
+sudo su -   # become super user
+cd /home/vagrant/meanmart/meanstore # change to project directory
+npm run dev # run the application in developer mode
+
+```
+
+At this point, the application should be up and running and can be accessed from your laptop/desktop by opening the url http://127.0.0.1:30000 depending on the specific settings in your .env.hackathon configuration file.
+
+
 ## Installation via local
 
 ```
