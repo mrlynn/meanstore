@@ -100,9 +100,8 @@ for (var i=0; i < maxUsers; i++) {
 			}
 			console.log("Items: " + JSON.stringify(items))
 			for(item in items) {
-				console.log("Updating items " + item);
 				Product.update(
-					{ _id: item },
+					{ _id: item._id},
 					{ $push: { usersBought: newuser._id } }
 				);
 			};

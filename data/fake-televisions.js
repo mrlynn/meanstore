@@ -64,8 +64,8 @@ async.times(100, function(i, next) {
 		name = name.toUpperCase();
 		price = Math.floor((Math.random() * 100000 - 1) + 1);
 		cost = Math.floor((Math.random() * price) + (price / 2));
-		console.log("Price: " + price);
-		console.log("Cost: " + cost);
+		// console.log("Price: " + price);
+		// console.log("Cost: " + cost);
 		pgroup = Math.floor((Math.random() * product_groups.length - 1) + 1);
 	    product_group = product_groups[pgroup];
 		title = faker.commerce.productAdjective() + ' ' + color + ' ' + name
