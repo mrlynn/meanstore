@@ -93,7 +93,7 @@
     "uuid": "3.2.1",
     "winston": "2.4.2",
     "ya-csv": "0.10.1",
-    "zone.js": "0.8.8"
+    "zone.js": "0.8.26"
   },
   "devDependencies": {
     "nodemon": "1.17.4",
