@@ -17,7 +17,7 @@
     "body-parser": "1.18.3",
     "braintree": "2.11.0",
     "braintree-web": "3.34.1",
-    "chalk": "1.1.3",
+    "chalk": "2.4.1",
     "connect-flash": "0.1.1",
     "connect-mongo": "2.0.1",
     "cookie-parser": "1.4.3",
