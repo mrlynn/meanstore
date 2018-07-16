@@ -78,7 +78,7 @@
     "prismjs": "1.14.0",
     "prompt": "1.0.0",
     "reflect-metadata": "0.1.12",
-    "rxjs": "5.3.0",
+    "rxjs": "5.5.11",
     "sendgrid": "5.2.3",
     "serve-favicon": "2.4.5",
     "sigma": "1.2.1",
