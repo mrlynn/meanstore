@@ -99,7 +99,7 @@
     "nodemon": "1.17.4",
     "autoprefixer": "6.7.7",
     "cssnano": "3.10.0",
-    "concurrently": "3.5.1",
+    "concurrently": "3.6.0",
     "gulp": "3.9.1",
     "gulp-ext-replace": "0.3.0",
     "gulp-imagemin": "3.4.0",
