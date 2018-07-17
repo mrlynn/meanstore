@@ -105,7 +105,7 @@
     "gulp-imagemin": "3.4.0",
     "gulp-postcss": "6.4.0",
     "gulp-sourcemaps": "2.6.4",
-    "gulp-typescript": "3.2.4",
+    "gulp-typescript": "4.0.2",
     "gulp-uglify": "2.1.2",
     "lite-server": "2.3.0",
     "postcss": "5.2.18",
