@@ -42,7 +42,7 @@
     "express-session": "1.15.6",
     "express-validator": "5.2.0",
     "faker": "4.1.0",
-    "fs": "0.0.1-security",
+    "fs": "0.0.2",
     "geocoder": "0.2.3",
     "google-oauth": "0.0.2",
     "hbs": "4.0.1",
