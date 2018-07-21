@@ -26,7 +26,7 @@
     "csurf": "1.9.0",
     "cytoscape": "3.2.12",
     "d3": "5.5.0",
-    "datatables.net": "1.10.16",
+    "datatables.net": "1.10.19",
     "datatables.net-bs": "1.10.19",
     "debug": "3.1.0",
     "dotdotdot": "1.7.0",
