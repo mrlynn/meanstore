@@ -62,7 +62,7 @@
     "mongoose": "5.2.5",
     "mongoose-currency": "0.2.0",
     "mongoose-simple-random": "0.4.1",
-    "morgan": "1.9.0",
+    "morgan": "1.9.1",
     "nodalytics": "1.1.0",
     "nodemailer": "4.6.7",
     "npm": "6.2.0",
