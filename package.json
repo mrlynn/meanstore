@@ -30,7 +30,7 @@
     "datatables.net-bs": "1.10.19",
     "debug": "4.1.1",
     "dotdotdot": "1.7.0",
-    "dotenv": "6.0.0",
+    "dotenv": "6.2.0",
     "errorhandler": "1.5.0",
     "es6-shim": "0.35.4",
     "express": "4.16.4",
