@@ -167,11 +167,6 @@ This will expose the entire product catalog collection.
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## History
-
-- Version 0.1 - 11/20/2016 - Michael Lynn
-- Version 1.0 - 01/01/2017 - Michael Lynn - Updated theme, new category, group and search mechanisms
-
 ## Credits / Contributors
 
 - Michael Lynn <michael.lynn@mongodb.com>
