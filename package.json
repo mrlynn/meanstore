@@ -65,7 +65,7 @@
     "morgan": "1.9.0",
     "nodalytics": "1.1.0",
     "nodemailer": "4.7.0",
-    "npm": "6.2.0",
+    "npm": "6.8.0",
     "passport": "0.4.0",
     "passport-facebook": "2.1.1",
     "passport-google-oauth": "1.0.0",
