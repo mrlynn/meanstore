@@ -57,7 +57,7 @@
     "json2csv": "4.3.4",
     "marked": "0.6.0",
     "moment": "2.22.2",
-    "mongo-sanitize": "1.0.0",
+    "mongo-sanitize": "1.0.1",
     "mongodb": "3.1.13",
     "mongoose": "5.4.13",
     "mongoose-currency": "0.2.0",
