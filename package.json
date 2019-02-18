@@ -64,7 +64,7 @@
     "mongoose-simple-random": "0.4.1",
     "morgan": "1.9.0",
     "nodalytics": "1.1.0",
-    "nodemailer": "4.6.7",
+    "nodemailer": "4.7.0",
     "npm": "6.2.0",
     "passport": "0.4.0",
     "passport-facebook": "2.1.1",
