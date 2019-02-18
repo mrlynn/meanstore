@@ -21,7 +21,7 @@
     "connect-flash": "0.1.1",
     "connect-mongo": "2.0.1",
     "cookie-parser": "1.4.3",
-    "cors": "2.8.4",
+    "cors": "2.8.5",
     "crypto": "1.0.1",
     "csurf": "1.9.0",
     "cytoscape": "3.4.1",
