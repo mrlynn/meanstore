@@ -12,7 +12,7 @@
     "angular2": "2.0.0-beta.21",
     "assert": "1.4.1",
     "async": "2.6.2",
-    "bad-words": "3.0.0",
+    "bad-words": "3.0.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.3",
     "braintree": "2.15.0",
