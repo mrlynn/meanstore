@@ -97,7 +97,7 @@
   },
   "devDependencies": {
     "nodemon": "1.18.10",
-    "autoprefixer": "9.4.9",
+    "autoprefixer": "9.5.1",
     "cssnano": "4.1.10",
     "concurrently": "4.1.0",
     "gulp": "4.0.0",
