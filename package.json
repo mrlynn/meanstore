@@ -59,7 +59,7 @@
     "moment": "2.24.0",
     "mongo-sanitize": "1.0.1",
     "mongodb": "3.1.13",
-    "mongoose": "5.4.17",
+    "mongoose": "5.5.2",
     "mongoose-currency": "0.2.0",
     "mongoose-simple-random": "0.4.1",
     "morgan": "1.9.0",
