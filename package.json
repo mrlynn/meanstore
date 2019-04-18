@@ -16,7 +16,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.3",
     "braintree": "2.16.0",
-    "braintree-web": "3.42.0",
+    "braintree-web": "3.44.2",
     "chalk": "2.4.2",
     "connect-flash": "0.1.1",
     "connect-mongo": "2.0.3",
