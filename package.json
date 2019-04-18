@@ -25,7 +25,7 @@
     "crypto": "1.0.1",
     "csurf": "1.9.0",
     "cytoscape": "3.5.3",
-    "d3": "5.9.1",
+    "d3": "5.9.2",
     "datatables.net": "1.10.19",
     "datatables.net-bs": "1.10.19",
     "debug": "4.1.1",
