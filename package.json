@@ -27,7 +27,7 @@
     "cytoscape": "3.8.2",
     "d3": "5.9.2",
     "datatables.net": "1.10.19",
-    "datatables.net-bs": "1.10.19",
+    "datatables.net-bs": "1.10.20",
     "debug": "4.1.1",
     "dotdotdot": "1.7.0",
     "dotenv": "8.0.0",
