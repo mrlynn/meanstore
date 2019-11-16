@@ -5,16 +5,16 @@
 	var Config = require('../config/config');
 	const dotenv = require('dotenv');
 	const chalk = require('chalk');
-	dotenv.load({
+	dotenv.config({
 		path: '.env.hackathon'
 	});
 
 	if (process.env.NODE_ENV) {
 	// console.log("USING .env.hackathon-" + process.env.NODE_ENV);
-	dotenv.load({ path: '.env.hackathon-' + process.env.NODE_ENV });
+	dotenv.config({ path: '.env.hackathon-' + process.env.NODE_ENV });
 	} else {
 	console.log("USING .env.hackathon" );
-	dotenv.load({ path: '.env.hackathon' });
+	dotenv.config({ path: '.env.hackathon' });
 	}
 
 	var options = {

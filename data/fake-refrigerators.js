@@ -5,7 +5,7 @@ var faker = require('faker');
 var async = require('async');
 var winston = require("winston");
 
-var logger = new (winston.Logger)({
+var logger = new (winston.createLogger)({
     transports: [
       new (winston.transports.Console)(),
       new (winston.transports.File)({ filename: 'hackathon.log' })
@@ -15,7 +15,7 @@ var logger = new (winston.Logger)({
 var mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
+dotenv.config({
     path: '.env.hackathon'
 });
 

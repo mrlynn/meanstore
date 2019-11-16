@@ -2,7 +2,7 @@ var Product = require('../models/product');
 var mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
+dotenv.config({
     path: '.env.hackathon'
 });
 

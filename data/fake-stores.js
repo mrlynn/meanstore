@@ -6,7 +6,7 @@ var async = require('async');
 var MongoClient = require('mongodb').MongoClient
 var winston = require("winston");
 
-var logger = new (winston.Logger)({
+var logger = new (winston.createLogger)({
     transports: [
       new (winston.transports.Console)(),
       new (winston.transports.File)({ filename: 'hackathon.log' })
@@ -18,7 +18,7 @@ mongoose.Promise = global.Promise;
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
+dotenv.config({
 	path: '.env.hackathon'
 });
 

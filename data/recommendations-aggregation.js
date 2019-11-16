@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
+dotenv.config({
     path: '.env.hackathon'
 });
 

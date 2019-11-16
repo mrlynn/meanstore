@@ -16,7 +16,8 @@ const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 var passport = require('passport');
 var flash = require('connect-flash');
-var validator = require('express-validator');
+// var validator = require('express-validator');
+const { check, validationResult } = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var fs = require('fs');
@@ -44,7 +45,7 @@ var docs = require("express-mongoose-docs");
 var csrf = require('csurf');
 var getIP = require('ipware')().get_ip;
 
-var logger = new (winston.Logger)({
+var logger = new (winston.createLogger)({
     transports: [
       new (winston.transports.Console)(),
       new (winston.transports.File)({ filename: 'hackathon.log' })
@@ -69,7 +70,7 @@ if (process.env.NODE_ENV) {
   dotenv.load({ path: '.env.hackathon-' + process.env.NODE_ENV });
 } else {
   console.log("USING .env.hackathon" );
-  dotenv.load({ path: '.env.hackathon' });
+  dotenv.config({ path: '.env.hackathon' });
 }
 
 var options = {
@@ -134,14 +135,14 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(validator({
-  gte: function(param, num) {
-        return param >= num;
-  },
-  lte: function(param, num) {
-        return param >= num;
-  }
-}));
+// app.use(validator({
+//   gte: function(param, num) {
+//         return param >= num;
+//   },
+//   lte: function(param, num) {
+//         return param >= num;
+//   }
+// }));
 
 app.use(cookieParser());
 app.use(breadcrumbs.init());

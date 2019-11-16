@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var Config = require('../config/config');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
-dotenv.load({
+dotenv.config({
     path: '.env.hackathon'
 });
 var connectionstring = 'mongodb://' + Config.dbhost + ':' + Config.dbport + '/' + Config.dbname;

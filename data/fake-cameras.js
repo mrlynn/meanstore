@@ -8,13 +8,13 @@ const chalk = require('chalk');
 const async = require('async');
 var winston = require("winston");
 
-var logger = new (winston.Logger)({
+var logger = new (winston.createLogger)({
     transports: [
       new (winston.transports.Console)(),
       new (winston.transports.File)({ filename: 'hackathon.log' })
     ]
 });
-dotenv.load({
+dotenv.config({
     path: '.env.hackathon'
 });
 
