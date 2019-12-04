@@ -37,6 +37,8 @@ npm install
 npm install unicode
 # install faker to generate data
 npm install faker
+# Set environment
+export MONGODB_URI="mongodb://127.0.0.1:27017/hackathon"
 # Generate some data...
 node data/fake-refrigerators.js
 node data/fake-televisions.js
