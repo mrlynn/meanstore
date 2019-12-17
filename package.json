@@ -58,7 +58,7 @@
     "marked": "0.8.0",
     "moment": "2.24.0",
     "mongo-sanitize": "1.0.1",
-    "mongodb": "3.3.5",
+    "mongodb": "3.4.0",
     "mongoose": "5.8.1",
     "mongoose-currency": "0.2.0",
     "mongoose-simple-random": "0.4.1",
