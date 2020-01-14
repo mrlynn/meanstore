@@ -75,7 +75,7 @@
     "passport-twitter": "1.0.4",
     "passport-wordpress": "0.0.4",
     "paypal-rest-sdk": "1.8.1",
-    "prismjs": "1.17.1",
+    "prismjs": "1.19.0",
     "prompt": "1.0.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.3",
