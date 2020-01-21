@@ -102,7 +102,7 @@
     "concurrently": "5.0.2",
     "gulp": "4.0.2",
     "gulp-ext-replace": "0.3.0",
-    "gulp-imagemin": "6.2.0",
+    "gulp-imagemin": "7.1.0",
     "gulp-postcss": "8.0.0",
     "gulp-sourcemaps": "2.6.5",
     "gulp-typescript": "5.0.1",
