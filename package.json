@@ -6,7 +6,9 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "development": "nodemon ./bin/www",
-    "production": "NODE_ENV=production nodemon ./bin/www"
+    "production": "NODE_ENV=production nodemon ./bin/www",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "angular2": "2.0.0-beta.21",
@@ -93,7 +95,8 @@
     "uuid": "3.3.3",
     "winston": "3.2.1",
     "ya-csv": "0.10.1",
-    "zone.js": "0.10.2"
+    "zone.js": "0.10.2",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "autoprefixer": "9.7.3",
@@ -111,5 +114,6 @@
     "postcss": "7.0.25",
     "postcss-scss": "2.0.0",
     "precss": "4.0.0"
-  }
+  },
+  "snyk": true
 }
