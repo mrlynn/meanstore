@@ -58,7 +58,7 @@
     "jquery-zoom": "1.7.21",
     "json2csv": "4.5.4",
     "marked": "1.2.0",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "mongo-sanitize": "1.0.1",
     "mongodb": "3.4.1",
     "mongoose": "5.10.7",
