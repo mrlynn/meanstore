@@ -11,12 +11,12 @@
   "dependencies": {
     "angular2": "2.0.0-beta.21",
     "assert": "2.0.0",
-    "async": "3.1.0",
+    "async": "3.2.2",
     "bad-words": "3.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.19.0",
     "braintree": "2.21.0",
-    "braintree-web": "3.56.0",
+    "braintree-web": "3.85.3",
     "chalk": "3.0.0",
     "connect-flash": "0.1.1",
     "connect-mongo": "3.2.0",
@@ -93,7 +93,7 @@
     "unicode": "12.1.0",
     "util": "0.12.1",
     "uuid": "3.3.3",
-    "winston": "3.2.1",
+    "winston": "3.3.0",
     "ya-csv": "0.10.1",
     "zone.js": "0.10.2"
   },
