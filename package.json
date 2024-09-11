@@ -14,7 +14,7 @@
     "async": "3.1.0",
     "bad-words": "3.0.3",
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "1.19.0",
+    "body-parser": "1.20.3",
     "braintree": "2.21.0",
     "braintree-web": "3.56.0",
     "chalk": "3.0.0",
