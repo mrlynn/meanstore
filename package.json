@@ -35,7 +35,7 @@
     "dotenv": "8.2.0",
     "errorhandler": "1.5.1",
     "es6-shim": "0.35.5",
-    "express": "4.17.1",
+    "express": "4.20.0",
     "express-breadcrumbs": "0.0.2",
     "express-fileupload": "1.2.0",
     "express-handlebars": "3.1.0",
