@@ -60,7 +60,7 @@
     "marked": "1.2.0",
     "moment": "2.24.0",
     "mongo-sanitize": "1.0.1",
-    "mongodb": "3.4.1",
+    "mongodb": "3.7.3",
     "mongoose": "5.10.7",
     "mongoose-currency": "0.2.0",
     "mongoose-simple-random": "0.4.1",
